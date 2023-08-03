@@ -4,7 +4,7 @@ import { useGlobalContext } from '@/Context/store';
 import CartSummary from '../CartSummary/CartSummary';
 import './Cart.css';
 
-export default function Header() {
+export default function Cart() {
   const {
     dataCss,
     isTilted,

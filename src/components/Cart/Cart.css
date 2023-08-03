@@ -4,7 +4,7 @@
 }
 
 .cart-img.tilted {
-  transform: rotate(-10deg) scale(1.1); /* Inclinação e rotação */
+  transform: rotate(-10deg) scale(1.1);
 }
 
 .tab-content-cart {

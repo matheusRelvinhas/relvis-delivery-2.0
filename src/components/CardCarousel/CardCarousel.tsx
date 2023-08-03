@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import './CardCarousel.css'; // Importe o CSS aqui
+import './CardCarousel.css';
 
 type Card = {
   title: string;
