@@ -1,34 +1,46 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+---
 
-## Getting Started
+LINK PROJECT : 
 
-First, run the development server:
+<p aling="center">
+  <img src="public/assets/relvis-delivery-2.0-tela-app.png">
+</p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+Aplicação de um e-comerce simples aonde usuário faz o pedido e é direcionado para whats da empresa para finalizar o pedido, a ideia é ser simples e prático, ultilizei HTML, CSS, TypeScript e Next.js, foi um grande desáfio.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ultilizei Context para gerenciamento global de estados,  primeira vez que uso context em uma aplicação next.js e tem sua particularidades ultilizar context em next.js compardo ao react.js.
+https://legacy.reactjs.org/docs/context.html
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Instruções
+O desafio consiste em criar uma loja virtual simples.
+Sua aplicação deve possuir:
+● Página inicial:
+● Listagem de categorias de produtos
+● Listagem produtos
+● Página de produto:
+● Carousel de imagens
+● Detalhes do produto
+● Carrinho de compras
+● Atualizar a quantidade de um produto no carrinho;
+● Excluir um item do carrinho;
+● Mensagem de carrinho vazio;
+● Valor total, somando os preços de todos os itens no carrinho;
+● Botão para a finalização do pedido;
+● Você pode utilizar a FakeStoreAPI para consultar os produtos e as
+categorias;
+Tecnologias a serem utilizadas
+Devem ser utilizadas as seguintes tecnologias:
+● HTML
+● CSS
+● TypeScript
+● Next.js
+Entrega
+● Para iniciar o teste, siga atentamente as instruções do teste;
+● Crie um repositório público na sua conta do GitHub;
+● Faça o arquivo readme.md com as informações necessárias para
+executar o seu teste;
+● Depois de finalizado, envie-nos um e-mail com o link do seu teste;
+Bônus
+● Layout Responsivo
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+---
