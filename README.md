@@ -1,6 +1,3 @@
----
-
-LINK PROJECT : 
 
 <p aling="center">
   <img src="public/assets/relvis-delivery-2.0-tela-app.png">
@@ -42,5 +39,3 @@ executar o seu teste;
 ● Depois de finalizado, envie-nos um e-mail com o link do seu teste;
 Bônus
 ● Layout Responsivo
-
----
