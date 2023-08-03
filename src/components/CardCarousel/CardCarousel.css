@@ -1,0 +1,119 @@
+.category {
+  text-align: center;
+}
+
+.card-carousel {
+  max-width: 100%;
+  overflow: hidden;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 10px 0;
+}
+
+
+.card-list {
+  display: flex;
+  overflow-x: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.card {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin: 0 10px;
+  background-color: #f5f5f5;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  flex: 0 0 auto;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.card h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.card p {
+  margin-top: 5px;
+  font-size: 1rem;
+}
+
+.card p.price {
+  font-weight: bold;
+  color: #e74c3c;
+  margin-top: 10px;
+}
+
+.scroll-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.scroll-button:hover {
+  color: #e74c3c;
+}
+
+.left {
+  z-index: 1;
+  left: 10px;
+}
+
+.right {
+  right: 10px;
+}
+
+.item-controls {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.item-controls button {
+  font-size: 16px;
+  padding: 5px 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.item-controls button:hover {
+  background-color: #2980b9;
+}
+
+.item-controls input[type="number"] {
+  font-size: 16px;
+  padding: 5px;
+  width: 40px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 0 5px;
+}

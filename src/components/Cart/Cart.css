@@ -1,0 +1,43 @@
+.cart-img {
+  height: 15vh;
+  transition: transform 0.3s ease;
+}
+
+.cart-img.tilted {
+  transform: rotate(-10deg) scale(1.1); /* Inclinação e rotação */
+}
+
+.tab-content-cart {
+  position: fixed;
+  top: 21vh;
+  right: 0;
+  min-width: 230px;
+  width: 45vw;
+  height: 75vh;
+  border-top-left-radius: 6.5px;
+  border-bottom-left-radius: 6.5px;
+  background-color: #226154;
+  padding-top: 8px;
+}
+
+.tab-itens-cart {
+  display: grid;
+  flex-direction: row;
+  justify-content: space-around;
+  text-align: center;
+  align-items: center;
+  height: 100%;
+}
+
+.cart-message {
+  position: fixed;
+  top: 13vh;
+  right: 5vw;
+  min-width: 75px;
+  width: 10vw;
+  background-color: #e74c3c;
+  padding: 4px;
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  text-align: center;
+}

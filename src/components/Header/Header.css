@@ -1,0 +1,19 @@
+.header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background-color: #226154;
+  height: 20vh;
+  background: linear-gradient(to bottom, #226154 0%, #226154 15vh, transparent 50%, transparent 100%);
+  padding-right: 8px;
+  padding-bottom: 8px;
+  z-index: 998;
+}
+
+.logo-img {
+  height: 20vh;
+  border-radius: 100%;
+}
