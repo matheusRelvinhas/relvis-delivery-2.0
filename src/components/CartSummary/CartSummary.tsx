@@ -12,9 +12,10 @@ interface CartSummaryProps {
   cartItems: Record<string, number>;
   cards: Card[];
   setCartItems: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  totalItems: number;
 }
 
-const CartSummary: React.FC<CartSummaryProps> = ({ cartItems ,cards, setCartItems }) => {
+const CartSummary: React.FC<CartSummaryProps> = ({ cartItems ,cards, setCartItems, totalItems }) => {
   const cartTotal = Object.entries(cartItems).reduce((total, [title, quantity]) => {
     const card = cards.find(card => card.title === title);
     if (card && quantity > 0) {
@@ -52,7 +53,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ cartItems ,cards, setCartItem
             return (
               <li key={title}>
                 <span>{quantity}x {title}</span>
-                <span>${totalPrice.toFixed(2)}</span>
+                <span>R${totalPrice.toFixed(2)}</span>
                 <button className='button-delete-item' onClick={() => handleRemoveItem(title)}>X</button>
               </li>
             );
@@ -60,11 +61,12 @@ const CartSummary: React.FC<CartSummaryProps> = ({ cartItems ,cards, setCartItem
           return null;
         })}
       </ul>
-      <h2>Total: ${cartTotal.toFixed(2)}</h2>
+      <h2>Total: R${cartTotal.toFixed(2)}</h2>
     </div>
       <button 
-        className='cart-button'
+        className={`cart-button ${totalItems === 0 ? 'disabled' : ''}`}
         onClick={handleFinalizeOrder}
+        disabled={totalItems === 0}
       >
         <h1>Finalizar pedido</h1>
       </button>

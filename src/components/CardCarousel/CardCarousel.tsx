@@ -43,7 +43,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
 
   return (
     <>
-      <div>
+      <div className='card-carousel-container'>
         <h1 className='category'>{category}</h1>
         <div className="card-carousel">
           <button className="scroll-button left" onClick={scrollLeft}>
@@ -52,8 +52,15 @@ const CardCarousel: React.FC<CardCarouselProps> = ({
           <div className="card-list" ref={carouselRef}>
             {cards.map((card, index) => (
               <div key={index} className="card">
-                <img src={card.image} alt={card.title} />
-                <h3>{card.title}</h3>
+                <div className='card-list-img-title'>
+                  <figure>
+                    <picture>
+                      <source src={card.image} type="image/png" />
+                      <img className='logo-img' src={card.image} alt={card.title} height='50px' width='50px' />
+                    </picture>
+                  </figure>
+                  <h3>{card.title}</h3>
+                </div>
                 <p>{card.description}</p>
                 <p className="price">Preço: R${card.price}</p>
                 <div className="item-controls">

@@ -1,5 +1,11 @@
 .category {
   text-align: center;
+  font-size: x-large;
+}
+
+.card-carousel-container{
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 10px 0;
 }
 
 .card-carousel {
@@ -13,12 +19,17 @@
   padding: 10px 0;
 }
 
-
 .card-list {
   display: flex;
   overflow-x: scroll;
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+.card-list-img-title {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }
 
 .card {
@@ -29,10 +40,14 @@
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
   flex: 0 0 auto;
-  width: 300px;
+  width: 40vw;
+  min-width: 200px;
+  max-width: 300px;
+  max-height: 250px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
 }
 
 .card:hover {
@@ -49,9 +64,14 @@
 .card h3 {
   margin-top: 0;
   font-size: 1.2rem;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .card p {
+  color: black;
   margin-top: 5px;
   font-size: 1rem;
 }
@@ -96,7 +116,8 @@
 .item-controls button {
   font-size: 16px;
   padding: 5px 10px;
-  background-color: #3498db;
+  background-color: #e74c3c;
+  width: 30px;
   color: white;
   border: none;
   border-radius: 5px;
@@ -105,7 +126,7 @@
 }
 
 .item-controls button:hover {
-  background-color: #2980b9;
+  background-color: #226154;
 }
 
 .item-controls input[type="number"] {

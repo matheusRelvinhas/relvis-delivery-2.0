@@ -27,7 +27,7 @@ export default function Header() {
     {isTilted && (
       <div className="tab-content-cart">
         <div className="tab-itens-cart">
-          <CartSummary cartItems={cartItems} cards={allCards} setCartItems={setCartItems} />
+          <CartSummary cartItems={cartItems} cards={allCards} setCartItems={setCartItems} totalItems={totalItems} />
         </div>
       </div>
     )}
