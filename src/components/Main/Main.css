@@ -3,11 +3,11 @@
   display: flex;
   flex-direction: column;
   max-width: 100vw;
-  margin-top: 20vh; /* Altura do cabeçalho + espaço de margem */
-  overflow-y: auto; /* Habilita a rolagem vertical quando o conteúdo ultrapassar a altura da janela */
+  margin-top: 20vh;
+  overflow-y: auto;
 }
 
 body {
-  overflow-x: hidden; /* Impede a barra de rolagem horizontal */
-  max-width: 100%;    /* Evita que o conteúdo exceda a largura da janela */
+  overflow-x: hidden;
+  max-width: 100%;
 }

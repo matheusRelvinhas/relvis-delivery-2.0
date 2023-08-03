@@ -57,7 +57,7 @@ export default function Main() {
   return (
     <main className='main'>
       <CardCarousel
-        cards={drinkCards} // Passando drinkCards aqui
+        cards={drinkCards}
         category={drinkCards[0].category}
         handleAddItem={handleAddItem}
         handleRemoveItem={handleRemoveItem}

@@ -37,7 +37,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ cartItems ,cards, setCartItem
   const handleRemoveItem = (title: string) => {
     setCartItems(prevCartItems => ({
       ...prevCartItems,
-      [title]: 0, // Atualiza a quantidade para 0
+      [title]: 0,
     }));
   };
 
