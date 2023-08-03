@@ -23,7 +23,7 @@ export default function Hamburger() {
       </div>
       {isOpen && (
         <div className="tab-content">
-          <div className="tab-itens">oi</div>
+          <div className="tab-itens"><span>Relvis Delivery</span></div>
         </div>
       )}
     </>

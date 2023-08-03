@@ -52,8 +52,10 @@ const CartSummary: React.FC<CartSummaryProps> = ({ cartItems ,cards, setCartItem
           if (quantity > 0) {
             return (
               <li key={title}>
-                <span>{quantity}x {title}</span>
-                <span>R${totalPrice.toFixed(2)}</span>
+                <div className='cart-summary-span'>
+                  <span>{quantity}x {title}</span>
+                  <span>R${totalPrice.toFixed(2)}</span>
+                </div>
                 <button className='button-delete-item' onClick={() => handleRemoveItem(title)}>X</button>
               </li>
             );

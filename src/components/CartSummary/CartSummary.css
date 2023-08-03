@@ -18,6 +18,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.cart-summary-span {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding-right: 10px;
+}
+
 .cart-summary
 li,
 span,
