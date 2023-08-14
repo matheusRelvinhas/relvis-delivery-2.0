@@ -13,7 +13,7 @@ type Card = {
 };
 
 export default function Main() {
-  const { drinkCards, drinkNoAlcoolCards, portionsCards, cartItems, setCartItems } = useGlobalContext();
+  const { drinkCards, drinkNoAlcoolCards, portionsCards, cartItems, setCartItems, dataCss } = useGlobalContext();
   
   const handleAddItem = (card: Card) => {
     setCartItems((prevItems) => ({
@@ -55,7 +55,10 @@ export default function Main() {
   }, 0);
 
   return (
-    <main className='main'>
+    <main 
+      style={{color: dataCss.fontColor}}
+      className='main'
+    >
       <CardCarousel
         cards={drinkCards}
         category={drinkCards[0].category}

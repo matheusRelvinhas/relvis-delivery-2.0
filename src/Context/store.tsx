@@ -51,6 +51,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       'https://i.postimg.cc/pVsYp1fM/easy-ia-logo.webp',
     ],
     cartImage: './img/cart.png',
+    colorPrimary: '#226154',
+    colorSecundary: '#e74c3c',
+    colorThird: '#ebc49d',
+    backgroundColorCard: '#f5f5f5',
+    backgroundColorHeader: 'linear-gradient(to bottom, #226154 0%, #226154 15vh, transparent 50%, transparent 100%)',
+    fontColor: '#141414',
+    summaryFont: '#ecddcd',
+    buttonColor: '#fafafa',
+    activeButtonColor: '#c0392b'
   };
   const [isOpen, setIsOpen] = useState(false);
   const [isTilted, setIsTilted] = useState(false);

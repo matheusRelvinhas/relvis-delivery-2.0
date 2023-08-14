@@ -4,7 +4,7 @@ import './Hamburger.css';
 import { useGlobalContext } from '@/Context/store';
 
 export default function Hamburger() {
-  const { isOpen, handleCheckboxChange } = useGlobalContext();
+  const { isOpen, handleCheckboxChange, dataCss } = useGlobalContext();
 
   return (
     <>
@@ -16,14 +16,19 @@ export default function Hamburger() {
             checked={isOpen}
             onChange={handleCheckboxChange}
           />
-          <span></span>
-          <span></span>
-          <span></span>
+          <span style={{background: dataCss.colorThird}}></span>
+          <span style={{background: dataCss.colorThird}}></span>
+          <span style={{background: dataCss.colorThird}}></span>
         </label>
       </div>
       {isOpen && (
         <div className="tab-content">
-          <div className="tab-itens"><span>Relvis Delivery</span></div>
+          <div
+            style={{background: dataCss.colorPrimary}}
+            className="tab-itens"
+          >
+            <span>Relvis Delivery</span>
+          </div>
         </div>
       )}
     </>

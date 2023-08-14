@@ -21,7 +21,6 @@
   position: absolute;
   height: 4px;
   width: 100%;
-  background: #ebc49d;
   border-radius: 9px;
   opacity: 1;
   left: 0;
@@ -71,7 +70,6 @@
   height: 75vh;
   border-top-right-radius: 6.5px;
   border-bottom-right-radius: 6.5px;
-  background-color: #226154;
 }
 
 .tab-itens {

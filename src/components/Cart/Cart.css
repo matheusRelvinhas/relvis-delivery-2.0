@@ -8,16 +8,16 @@
 }
 
 .tab-content-cart {
-  position: fixed;
+  position: absolute;
   top: 21vh;
   right: 0;
   min-width: 45vw;
   border-top-left-radius: 6.5px;
   border-bottom-left-radius: 6.5px;
-  background-color: #226154;
   padding-top: 8px;
   display: flex;
   flex-direction: column;
+  overflow-y:auto;
 }
 
 .tab-itens-cart {
@@ -35,7 +35,6 @@
   right: 5vw;
   min-width: 75px;
   width: 10vw;
-  background-color: #e74c3c;
   padding: 4px;
   border-radius: 10px;
   border-top-right-radius: 0;

@@ -24,12 +24,10 @@
 li,
 span,
 p {
-  color: #ecddcd;
   font-size: medium;
 }
 
 .cart-summary h2 {
-  color: #ecddcd;  
   font-size: 1.5rem;
   margin-bottom: 10px;
 }
@@ -58,7 +56,6 @@ p {
 }
 
 .cart-button {
-  background-color: #e74c3c;
   height: 10vh;
   border-bottom-left-radius: 5px;
   transition: background-color 0.2s, box-shadow 0.2s;
@@ -75,13 +72,10 @@ p {
 }
 
 .cart-button:active {
-  background-color: #c0392b;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .button-delete-item {
-  background-color: #e74c3c;
-  color: white;
   border: none;
   border-radius: 50%;
   width: 24px;
@@ -93,8 +87,4 @@ p {
   justify-content: center;
   align-items: center;
   transition: background-color 0.2s;
-}
-
-.button-delete-item:hover {
-  background-color: #c0392b;
 }

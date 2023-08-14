@@ -1,4 +1,9 @@
+'use client';
+
+import { useGlobalContext } from '@/Context/store';
+import StyledButton from '../StyledButton/StyledButton';
 import './CartSummary.css';
+
 
 type Card = {
   title: string;
@@ -16,6 +21,9 @@ interface CartSummaryProps {
 }
 
 const CartSummary: React.FC<CartSummaryProps> = ({ cartItems ,cards, setCartItems, totalItems }) => {
+  
+  const { dataCss } = useGlobalContext();
+
   const cartTotal = Object.entries(cartItems).reduce((total, [title, quantity]) => {
     const card = cards.find(card => card.title === title);
     if (card && quantity > 0) {
@@ -44,7 +52,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ cartItems ,cards, setCartItem
   return (
     <div className="cart-summary-container">
       <div className="cart-summary">
-      <h2>Carrinho</h2>
+      <h2 style={{color: dataCss.summaryFont}}>Carrinho</h2>
       <ul>
         {Object.entries(cartItems).map(([title, quantity]) => {
           const card = cards.find(card => card.title === title);
@@ -53,10 +61,16 @@ const CartSummary: React.FC<CartSummaryProps> = ({ cartItems ,cards, setCartItem
             return (
               <li key={title}>
                 <div className='cart-summary-span'>
-                  <span>{quantity}x {title}</span>
-                  <span>R${totalPrice.toFixed(2)}</span>
+                  <span style={{color: dataCss.summaryFont}}>{quantity}x {title}</span>
+                  <span style={{color: dataCss.summaryFont}}>R${totalPrice.toFixed(2)}</span>
                 </div>
-                <button className='button-delete-item' onClick={() => handleRemoveItem(title)}>X</button>
+                <button 
+                  style={{backgroundColor: dataCss.colorSecundary, color: dataCss.buttonColor}} 
+                  className='button-delete-item' 
+                  onClick={() => handleRemoveItem(title)}
+                >
+                  X
+                </button>
               </li>
             );
           }    
@@ -65,13 +79,15 @@ const CartSummary: React.FC<CartSummaryProps> = ({ cartItems ,cards, setCartItem
       </ul>
       <h2>Total: R${cartTotal.toFixed(2)}</h2>
     </div>
-      <button 
+      <StyledButton
+        normalBackgroundColor={dataCss.colorSecundary}
+        activeBackgroundColor={dataCss.activeButtonColor}
         className={`cart-button ${totalItems === 0 ? 'disabled' : ''}`}
         onClick={handleFinalizeOrder}
         disabled={totalItems === 0}
       >
         <h1>Finalizar pedido</h1>
-      </button>
+      </StyledButton>
     </div>
   );
 };

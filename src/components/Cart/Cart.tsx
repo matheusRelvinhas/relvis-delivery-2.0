@@ -37,7 +37,7 @@ export default function Cart() {
         </picture>
       </figure>
       {isTilted && (
-        <div className="tab-content-cart">
+        <div style={{backgroundColor: dataCss.colorPrimary}} className="tab-content-cart">
           <div className="tab-itens-cart">
             <CartSummary
               cartItems={cartItems}
@@ -48,7 +48,7 @@ export default function Cart() {
           </div>
         </div>
       )}
-      <div className="cart-message">
+      <div style={{backgroundColor: dataCss.colorSecundary}} className="cart-message">
         <strong>
           {totalItems === 0
             ? 'vazio :('

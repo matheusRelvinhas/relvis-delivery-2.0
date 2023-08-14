@@ -9,7 +9,10 @@ export default function Header() {
   const { dataCss } = useGlobalContext();
 
   return (
-    <header className='header'>
+    <header 
+      style={{background: dataCss.backgroundColorHeader, color: dataCss.fontColor}}
+      className='header'
+    >
       <Hamburger/>
       <figure>
         <picture>
