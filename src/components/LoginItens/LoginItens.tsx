@@ -37,9 +37,9 @@ const LoginItens: React.FC = () => {
       <div key={item.chave}>
         <p>Titulo: {item.newTitle}</p>
         <p>Descrição: {item.newDescription}</p>
-        <p>Chave: {item.chave}</p>
-        <p>Imagem: {item.newImage}</p>
         <p>Preço: {item.newPrice}</p>
+        <p>Imagem: {item.newImage}</p>
+        <p>Chave: {item.chave}</p>
       </div>
     ))}
   </div>
