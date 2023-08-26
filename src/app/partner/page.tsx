@@ -1,6 +1,6 @@
   "use client"
 
-import React, { FormEvent } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useGlobalContext } from '@/Context/store';
 import AddItemForm from '@/components/AddItemForm/AddItemForm';
