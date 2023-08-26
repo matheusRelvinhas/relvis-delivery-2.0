@@ -12,7 +12,9 @@ type Card = {
 
 interface ContextProps {
   dataCss: Record<string, any>;
+  isLogin: boolean;
   isOpen: boolean;
+  setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
   isTilted: boolean;
   handleCheckboxChange: () => void;
   handleCartClick: () => void;
@@ -25,7 +27,9 @@ interface ContextProps {
 
 const GlobalContext = createContext<ContextProps>({
   dataCss: {},
+  isLogin: false,
   isOpen: false,
+  setIsLogin: () => {},
   isTilted: false,
   handleCheckboxChange: () => {},
   handleCartClick: () => {},
@@ -61,9 +65,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     buttonColor: '#fafafa',
     activeButtonColor: '#c0392b'
   };
+
+  const[isLogin, setIsLogin] = useState(false);
+  
   const [isOpen, setIsOpen] = useState(false);
   const [isTilted, setIsTilted] = useState(false);
-
+  
   const handleCheckboxChange = () => {
     setIsOpen(!isOpen);
     setIsTilted(false)
@@ -149,6 +156,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     <GlobalContext.Provider
       value={{
         dataCss,
+        isLogin,
         isOpen,
         isTilted,
         handleCheckboxChange,
@@ -158,6 +166,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         portionsCards,
         cartItems,
         setCartItems,
+        setIsLogin,
       }}
     >
       {children}
