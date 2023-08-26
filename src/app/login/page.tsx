@@ -4,17 +4,18 @@ import LoginForm from '@/components/LoginForm/LoginForm';
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 import AddItemForm from '@/components/AddItemForm/AddItemForm';
+import LoginItens from '@/components/LoginItens/LoginItens';
 
 const LoginPage: React.FC = () => {
   const { isLogin } = useGlobalContext();
   
-
   return (
     <div>
       {isLogin ? (
         <>
           <h1>Portal Parceiro</h1>
           <AddItemForm />
+          <LoginItens />
         </>
       ) : (
         <>
