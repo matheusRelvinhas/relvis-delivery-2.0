@@ -11,7 +11,7 @@ const AddItemForm: React.FC = () => {
   
   console.log(newTitle, newDescription, newPrice, newImage)
   
-  function save(event) {
+  function save(event: FormEvent) {
     event.preventDefault()
 
     const ref = database.ref('item')
