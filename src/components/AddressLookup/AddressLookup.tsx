@@ -10,6 +10,7 @@ const AddressLookup: React.FC = () => {
   return (
     <div>
       <input
+        style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
         type="text"
         placeholder="Digite o CEP (somente números)"
         value={cep}

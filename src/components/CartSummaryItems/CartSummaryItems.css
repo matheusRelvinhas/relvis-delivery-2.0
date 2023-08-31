@@ -4,7 +4,8 @@
   flex-direction: column;
   justify-content: space-between;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 50vw;
+  min-width: 230px;
 }
 
 .cart-summary-span {
@@ -29,6 +30,7 @@ p {
 .cart-summary ul {
   list-style: none;
   padding: 8px 6px;
+  height: 100%;
 }
 
 .cart-summary li {
@@ -51,6 +53,8 @@ p {
 
 .cart-button {
   height: 10vh;
+  min-width: 230px;
+  width: 50vw;
   border-bottom-left-radius: 5px;
   transition: background-color 0.2s, box-shadow 0.2s;
 }

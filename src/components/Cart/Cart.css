@@ -11,7 +11,8 @@
   position: absolute;
   top: 21vh;
   right: 0;
-  width: 45vw;
+  min-width: 230px;
+  width: 50vw;
   height: 70vh;
   border-top-left-radius: 6.5px;
   border-bottom-left-radius: 6.5px;

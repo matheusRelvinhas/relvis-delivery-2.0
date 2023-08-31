@@ -59,6 +59,7 @@ interface ContextProps {
   setCity: React.Dispatch<React.SetStateAction<string>>;
   setState: React.Dispatch<React.SetStateAction<string>>;
   isBuy: boolean;
+  setIsBuy: React.Dispatch<React.SetStateAction<boolean>>;
   messageItens: string;
   name: string;
   paymentMethod: string;
@@ -101,7 +102,8 @@ interface ContextProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   handleLogin: () => Promise<void>;
   handleLogout: () => Promise<void>;
-  items: Item[] | undefined; // Adicione essa linha à interface
+  items: Item[] | undefined;
+  isFormValid: boolean;
 }
 
 interface Address {
@@ -143,6 +145,7 @@ const GlobalContext = createContext<ContextProps>({
   setCity: () => {},
   setState: () => {},
   isBuy: false,
+  setIsBuy: () => {},
   messageItens: '',
   name: '',
   paymentMethod: '',
@@ -186,6 +189,7 @@ const GlobalContext = createContext<ContextProps>({
   handleLogin: async () => {},
   handleLogout: async () => {},
   items: [],
+  isFormValid: false,
 });
 
 type GlobalContextProviderProps = {
@@ -204,6 +208,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       'https://i.postimg.cc/pVsYp1fM/easy-ia-logo.webp',
     ],
     cartImage: './img/cart.png',
+    backImage: '/img/back.png',
     colorPrimary: '#226154',
     colorSecundary: '#e74c3c',
     colorThird: '#ebc49d',
@@ -212,7 +217,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     fontColor: '#141414',
     summaryFont: '#ecddcd',
     buttonColor: '#fafafa',
-    activeButtonColor: '#c0392b'
+    activeButtonColor: '#c0392b',
+    colorInput: '#1c554a',
+    colorBorder: '#14463c',
   };
 
   const [isOpen, setIsOpen] = useState(false);
@@ -233,6 +240,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [cellphone, setCellphone] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [troco, setTroco] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
   
   const handleCheckboxChange = () => {
     setIsOpen(!isOpen);
@@ -241,6 +249,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const handleCartClick = () => {
     setIsTilted(!isTilted);
     setIsOpen(false)
+    setIsBuy(false)
   };
 
   const handleAddItem = (card: Card) => {
@@ -350,7 +359,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     } catch (error) {
       console.error('Erro ao consultar banco de dados:', error);
     }
-    const message = `Pedido Novo\nCliente: ${name}\nEndereço: ${road}\nNº: ${number}    Compl.: ${complement}\nBairro: ${district}\nCidade: ${city}    Estado: ${state}\n\n${messageItens}`;
+    let message = `Pedido Novo!!\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}    Compl.: ${complement}\nBairro: ${district}\nCidade: ${city}    Estado: ${state}\n\n${messageItens}\nForma de Pagamento: ${paymentMethod}\n`;
+    if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
+      message += `Troco: R$${trocoMessage.toFixed(2)}`;
+    }
+    setTroco('')
     const whatsappLink = `https://api.whatsapp.com/send?phone=+5531971451910&text=${encodeURIComponent(
       message
     )}`;
@@ -440,6 +453,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     0
   );
 
+  const trocoMessage = Math.abs(cartTotal - parseFloat(troco));
+
   const totalItems = Object.values(cartItems).reduce(
     (total, quantity) => total + quantity,
     0
@@ -451,6 +466,19 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       [title]: 0,
     }));
   };
+
+  useEffect(() => {
+    const isValid =
+      name !== '' &&
+      cellphone !== '' &&
+      road !== '' &&
+      number !== '' &&
+      district !== '' &&
+      paymentMethod !== '' &&
+      (paymentMethod !== 'dinheiro' || troco !== '');
+
+    setIsFormValid(isValid);
+  }, [name, cellphone, road, number, district, city, state, paymentMethod, troco]);
 
   useEffect(() => {
     const storedName = localStorage.getItem('name') || '';
@@ -675,6 +703,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setCity,
         setState,
         isBuy,
+        setIsBuy,
         messageItens,
         handleFinalizeOrder,
         handleFinalize,
@@ -718,6 +747,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         handleLogin,
         handleLogout,
         items,
+        isFormValid,
       }}
     >
       {children}
