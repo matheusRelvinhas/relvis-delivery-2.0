@@ -9,19 +9,8 @@ export default function Cart() {
     dataCss,
     isTilted,
     handleCartClick,
-    cartItems,
-    setCartItems,
-    drinkCards,
-    drinkNoAlcoolCards,
-    portionsCards,
+    totalItems,
   } = useGlobalContext();
-
-  const allCards = [...drinkCards, ...drinkNoAlcoolCards, ...portionsCards];
-
-  const totalItems = Object.values(cartItems).reduce(
-    (total, quantity) => total + quantity,
-    0
-  );
 
   return (
     <>
@@ -39,12 +28,7 @@ export default function Cart() {
       {isTilted && (
         <div style={{backgroundColor: dataCss.colorPrimary}} className="tab-content-cart">
           <div className="tab-itens-cart">
-            <CartSummary
-              cartItems={cartItems}
-              cards={allCards}
-              setCartItems={setCartItems}
-              totalItems={totalItems}
-            />
+            <CartSummary />
           </div>
         </div>
       )}

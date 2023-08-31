@@ -11,13 +11,14 @@
   position: absolute;
   top: 21vh;
   right: 0;
-  min-width: 45vw;
+  width: 45vw;
+  height: 70vh;
   border-top-left-radius: 6.5px;
   border-bottom-left-radius: 6.5px;
   padding-top: 8px;
   display: flex;
   flex-direction: column;
-  overflow-y:auto;
+  overflow:auto;
 }
 
 .tab-itens-cart {

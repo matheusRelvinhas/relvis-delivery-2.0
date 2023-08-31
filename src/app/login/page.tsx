@@ -5,6 +5,8 @@ import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 import AddItemForm from '@/components/AddItemForm/AddItemForm';
 import LoginItens from '@/components/LoginItens/LoginItens';
+import AddCategoryForm from '@/components/AddCategoryForm/AddCategoryForm';
+import LoginCategory from '@/components/LoginCategory/LoginCategory';
 
 const LoginPage: React.FC = () => {
   const { isLogin } = useGlobalContext();
@@ -14,7 +16,9 @@ const LoginPage: React.FC = () => {
       {isLogin ? (
         <>
           <h1>Portal Parceiro</h1>
+          <AddCategoryForm />
           <AddItemForm />
+          <LoginCategory />
           <LoginItens />
         </>
       ) : (

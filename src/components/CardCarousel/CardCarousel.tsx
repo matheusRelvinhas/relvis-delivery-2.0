@@ -16,23 +16,14 @@ type Card = {
 interface CardCarouselProps {
   cards: Card[];
   category: string;
-  handleAddItem: (card: Card) => void;
-  handleRemoveItem: (card: Card) => void;
-  handleQuantityChange: (card: Card, e: React.ChangeEvent<HTMLInputElement>) => void;
-  getItemQuantity: (card: Card) => number;
-  cartTotal: number;
 }
 
 const CardCarousel: React.FC<CardCarouselProps> = ({
   cards,
   category,
-  handleAddItem,
-  handleRemoveItem,
-  handleQuantityChange,
-  getItemQuantity,
 }) => {
   
-  const { dataCss } = useGlobalContext();
+  const { dataCss, handleAddItem, handleRemoveItem, handleQuantityChange, getItemQuantity } = useGlobalContext();
 
   const carouselRef = useRef<HTMLDivElement | null>(null);
 

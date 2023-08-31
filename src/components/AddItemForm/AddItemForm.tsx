@@ -1,67 +1,59 @@
 "use client"
 
-import React, { FormEvent, useState } from 'react';
-import { database } from '@/firebase';
-
-interface ItemData {
-  newTitle: string;
-  newDescription: string;
-  newPrice: string;
-  newImage: string;
-}
+import React from 'react';
+import { useGlobalContext } from '@/Context/store';
 
 const AddItemForm: React.FC = () => {
-  const [newTitle, setNewTitle] = useState('');
-  const [newDescription, setNewDescription] = useState('');
-  const [newPrice, setNewPrice] = useState('');
-  const [newImage, setNewImage] = useState('');
 
-  console.log(newTitle, newDescription, newPrice, newImage);
-
-  function save(event: FormEvent) {
-    event.preventDefault();
-
-    const ref = database.ref('item');
-
-    const data: ItemData = {
-      newTitle,
-      newDescription,
-      newPrice,
-      newImage,
-    };
-
-    ref.push(data);
-    setNewTitle('');
-    setNewDescription('');
-    setNewPrice('');
-    setNewImage('');
-  }
+  const { title, setTitle, price, setPrice, description, setDescription, selectedCategory, setSelectedCategory, imageFile, setImageFile, optionCategories, save } = useGlobalContext();
 
   return (
     <form onSubmit={save}>
       <input
         type="text"
-        placeholder="título"
-        value={newTitle}
-        onChange={event => setNewTitle(event.target.value)}
+        placeholder="Título"
+        value={title}
+        onChange={(event) => setTitle(event.target.value)}
+        required
       />
       <input
         type="text"
-        placeholder="descrição"
-        value={newDescription}
-        onChange={event => setNewDescription(event.target.value)}
+        placeholder="Descrição"
+        value={description}
+        onChange={(event) => setDescription(event.target.value)}
+        required
       />
       <input
-        type="text"
-        placeholder="preço"
-        value={newPrice}
-        onChange={event => setNewPrice(event.target.value)}
+        type="number"
+        placeholder="Preço"
+        value={price}
+        onChange={(event) => setPrice(event.target.value)}
+        required
       />
+      <select
+        value={selectedCategory}
+        onChange={(event) => setSelectedCategory(event.target.value)}
+        required
+      >
+        <option value="" disabled>
+          Selecione uma categoria
+        </option>
+        {optionCategories.map((category, index) => (
+          <option key={index} value={category}>
+            {category}
+          </option>
+        ))}
+      </select>
       <input
-        type="text"
-        placeholder="image"
-        value={newImage}
-        onChange={event => setNewImage(event.target.value)}
+        type="file"
+        accept="image/*"
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+          if (file) {
+            setImageFile(file);
+          }
+        }}
+        required
       />
       <button type="submit">Adicionar</button>
     </form>
