@@ -127,7 +127,7 @@ const FormContact: React.FC<FormContactProps> = () => {
         <option value="Dinheiro">Dinheiro</option>
         <option value="Dinheiro trocado">Dinheiro trocado</option>
       </select>
-      {paymentMethod === 'dinheiro' && (
+      {paymentMethod === 'Dinheiro' && (
         <input
           style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
           type="number"
