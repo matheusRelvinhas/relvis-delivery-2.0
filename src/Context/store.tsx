@@ -4,8 +4,8 @@ import React, { createContext, useContext, useState, ReactNode, FormEvent, useEf
 import axios from 'axios';
 import { database, firestore, storage, auth } from '@/firebase';
 
-
 type Card = {
+  chave: string;
   title: string;
   description: string;
   price: number;
@@ -19,6 +19,7 @@ type Item = {
   description: string;
   price: number;
   image: string;
+  category:string;
 };
 
 interface ItemData {
@@ -37,9 +38,6 @@ interface ContextProps {
   isTilted: boolean;
   handleCheckboxChange: () => void;
   handleCartClick: () => void;
-  drinkCards: Card[];
-  drinkNoAlcoolCards: Card[];
-  portionsCards: Card[];
   cartItems: Record<string, number>;
   setCartItems: React.Dispatch<React.SetStateAction<Record<string, number>>>
   cep: string;
@@ -93,7 +91,6 @@ interface ContextProps {
   handleQuantityChange: (card: Card, e: React.ChangeEvent<HTMLInputElement>) => void;
   getItemQuantity: (card: Card) => number;
   cartTotal: number;
-  allCards: Card[]; // Adicione essa linha à interface
   totalItems: number; // Adicione essa linha à interface
   handleRemoveAllItems: (title: string) => void;
   email: string;
@@ -104,6 +101,7 @@ interface ContextProps {
   handleLogout: () => Promise<void>;
   items: Item[] | undefined;
   isFormValid: boolean;
+  alertLogin: boolean;
 }
 
 interface Address {
@@ -123,9 +121,6 @@ const GlobalContext = createContext<ContextProps>({
   isTilted: false,
   handleCheckboxChange: () => {},
   handleCartClick: () => {},
-  drinkCards: [],
-  drinkNoAlcoolCards: [],
-  portionsCards: [],
   cartItems: {},
   setCartItems: () => {},
   cep: '',           // Adicione essa linha para incluir a propriedade cep
@@ -179,7 +174,6 @@ const GlobalContext = createContext<ContextProps>({
   handleQuantityChange: (card: Card, e: React.ChangeEvent<HTMLInputElement>) => {},
   getItemQuantity: (card: Card) => 0,
   cartTotal: 0,
-  allCards: [], // Adicione essa linha à interface
   totalItems: 0, // Adicione essa linha à interface
   handleRemoveAllItems: () => {},
   email: '',
@@ -190,6 +184,7 @@ const GlobalContext = createContext<ContextProps>({
   handleLogout: async () => {},
   items: [],
   isFormValid: false,
+  alertLogin: false,
 });
 
 type GlobalContextProviderProps = {
@@ -222,6 +217,196 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     colorBorder: '#14463c',
   };
 
+  //LOGIN PAGE
+  const [isLogin, setIsLogin] = useState(false);
+  const [categories, setCategories] = useState<{ id: string; category: string }[]>([]);
+  const [category, setCategory] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [optionCategories, setOptionCategories] = useState<string[]>([]);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [items, setItens] = useState<Item[]>();
+  const [alertLogin, setAlertLogin] = useState(false);
+
+  
+  const handleLogin = async () => {
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      console.log('Login successful');
+      setEmail('');
+      setPassword('');
+    } catch (error) {
+      console.error('Login error:', error);
+      setEmail('');
+      setPassword('');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      console.log('Logout successful');
+      setIsLogin(false);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  const addCategory = async () => {
+    if (category.trim() !== '') {
+      try {
+        const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
+        await collectionRef.add({ category });
+        setCategory('');
+        console.log('Categoria salva com sucesso!');
+      } catch (error) {
+        console.error('Erro ao salvar categoria:', error);
+      }
+    }
+  };
+
+  const handleDeleteCategory = async (categoryId: string) => {
+    try {
+      const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
+      await collectionRef.doc(categoryId).delete();
+      console.log('Categoria excluída com sucesso!');
+    } catch (error) {
+      console.error('Erro ao excluir categoria:', error);
+    }
+  };
+
+  async function save(event: React.FormEvent) {
+    event.preventDefault();
+  
+    const collectionRef = firestore.collection('items');
+  
+    const data: ItemData = {
+      title,
+      description,
+      price: parseFloat(price),
+      image: '',
+      category: selectedCategory,
+    };
+  
+    try {
+      // Verifica se já existe um item com o mesmo título
+      const querySnapshot = await collectionRef.where('title', '==', title).get();
+  
+      if (!querySnapshot.empty) {
+        // Já existe um item com o mesmo título, ativa o alerta
+        setAlertLogin(true);
+  
+        // Define um timer para desativar o alerta após 3 segundos
+        setTimeout(() => {
+          setAlertLogin(false);
+        }, 3000);
+  
+        // Não continue o processo de salvar
+        return;
+      }
+  
+      // Se não houver itens com o mesmo título, continue com o processo de salvar
+      if (imageFile) {
+        // Faz upload da imagem para o Storage
+        const storageRef = storage.ref();
+        const imageRef = storageRef.child(imageFile.name);
+        await imageRef.put(imageFile);
+  
+        // Obtém a URL de download da imagem
+        const imageUrl = await imageRef.getDownloadURL();
+        data.image = imageUrl;
+      }
+  
+      // Salva o objeto no Firestore
+      await collectionRef.add(data);
+  
+      setTitle('');
+      setDescription('');
+      setPrice('');
+      setImageFile(null);
+      setSelectedCategory('');
+    } catch (error) {
+      console.error('Error adding item:', error);
+    }
+  }
+
+  useEffect(() => {
+    const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
+
+    // Cria o listener para mudanças na coleção
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
+      const categoriesData: { id: string; category: string }[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        category: doc.data().category,
+      }));
+      setCategories(categoriesData);
+    });
+
+    return () => {
+      // Remove o listener quando o componente é desmontado
+      unsubscribe();
+    };
+  }, []);
+  
+  useEffect(() => {
+    // Verifica se o usuário já está autenticado ao carregar a página
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    });
+
+    return () => {
+      // Remove o listener quando o componente é desmontado
+      unsubscribe();
+    };
+  }, [setIsLogin]); // Executa somente uma vez ao carregar o componente
+  
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
+        const snapshot = await collectionRef.get();
+        const categoriesData = snapshot.docs.map((doc) => doc.data().category);
+        setOptionCategories(categoriesData);
+      } catch (error) {
+        console.error('Erro ao buscar categorias:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const collectionRef = firestore.collection('items');
+
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
+      const resultItens: Item[] = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          chave: doc.id,
+          title: data.title,
+          description: data.description,
+          price: data.price,
+          image: data.image,
+          category: data.category
+        };
+      });
+      setItens(resultItens);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  //CLIENT PAGE
   const [isOpen, setIsOpen] = useState(false);
   const [isTilted, setIsTilted] = useState(false);
   const [cartItems, setCartItems] = useState<Record<string, number>>({});
@@ -359,7 +544,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     } catch (error) {
       console.error('Erro ao consultar banco de dados:', error);
     }
-    let message = `Pedido Novo!!\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}    Compl.: ${complement}\nBairro: ${district}\nCidade: ${city}    Estado: ${state}\n\n${messageItens}\nForma de Pagamento: ${paymentMethod}\n`;
+    let message = `Pedido Novo\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}    Compl.: ${complement}\nBairro: ${district}\nCidade: ${city}    Estado: ${state}\n\n${messageItens}\nForma de Pagamento: ${paymentMethod}\n`;
     if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
       message += `Troco: R$${trocoMessage.toFixed(2)}`;
     }
@@ -370,81 +555,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     window.open(whatsappLink, '_blank');
   };
 
-  const drinkCards: Card[] = [
-    {
-      title: 'Cerveja Brahma',
-      description: 'Cerveja Brahma lata 473ml',
-      price: 8,
-      image: './img/cerveja-brahma.png',
-      category: 'Bebidas Alcólicas',
-    },
-    {
-      title: 'Cerveja Heineken',
-      description: 'Cerveja Heineken lata 473ml',
-      price: 10,
-      image: './img/cerveja-heineken.png',
-      category: 'Bebidas Alcólicas',
-    },
-    {
-      title: 'Cerveja Skol',
-      description: 'Cerveja Skol lata 473ml',
-      price: 6,
-      image: './img/cerveja-skol.png',
-      category: 'Bebidas Alcólicas',
-    },
-  ];
-  const drinkNoAlcoolCards: Card[] = [
-    {
-      title: 'Refrigerante Coca',
-      description: 'Refrigerante Coca-cola lata 350ml',
-      price: 6,
-      image: './img/refrigerante-coca.png',
-      category: 'Bebidas não Alcólicas',
-    },
-    {
-      title: 'Refrigerante Pepsi',
-      description: 'Refrigerante Pepsi lata 350ml',
-      price: 5,
-      image: './img/refrigerante-pepsi.png',
-      category: 'Bebidas não Alcólicas',
-    },
-    {
-      title: 'Refrigerante Kuat',
-      description: 'Refrigerante Kuat lata 350ml',
-      price: 5,
-      image: './img/refrigerante-kuat.png',
-      category: 'Bebidas não Alcólicas',
-    },
-  ];
-  const portionsCards: Card[] = [
-    {
-      title: 'Porção Boi',
-      description: 'Porção 500g carne de boi',
-      price: 40,
-      image: './img/porcao-boi.png',
-      category: 'Porções',
-    },
-    {
-      title: 'Porção Porco',
-      description: 'Porção 500g carne de porco',
-      price: 30,
-      image: './img/porcao-porco.png',
-      category: 'Porções',
-    },
-    {
-      title: 'Porção Frango',
-      description: 'Porção 500g carne de frango',
-      price: 30,
-      image: './img/porcao-frango.png',
-      category: 'Porções',
-    },
-  ];
-
-  const allCards = [...drinkCards, ...drinkNoAlcoolCards, ...portionsCards];
+  
 
   const cartTotal = Object.entries(cartItems).reduce(
     (total, [title, quantity]) => {
-      const card = allCards.find((card) => card.title === title);
+      const card = items?.find((card) => card.title === title);
       if (card && quantity > 0) {
         total += card.price * quantity;
       }
@@ -502,174 +617,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setState(storedState);
   }, []);
 
-  //LOGIN PAGE
-  const [isLogin, setIsLogin] = useState(false);
-  const [categories, setCategories] = useState<{ id: string; category: string }[]>([]);
-  const [category, setCategory] = useState('');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [optionCategories, setOptionCategories] = useState<string[]>([]);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [items, setItens] = useState<Item[]>();
   
-  const handleLogin = async () => {
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-      console.log('Login successful');
-      setEmail('');
-      setPassword('');
-    } catch (error) {
-      console.error('Login error:', error);
-      setEmail('');
-      setPassword('');
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await auth.signOut();
-      console.log('Logout successful');
-      setIsLogin(false);
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
-
-  const addCategory = async () => {
-    if (category.trim() !== '') {
-      try {
-        const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
-        await collectionRef.add({ category });
-        setCategory('');
-        console.log('Categoria salva com sucesso!');
-      } catch (error) {
-        console.error('Erro ao salvar categoria:', error);
-      }
-    }
-  };
-
-  const handleDeleteCategory = async (categoryId: string) => {
-    try {
-      const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
-      await collectionRef.doc(categoryId).delete();
-      console.log('Categoria excluída com sucesso!');
-    } catch (error) {
-      console.error('Erro ao excluir categoria:', error);
-    }
-  };
-
-  async function save(event: React.FormEvent) {
-    event.preventDefault();
-
-    const collectionRef = firestore.collection('items'); // Substitua 'items' pelo nome correto da coleção
-
-    const data: ItemData = {
-      title,
-      description,
-      price: parseFloat(price),
-      image: '',
-      category: selectedCategory, // Adicione a categoria selecionada
-    };
-
-    try {
-      if (imageFile) {
-        // Faz upload da imagem para o Storage
-        const storageRef = storage.ref();
-        const imageRef = storageRef.child(imageFile.name);
-        await imageRef.put(imageFile);
-
-        // Obtém a URL de download da imagem
-        const imageUrl = await imageRef.getDownloadURL();
-        data.image = imageUrl;
-      }
-
-      // Salva o objeto no Firestore
-      await collectionRef.add(data);
-
-      setTitle('');
-      setDescription('');
-      setPrice('');
-      setImageFile(null);
-      setSelectedCategory(''); // Limpa a categoria selecionada
-    } catch (error) {
-      console.error('Error adding item:', error);
-    }
-  }
-
-  useEffect(() => {
-    const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
-
-    // Cria o listener para mudanças na coleção
-    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
-      const categoriesData: { id: string; category: string }[] = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        category: doc.data().category,
-      }));
-      setCategories(categoriesData);
-    });
-
-    return () => {
-      // Remove o listener quando o componente é desmontado
-      unsubscribe();
-    };
-  }, []);
-  
-  useEffect(() => {
-    // Verifica se o usuário já está autenticado ao carregar a página
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        setIsLogin(true);
-      } else {
-        setIsLogin(false);
-      }
-    });
-
-    return () => {
-      // Remove o listener quando o componente é desmontado
-      unsubscribe();
-    };
-  }, [setIsLogin]); // Executa somente uma vez ao carregar o componente
-  
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
-        const snapshot = await collectionRef.get();
-        const categoriesData = snapshot.docs.map((doc) => doc.data().category);
-        setOptionCategories(categoriesData);
-      } catch (error) {
-        console.error('Erro ao buscar categorias:', error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    const collectionRef = firestore.collection('items');
-
-    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
-      const resultItens: Item[] = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          chave: doc.id,
-          title: data.title,
-          description: data.description,
-          price: data.price,
-          image: data.image,
-        };
-      });
-      setItens(resultItens);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
    
   return (
     <GlobalContext.Provider
@@ -680,9 +628,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         isTilted,
         handleCheckboxChange,
         handleCartClick,
-        drinkCards,
-        drinkNoAlcoolCards,
-        portionsCards,
         cartItems,
         setCartItems,
         setIsLogin,
@@ -737,7 +682,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         handleQuantityChange,
         getItemQuantity,
         cartTotal,
-        allCards,
         totalItems,
         handleRemoveAllItems,
         email,
@@ -748,6 +692,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         handleLogout,
         items,
         isFormValid,
+        alertLogin,
       }}
     >
       {children}

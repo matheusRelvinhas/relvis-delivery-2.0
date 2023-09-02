@@ -27,6 +27,7 @@ const LoginItens: React.FC = () => {
           <h3>Titulo: {item.title}</h3>
           <p>Descrição: {item.description}</p>
           <p>Preço: {item.price}</p>
+          <p>Categoria: {item.category}</p>
         </div>
       ))}
     </div>

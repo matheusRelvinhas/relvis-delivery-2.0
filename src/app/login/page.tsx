@@ -3,10 +3,7 @@
 import LoginForm from '@/components/LoginForm/LoginForm';
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
-import AddItemForm from '@/components/AddItemForm/AddItemForm';
-import LoginItens from '@/components/LoginItens/LoginItens';
-import AddCategoryForm from '@/components/AddCategoryForm/AddCategoryForm';
-import LoginCategory from '@/components/LoginCategory/LoginCategory';
+import LoginNavigation from '@/components/LoginNavigation/LoginNavigation';
 
 const LoginPage: React.FC = () => {
   const { isLogin } = useGlobalContext();
@@ -15,11 +12,7 @@ const LoginPage: React.FC = () => {
     <div>
       {isLogin ? (
         <>
-          <h1>Portal Parceiro</h1>
-          <AddCategoryForm />
-          <AddItemForm />
-          <LoginCategory />
-          <LoginItens />
+          <LoginNavigation/>
         </>
       ) : (
         <>

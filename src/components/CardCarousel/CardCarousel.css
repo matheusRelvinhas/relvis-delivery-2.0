@@ -26,57 +26,70 @@
   -ms-overflow-style: none;
 }
 
-.card-list-img-title {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-}
-
 .card {
-  border: 1px solid #ddd;
-  padding: 20px;
-  margin: 0 10px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-  flex: 0 0 auto;
-  width: 40vw;
-  min-width: 200px;
-  max-width: 300px;
-  max-height: 250px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  border: none;
+  margin: 10px;
+  box-shadow: 0 0 10px 0 #555; /* Adiciona sombra nas quatro bordas */
+  transition: transform 0.2s ease-in-out;
+  border-radius: 5px;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05); /* Efeito de zoom no hover */
+}
+
+.card-div {
+  display: flex;
+  width: 240px;
+  height: 125px;
+  border-radius: 5px;
+}
+
+.card-img {
+  width: 115px;
+  box-shadow: 0 0 2px 0 #555;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 0 0 8px;
+  overflow: hidden; /* Limita a altura e oculta o conteúdo que transborda */
+
+}
+
+.description {
+  font-size: smaller;
+  white-space: pre-line; /* Mantém quebras de linha no texto */
+  overflow: hidden; /* Oculta qualquer texto que ultrapasse o contêiner */
+  text-overflow: ellipsis; /* Mostra "..." quando o texto for cortado */
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Define o número de linhas que você deseja mostrar */
+  -webkit-box-orient: vertical;
 }
 
 .card img {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 10px;
+  width: 115px;
+  height: 125.25px;
+  border-radius: 5px 0 0 0;
+  
 }
 
-.card h3 {
-  margin-top: 0;
-  font-size: 1.2rem;
-  width: 100%;
+h3 {
+  font-size: larger;
   align-items: center;
-  display: flex;
-  justify-content: center;
+  text-align: center;
+  width: 100%;
 }
 
-.card p {
-  margin-top: 5px;
-  font-size: 1rem;
-}
-
-.card p.price {
+.price {
   font-weight: bold;
-  margin-top: 10px;
+  margin-bottom: 2px;
+
 }
 
 .scroll-button {
@@ -102,13 +115,14 @@
 .item-controls {
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  box-shadow: 0 -1px 0 #aaa; /* Define o deslocamento vertical e a cor da "borda superior" */
 }
 
+
 .item-controls button {
-  font-size: 16px;
-  padding: 5px 10px;
-  width: 30px;
+  font-size: x-large;
+  padding: 6px;
+  width: 100%;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -116,7 +130,7 @@
 }
 
 .item-controls input[type="number"] {
-  font-size: 16px;
+  font-size: x-large;
   padding: 5px;
   width: 40px;
   text-align: center;

@@ -15,12 +15,12 @@ export default function Header() {
     >
       <Hamburger/>
       <figure>
-        <picture>
+        <picture className='logo-img'>
           <source src={dataCss.logoImage[3]} type="image/webp" />
           <source src={dataCss.logoImage[2]} type="image/png" />
           <source src={dataCss.logoImage[1]} type="image/webp" />
           <source src={dataCss.logoImage[0]} type="image/png" />
-          <img className='logo-img' src={dataCss.logoImage[0]} alt="logo-img" />
+          <img src={dataCss.logoImage[0]} alt="logo-img" />
         </picture>
       </figure>
       <Cart/>

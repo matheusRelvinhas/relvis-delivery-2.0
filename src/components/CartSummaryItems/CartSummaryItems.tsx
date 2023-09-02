@@ -13,7 +13,7 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
     cartTotal,
     handleRemoveAllItems,
     cartItems,
-    allCards,
+    items,
     totalItems,
   } = useGlobalContext();
 
@@ -23,7 +23,7 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
         <h2 style={{ color: dataCss.summaryFont }}>Carrinho</h2>
         <ul>
           {Object.entries(cartItems).map(([title, quantity]) => {
-            const card = allCards.find((card) => card.title === title);
+            const card = items?.find((card) => card.title === title);
             const totalPrice = card ? card.price * quantity : 0;
             if (quantity > 0) {
               return (
