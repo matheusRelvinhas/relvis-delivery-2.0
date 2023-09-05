@@ -5,7 +5,7 @@ import axios from 'axios';
 import { database, firestore, storage, auth } from '@/firebase';
 
 type Card = {
-  chave: string;
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -14,7 +14,7 @@ type Card = {
 };
 
 type Item = {
-  chave: string;
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -70,7 +70,9 @@ interface ContextProps {
   cellphone: string;
   setCellphone: React.Dispatch<React.SetStateAction<string>>;
   categories: { id: string; category: string }[];
-  handleDeleteCategory: (categoryId: string) => void;
+  handleDeleteCategory: (categoryId: string, category: string) => void;
+  handleEditCategory: (categoryId: string, category: string) => void;
+  handleDeleteItem: (categoryId: string) => void;
   category: string;
   setCategory:React.Dispatch<React.SetStateAction<string>>;
   addCategory: () => void;
@@ -84,8 +86,7 @@ interface ContextProps {
   setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
   imageFile: File | null;
   setImageFile: React.Dispatch<React.SetStateAction<File | null>>;
-  optionCategories: string[];
-  save: (event: React.FormEvent) => Promise<void>;
+  addItem: (event: React.FormEvent) => Promise<void>;
   handleAddItem: (card: Card) => void;
   handleRemoveItem: (card: Card) => void;
   handleQuantityChange: (card: Card, e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -102,6 +103,19 @@ interface ContextProps {
   items: Item[] | undefined;
   isFormValid: boolean;
   alertLogin: boolean;
+  isEditCategory: boolean;
+  setIsEditCategory: React.Dispatch<React.SetStateAction<boolean>>;
+  categoryId: string;
+  setCategoryId: React.Dispatch<React.SetStateAction<string>>;
+  lastCategory: string;
+  setLastCategory: React.Dispatch<React.SetStateAction<string>>;
+  itemId: string;
+  setItemId: React.Dispatch<React.SetStateAction<string>>;
+  isEditItem: boolean,
+  setIsEditItem: React.Dispatch<React.SetStateAction<boolean>>;
+  lastImage: string,
+  setLastImage: React.Dispatch<React.SetStateAction<string>>;
+  handleEditItem: (ItemId: string) => void;
 }
 
 interface Address {
@@ -154,6 +168,8 @@ const GlobalContext = createContext<ContextProps>({
   setCellphone: () => {},
   categories: [],
   handleDeleteCategory: () => {},
+  handleEditCategory: () => {},
+  handleDeleteItem: () => {},
   category: '',
   setCategory: () => {},
   addCategory: () => {},
@@ -167,8 +183,7 @@ const GlobalContext = createContext<ContextProps>({
   setSelectedCategory: () => {},
   imageFile: null,
   setImageFile: () => {},
-  optionCategories: [],
-  save: async (event: React.FormEvent) => {},
+  addItem: async (event: React.FormEvent) => {},
   handleAddItem: (card: Card) => {},
   handleRemoveItem: (card: Card) => {},
   handleQuantityChange: (card: Card, e: React.ChangeEvent<HTMLInputElement>) => {},
@@ -185,6 +200,19 @@ const GlobalContext = createContext<ContextProps>({
   items: [],
   isFormValid: false,
   alertLogin: false,
+  isEditCategory: false,
+  setIsEditCategory: () => {},
+  categoryId: '',
+  setCategoryId: () => {},
+  lastCategory: '',
+  setLastCategory: () => {},
+  itemId: '',
+  setItemId: () => {},
+  isEditItem: false,
+  setIsEditItem: () => {},
+  lastImage: '',
+  setLastImage: () => {},
+  handleEditItem: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -226,12 +254,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [price, setPrice] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [optionCategories, setOptionCategories] = useState<string[]>([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [items, setItens] = useState<Item[]>();
   const [alertLogin, setAlertLogin] = useState(false);
-
+  const [isEditCategory, setIsEditCategory] = useState(false);
+  const [categoryId, setCategoryId] = useState('');
+  const [lastCategory, setLastCategory] = useState('');
+  const [itemId, setItemId] = useState('');
+  const [isEditItem, setIsEditItem] = useState(false);
+  const [lastImage, setLastImage] = useState('');
   
   const handleLogin = async () => {
     try {
@@ -260,28 +292,70 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     if (category.trim() !== '') {
       try {
         const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
-        await collectionRef.add({ category });
-        setCategory('');
-        console.log('Categoria salva com sucesso!');
+        const querySnapshot = await collectionRef.where('category', '==', category).get();
+        
+        if (querySnapshot.size === 0) {
+          // A categoria ainda não existe, pode adicioná-la
+          await collectionRef.add({ category });
+          setCategory('');
+          console.log('Categoria salva com sucesso!');
+        } else {
+          // A categoria já existe, defina o alertLogin como true por 3 segundos
+          setAlertLogin(true);
+          setTimeout(() => {
+            setAlertLogin(false);
+          }, 3000);
+        }
       } catch (error) {
         console.error('Erro ao salvar categoria:', error);
       }
     }
   };
-
-  const handleDeleteCategory = async (categoryId: string) => {
+  
+  const handleEditCategory = async (categoryId: string, lastCategory: string) => {
     try {
-      const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
-      await collectionRef.doc(categoryId).delete();
-      console.log('Categoria excluída com sucesso!');
+      const collectionRef = firestore.collection('categories');
+      const collectionItemRef = firestore.collection('items');
+      // Atualize a categoria da categoria em questão
+      await collectionRef.doc(categoryId).update({
+        category: category,
+      });
+      // Encontre todos os itens com a categoria anterior ('lastCategory')
+      const querySnapshot = await collectionItemRef.where('category', '==', lastCategory).get();
+      // Atualize a categoria de todos os itens encontrados
+      const batch = firestore.batch();
+      querySnapshot.forEach((doc) => {
+        const itemRef = collectionItemRef.doc(doc.id);
+        batch.update(itemRef, { category: category });
+      });
+      await batch.commit();
+      setIsEditCategory(false);
+      setLastCategory('')
+      setCategory('');
+      console.log('Categoria editada com sucesso e itens atualizados!');
     } catch (error) {
-      console.error('Erro ao excluir categoria:', error);
+      console.error('Erro ao editar categoria!', error);
     }
   };
 
-  async function save(event: React.FormEvent) {
-    event.preventDefault();
-  
+  const handleDeleteCategory = async (categoryId: string, category: string) => {
+    try {
+      const collectionRef = firestore.collection('categories');
+      const collectionItemRef = firestore.collection('items');
+      // Exclua a categoria
+      await collectionRef.doc(categoryId).delete();
+      // Consulte os itens com a mesma categoria e exclua-os
+      const querySnapshot = await collectionItemRef.where('category', '==', category).get();
+      querySnapshot.forEach(async (doc) => {
+        await collectionItemRef.doc(doc.id).delete();
+      });
+      console.log('Categoria e itens associados excluídos com sucesso!');
+    } catch (error) {
+      console.error('Erro ao excluir categoria e itens associados:', error);
+    }
+  };
+
+  async function addItem() {
     const collectionRef = firestore.collection('items');
   
     const data: ItemData = {
@@ -295,35 +369,28 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     try {
       // Verifica se já existe um item com o mesmo título
       const querySnapshot = await collectionRef.where('title', '==', title).get();
-  
       if (!querySnapshot.empty) {
         // Já existe um item com o mesmo título, ativa o alerta
         setAlertLogin(true);
-  
         // Define um timer para desativar o alerta após 3 segundos
         setTimeout(() => {
           setAlertLogin(false);
         }, 3000);
-  
         // Não continue o processo de salvar
         return;
       }
-  
       // Se não houver itens com o mesmo título, continue com o processo de salvar
       if (imageFile) {
         // Faz upload da imagem para o Storage
         const storageRef = storage.ref();
         const imageRef = storageRef.child(imageFile.name);
         await imageRef.put(imageFile);
-  
         // Obtém a URL de download da imagem
         const imageUrl = await imageRef.getDownloadURL();
         data.image = imageUrl;
       }
-  
       // Salva o objeto no Firestore
       await collectionRef.add(data);
-  
       setTitle('');
       setDescription('');
       setPrice('');
@@ -333,6 +400,81 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       console.error('Error adding item:', error);
     }
   }
+
+  const handleEditItem = async (itemId: string) => {
+    const collectionRef = firestore.collection('items');
+    const itemRef = collectionRef.doc(itemId);
+
+    try {
+      // Verifica se já existe um item com o mesmo título
+      const existingItem = await collectionRef.where('title', '==', title).get();
+      if (!existingItem.empty && existingItem.docs[0].id !== itemId) {
+        setAlertLogin(true);
+          setTimeout(() => {
+            setAlertLogin(false);
+          }, 3000);
+        return;
+      }
+    
+      // Define os dados atualizados do item
+      const updatedItemData = {
+        title: title,
+        description: description,
+        price: parseFloat(price),
+        category: selectedCategory,
+        image: lastImage, // Adicione esta propriedade
+      };
+
+      if (imageFile) {
+        // Faz upload da nova imagem para o Firebase Storage
+        const storageRef = storage.ref();
+        const imageRef = storageRef.child(itemId);
+        await imageRef.put(imageFile);
+        // Obtém a URL de download da nova imagem
+        const imageUrl = await imageRef.getDownloadURL();
+        updatedItemData.image = imageUrl;
+      }
+      setTitle('');
+      setDescription('');
+      setPrice('');
+      setImageFile(null);
+      setSelectedCategory('');
+      setLastImage('')
+      setIsEditItem(false)
+      // Atualiza o documento do item no Firestore
+      await itemRef.update(updatedItemData);
+
+      console.log('Item editado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao editar item:', error);
+    }
+  };
+  
+  const handleDeleteItem = async (itemId: string) => {
+    try {
+      const collectionRef = firestore.collection('items'); // Substitua 'categories' pelo nome correto da coleção
+      await collectionRef.doc(itemId).delete();
+      console.log('Item excluído com sucesso!');
+    } catch (error) {
+      console.error('Erro ao excluir item:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Verifica se o usuário já está autenticado ao carregar a página
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      }
+    });
+
+    return () => {
+      // Remove o listener quando o componente é desmontado
+      unsubscribe();
+    };
+  }, [setIsLogin]); // Executa somente uma vez ao carregar o componente
 
   useEffect(() => {
     const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
@@ -353,44 +495,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   }, []);
   
   useEffect(() => {
-    // Verifica se o usuário já está autenticado ao carregar a página
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        setIsLogin(true);
-      } else {
-        setIsLogin(false);
-      }
-    });
-
-    return () => {
-      // Remove o listener quando o componente é desmontado
-      unsubscribe();
-    };
-  }, [setIsLogin]); // Executa somente uma vez ao carregar o componente
-  
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
-        const snapshot = await collectionRef.get();
-        const categoriesData = snapshot.docs.map((doc) => doc.data().category);
-        setOptionCategories(categoriesData);
-      } catch (error) {
-        console.error('Erro ao buscar categorias:', error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
     const collectionRef = firestore.collection('items');
 
     const unsubscribe = collectionRef.onSnapshot((snapshot) => {
       const resultItens: Item[] = snapshot.docs.map((doc) => {
         const data = doc.data();
         return {
-          chave: doc.id,
+          id: doc.id,
           title: data.title,
           description: data.description,
           price: data.price,
@@ -662,6 +773,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setCellphone,
         categories,
         handleDeleteCategory,
+        handleDeleteItem,
         category,
         setCategory,
         addCategory,
@@ -675,8 +787,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setSelectedCategory,
         imageFile,
         setImageFile,
-        optionCategories,
-        save,
+        addItem,
         handleAddItem,
         handleRemoveItem,
         handleQuantityChange,
@@ -693,6 +804,20 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         items,
         isFormValid,
         alertLogin,
+        isEditCategory,
+        setIsEditCategory,
+        categoryId,
+        setCategoryId,
+        lastCategory,
+        setLastCategory,
+        handleEditCategory,
+        itemId,
+        setItemId,
+        isEditItem,
+        setIsEditItem,
+        lastImage,
+        setLastImage,
+        handleEditItem,
       }}
     >
       {children}

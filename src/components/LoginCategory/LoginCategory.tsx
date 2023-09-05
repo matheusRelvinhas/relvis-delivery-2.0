@@ -2,18 +2,28 @@
 
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
+import AddCategoryForm from '@/components/AddCategoryForm/AddCategoryForm';
 
 const LoginCategory: React.FC = () => {
 
-  const { categories, handleDeleteCategory } = useGlobalContext();
+  const { categories, handleDeleteCategory, setIsEditCategory, setCategory, setCategoryId, setLastCategory } = useGlobalContext();
+  
+  const handleIsEditCategory = (categoryId:string ,category:string) => {
+    setLastCategory(category)
+    setCategory(category)
+    setCategoryId(categoryId)
+    setIsEditCategory(true)
+  }
 
   return (
     <div>
-      <h2>Categorias Salvas</h2>
+      <AddCategoryForm />
+      <h2>Categorias</h2>
       {categories.map((category) => (
         <div key={category.id}>
           {category.category}
-          <button onClick={() => handleDeleteCategory(category.id)}>Excluir</button>
+          <button onClick={() => handleIsEditCategory(category.id, category.category)}>Editar</button>
+          <button onClick={() => handleDeleteCategory(category.id, category.category)}>Excluir</button>
         </div>
       ))}
     </div>

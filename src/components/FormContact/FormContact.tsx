@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState , useEffect } from 'react';
+import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 import AddressLookup from '../AddressLookup/AddressLookup';
 import StyledButton from '../StyledButton/StyledButton';

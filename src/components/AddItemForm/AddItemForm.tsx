@@ -2,13 +2,24 @@
 
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
+import { firestore, storage } from '@/firebase';
 
 const AddItemForm: React.FC = () => {
 
-  const { title, setTitle, price, setPrice, description, setDescription, selectedCategory, setSelectedCategory, imageFile, setImageFile, optionCategories, save } = useGlobalContext();
+  const { title, setTitle, price, setPrice, description, setDescription, selectedCategory, setSelectedCategory, setImageFile, categories, addItem, isEditItem, itemId, imageFile, lastImage, setIsEditItem, setLastImage, handleEditItem } = useGlobalContext();
+  
+  const handleSubmitItem = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (isEditItem) {
+      handleEditItem(itemId)
+    } else {
+      addItem;
+    }
+  };
 
   return (
-    <form onSubmit={save}>
+    <form onSubmit={handleSubmitItem}>
+      <h2>{isEditItem ? 'Editar Item' : 'Adicionar Item'}</h2>
       <input
         type="text"
         placeholder="Título"
@@ -38,9 +49,9 @@ const AddItemForm: React.FC = () => {
         <option value="" disabled>
           Selecione uma categoria
         </option>
-        {optionCategories.map((category, index) => (
-          <option key={index} value={category}>
-            {category}
+        {categories.map((category) => (
+          <option key={category.id} value={category.category}>
+            {category.category}
           </option>
         ))}
       </select>
@@ -53,9 +64,8 @@ const AddItemForm: React.FC = () => {
             setImageFile(file);
           }
         }}
-        required
       />
-      <button type="submit">Adicionar</button>
+      <button type="submit">{isEditItem ? 'Editar' : 'Adicionar'}</button>
     </form>
   );
 };

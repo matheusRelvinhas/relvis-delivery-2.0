@@ -3,25 +3,31 @@
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 
-interface AddCategoryFormProps {
-  // Se necessário, você pode adicionar props personalizadas aqui
-}
+const AddCategoryForm: React.FC = () => {
 
-const AddCategoryForm: React.FC<AddCategoryFormProps> = () => {
+  const { category, setCategory, addCategory, isEditCategory, categoryId, lastCategory, handleEditCategory } = useGlobalContext();
 
-  const { category, setCategory, addCategory } = useGlobalContext();
+  const handleSubmitCategory = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (isEditCategory) {
+      handleEditCategory(categoryId, lastCategory);
+    } else {
+      addCategory();
+    }
+  };
 
   return (
-    <div>
-      <h2>Adicionar Categoria</h2>
+    <form onSubmit={handleSubmitCategory}>
+      <h2>{isEditCategory ? 'Editar Categoria' : 'Adicionar Categoria'}</h2>
       <input
         type="text"
         placeholder="Nova Categoria"
         value={category}
         onChange={(event) => setCategory(event.target.value)}
+        required
       />
-      <button onClick={addCategory}>Adicionar e Salvar</button>
-    </div>
+      <button type='submit'>{isEditCategory ? 'Editar' : 'Adicionar'}</button>
+    </form>
   );
 };
 
