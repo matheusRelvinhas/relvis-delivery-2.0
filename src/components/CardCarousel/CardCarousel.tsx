@@ -50,7 +50,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
             {items?.map((card) => {
               if (card.category === category) {
                 return (
-                  <div key={card.chave} className="card">
+                  <div key={card.id} className="card">
                     <div
                       style={{ backgroundColor: dataCss.backgroundColorCard }}
                       className="card-div"
