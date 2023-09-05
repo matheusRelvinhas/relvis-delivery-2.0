@@ -16,7 +16,6 @@ const LoginPage: React.FC = () => {
         </>
       ) : (
         <>
-          <h1>Você não está logado. Por favor, faça login para acessar.</h1>
           <LoginForm />
         </>
       )}

@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+'use client'
+
+import React from 'react';
 import { useGlobalContext } from '@/Context/store';
-import { auth } from '@/firebase';
+
 
 const LoginForm: React.FC = () => {
   const { email, setEmail, password, setPassword, handleLogin } = useGlobalContext();
 
   return (
     <div>
+      <h1>Você não está logado. Por favor, faça login para acessar.</h1>
       <input
         type="email"
         placeholder="Email"

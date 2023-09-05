@@ -1,19 +1,37 @@
-"use client"
+'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useGlobalContext } from '@/Context/store';
-import { firestore, storage } from '@/firebase';
 
 const AddItemForm: React.FC = () => {
+  const {
+    title,
+    setTitle,
+    price,
+    setPrice,
+    description,
+    setDescription,
+    selectedCategory,
+    setSelectedCategory,
+    setImageFile,
+    categories,
+    addItem,
+    isEditItem,
+    itemId,
+    handleEditItem,
+  } = useGlobalContext();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const { title, setTitle, price, setPrice, description, setDescription, selectedCategory, setSelectedCategory, setImageFile, categories, addItem, isEditItem, itemId, imageFile, lastImage, setIsEditItem, setLastImage, handleEditItem } = useGlobalContext();
-  
   const handleSubmitItem = (event: React.FormEvent) => {
     event.preventDefault();
     if (isEditItem) {
-      handleEditItem(itemId)
+      handleEditItem(itemId);
     } else {
-      addItem;
+      addItem(event);
+    }
+    // Redefina o valor do input file para null
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -64,6 +82,7 @@ const AddItemForm: React.FC = () => {
             setImageFile(file);
           }
         }}
+        ref={fileInputRef}
       />
       <button type="submit">{isEditItem ? 'Editar' : 'Adicionar'}</button>
     </form>

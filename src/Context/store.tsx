@@ -11,6 +11,7 @@ type Card = {
   price: number;
   image: string;
   category: string;
+  active: boolean;
 };
 
 type Item = {
@@ -20,6 +21,7 @@ type Item = {
   price: number;
   image: string;
   category:string;
+  active: boolean;
 };
 
 interface ItemData {
@@ -28,6 +30,7 @@ interface ItemData {
   price: number;
   image: string;
   category: string; // Adicione o campo de categoria
+  active: boolean;
 }
 
 interface ContextProps {
@@ -69,7 +72,7 @@ interface ContextProps {
   setTroco: React.Dispatch<React.SetStateAction<string>>;
   cellphone: string;
   setCellphone: React.Dispatch<React.SetStateAction<string>>;
-  categories: { id: string; category: string }[];
+  categories: { id: string; category: string; order: number }[];
   handleDeleteCategory: (categoryId: string, category: string) => void;
   handleEditCategory: (categoryId: string, category: string) => void;
   handleDeleteItem: (categoryId: string) => void;
@@ -84,7 +87,7 @@ interface ContextProps {
   setDescription: React.Dispatch<React.SetStateAction<string>>;
   selectedCategory: string; 
   setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
-  imageFile: File | null;
+  imageFile: any;
   setImageFile: React.Dispatch<React.SetStateAction<File | null>>;
   addItem: (event: React.FormEvent) => Promise<void>;
   handleAddItem: (card: Card) => void;
@@ -247,7 +250,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   //LOGIN PAGE
   const [isLogin, setIsLogin] = useState(false);
-  const [categories, setCategories] = useState<{ id: string; category: string }[]>([]);
+  const [categories, setCategories] = useState<{ id: string; category: string; order:number }[]>([]);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -291,12 +294,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const addCategory = async () => {
     if (category.trim() !== '') {
       try {
-        const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
-        const querySnapshot = await collectionRef.where('category', '==', category).get();
-        
-        if (querySnapshot.size === 0) {
-          // A categoria ainda não existe, pode adicioná-la
-          await collectionRef.add({ category });
+        const collectionRef = firestore.collection('categories');
+        // Consulte todas as categorias para contar quantas existem
+        const querySnapshot = await collectionRef.get();
+        const totalCategories = querySnapshot.size;
+        const order = totalCategories + 1; // Determine a ordem para a nova categoria
+        // Verifique se a categoria já existe
+        const existingCategory = await collectionRef.where('category', '==', category).get();
+        if (existingCategory.size === 0) {
+          // A categoria ainda não existe, pode adicioná-la com a ordem calculada
+          await collectionRef.add({ category, order });
           setCategory('');
           console.log('Categoria salva com sucesso!');
         } else {
@@ -342,11 +349,22 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     try {
       const collectionRef = firestore.collection('categories');
       const collectionItemRef = firestore.collection('items');
+      // Obtenha a ordem da categoria que será excluída
+      const categoryDoc = await collectionRef.doc(categoryId).get();
+      const orderToDelete = categoryDoc.data()?.order;
       // Exclua a categoria
       await collectionRef.doc(categoryId).delete();
-      // Consulte os itens com a mesma categoria e exclua-os
-      const querySnapshot = await collectionItemRef.where('category', '==', category).get();
+      // Consulte todas as categorias com ordens maiores que a excluída
+      const querySnapshot = await collectionRef.where('order', '>', orderToDelete).get();
+      // Atualize as ordens das categorias encontradas
       querySnapshot.forEach(async (doc) => {
+        const docRef = collectionRef.doc(doc.id);
+        const currentOrder = doc.data().order;
+        await docRef.update({ order: currentOrder - 1 });
+      });
+      // Consulte os itens com a mesma categoria e exclua-os
+      const itemQuerySnapshot = await collectionItemRef.where('category', '==', category).get();
+      itemQuerySnapshot.forEach(async (doc) => {
         await collectionItemRef.doc(doc.id).delete();
       });
       console.log('Categoria e itens associados excluídos com sucesso!');
@@ -355,7 +373,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
   };
 
-  async function addItem() {
+  async function addItem(event: React.FormEvent) {
+    event?.preventDefault();
     const collectionRef = firestore.collection('items');
   
     const data: ItemData = {
@@ -364,6 +383,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       price: parseFloat(price),
       image: '',
       category: selectedCategory,
+      active: false,
     };
   
     try {
@@ -481,9 +501,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
     // Cria o listener para mudanças na coleção
     const unsubscribe = collectionRef.onSnapshot((snapshot) => {
-      const categoriesData: { id: string; category: string }[] = snapshot.docs.map((doc) => ({
+      const categoriesData: { id: string; category: string; order: number }[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         category: doc.data().category,
+        order: doc.data().order,
       }));
       setCategories(categoriesData);
     });
@@ -506,7 +527,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           description: data.description,
           price: data.price,
           image: data.image,
-          category: data.category
+          category: data.category,
+          active: data.active
         };
       });
       setItens(resultItens);
