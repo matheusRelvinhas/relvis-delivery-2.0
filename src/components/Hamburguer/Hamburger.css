@@ -63,13 +63,17 @@
 }
 
 .tab-content {
-  position: fixed;
-  top: 21vh;
-  min-width: 230px;
+  position: absolute;
+  top: 19.9vh;
+  min-width: 220px;
   width: 45vw;
-  height: 75vh;
+  height: 70.8vh;
   border-top-right-radius: 6.5px;
   border-bottom-right-radius: 6.5px;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow:auto;
 }
 
 .tab-itens {
@@ -80,4 +84,5 @@
   align-items: center;
   height: 100%;
   padding: 0;
+  border-top-right-radius: 6.5px;
 }

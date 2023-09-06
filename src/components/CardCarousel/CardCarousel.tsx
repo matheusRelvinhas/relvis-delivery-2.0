@@ -18,7 +18,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
     handleQuantityChange,
     getItemQuantity,
   } = useGlobalContext();
-
+  
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
   const scrollLeft = () => {

@@ -7,12 +7,14 @@ import { useGlobalContext } from '@/Context/store';
 export default function Main() {
   const { dataCss, categories } = useGlobalContext();
   
+  const sortedCategories = [...categories].sort((a, b) => a.order - b.order);
+
   return (
     <main 
       style={{color: dataCss.fontColor}}
       className='main'
     >
-      {categories.map((category) => (
+      {sortedCategories.map((category) => (
         <div key={category.id}>
           <CardCarousel
             category={category.category}

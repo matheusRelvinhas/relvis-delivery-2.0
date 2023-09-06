@@ -10,6 +10,7 @@
 
 .form-contact input {
   width: 45vw;
+  min-width: 190px;
   padding: 1vh 1vw;
   border-radius: 4px;
   margin-bottom: 1vh;
@@ -19,6 +20,7 @@
 
 .form-contact select {  
   width: 47vw;
+  min-width: 195px;
   height: 33px;
   border-radius: 4px;
   margin-bottom: 1vh;

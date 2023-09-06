@@ -29,7 +29,7 @@ interface ItemData {
   description: string;
   price: number;
   image: string;
-  category: string; // Adicione o campo de categoria
+  category: string;
   active: boolean;
 }
 
@@ -267,6 +267,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [itemId, setItemId] = useState('');
   const [isEditItem, setIsEditItem] = useState(false);
   const [lastImage, setLastImage] = useState('');
+  
   
   const handleLogin = async () => {
     try {
