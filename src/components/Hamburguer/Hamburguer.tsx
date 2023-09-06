@@ -2,6 +2,7 @@
 
 import './Hamburger.css';
 import { useGlobalContext } from '@/Context/store';
+import About from '../About/About';
 
 export default function Hamburger() {
   const { isOpen, handleCheckboxChange, dataCss } = useGlobalContext();
@@ -27,7 +28,7 @@ export default function Hamburger() {
             style={{background: dataCss.colorPrimary}}
             className="tab-itens"
           >
-            <span>Relvis Delivery</span>
+            <About />
           </div>
         </div>
       )}

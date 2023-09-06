@@ -3,7 +3,6 @@
 import { useGlobalContext } from '@/Context/store';
 import CartSummaryItems from '../CartSummaryItems/CartSummaryItems';
 import FormContact from '../FormContact/FormContact';
-import StyledButton from '../StyledButton/StyledButton';
 import './CartSummary.css';
 
 interface CartSummaryProps {
