@@ -235,6 +235,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     ],
     cartImage: './img/cart.png',
     backImage: '/img/back.png',
+    whatsImage: '/img/whatsapp.png',
     colorPrimary: '#226154',
     colorSecundary: '#e74c3c',
     colorThird: '#ebc49d',
@@ -267,8 +268,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [itemId, setItemId] = useState('');
   const [isEditItem, setIsEditItem] = useState(false);
   const [lastImage, setLastImage] = useState('');
-  
-  
+
   const handleLogin = async () => {
     try {
       await auth.signInWithEmailAndPassword(email, password);
@@ -319,7 +319,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       }
     }
   };
-  
+
   const handleEditCategory = async (categoryId: string, lastCategory: string) => {
     try {
       const collectionRef = firestore.collection('categories');
@@ -386,7 +386,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       category: selectedCategory,
       active: false,
     };
-  
+
     try {
       // Verifica se já existe um item com o mesmo título
       const querySnapshot = await collectionRef.where('title', '==', title).get();
@@ -470,7 +470,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       console.error('Erro ao editar item:', error);
     }
   };
-  
+
   const handleDeleteItem = async (itemId: string) => {
     try {
       const collectionRef = firestore.collection('items'); // Substitua 'categories' pelo nome correto da coleção
@@ -515,7 +515,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       unsubscribe();
     };
   }, []);
-  
+
   useEffect(() => {
     const collectionRef = firestore.collection('items');
 
@@ -560,7 +560,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [paymentMethod, setPaymentMethod] = useState('');
   const [troco, setTroco] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
-  
+
   const handleCheckboxChange = () => {
     setIsOpen(!isOpen);
     setIsTilted(false)
@@ -601,7 +601,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const getItemQuantity = (card: Card) => {
     return cartItems[card.title] || 0;
   };
-  
+
   const fetchAddress = async (inputCep: string) => {
     try {
       const response = await axios.get(`https://viacep.com.br/ws/${inputCep}/json/`);
@@ -688,8 +688,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     )}`;
     window.open(whatsappLink, '_blank');
   };
-
-  
 
   const cartTotal = Object.entries(cartItems).reduce(
     (total, [title, quantity]) => {
