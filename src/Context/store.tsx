@@ -235,6 +235,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     ],
     cartImage: './img/cart.png',
     backImage: '/img/back.png',
+    searchImage:'/img/search.png',
     iconAbout: {
       local: '/img/local.png',
       payment: '/img/payment.png',

@@ -1,0 +1,28 @@
+.search{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 5px 10px;
+  width: 30vw;
+  min-width: 230px;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 5px;
+  border-radius: 20px;
+}
+
+.search-input::placeholder {
+  color: #aaa;
+}
