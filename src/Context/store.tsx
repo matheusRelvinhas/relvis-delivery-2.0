@@ -119,6 +119,8 @@ interface ContextProps {
   lastImage: string,
   setLastImage: React.Dispatch<React.SetStateAction<string>>;
   handleEditItem: (ItemId: string) => void;
+  searchResults: Item[] | undefined;
+  setSearchResults: React.Dispatch<React.SetStateAction<Item[] | undefined>>;
 }
 
 interface Address {
@@ -216,6 +218,8 @@ const GlobalContext = createContext<ContextProps>({
   lastImage: '',
   setLastImage: () => {},
   handleEditItem: () => {},
+  searchResults: [],
+  setSearchResults: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -275,6 +279,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [itemId, setItemId] = useState('');
   const [isEditItem, setIsEditItem] = useState(false);
   const [lastImage, setLastImage] = useState('');
+  const [searchResults, setSearchResults] = useState(items);
 
   const handleLogin = async () => {
     try {
@@ -846,6 +851,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         lastImage,
         setLastImage,
         handleEditItem,
+        searchResults, 
+        setSearchResults
       }}
     >
       {children}

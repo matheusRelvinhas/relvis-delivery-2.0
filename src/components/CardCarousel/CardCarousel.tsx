@@ -12,7 +12,7 @@ interface CardCarouselProps {
 const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
   const {
     dataCss,
-    items,
+    searchResults,
     handleAddItem,
     handleRemoveItem,
     handleQuantityChange,
@@ -47,7 +47,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
             &#9664;
           </StyledButton>
           <div className="card-list" ref={carouselRef}>
-            {items?.map((card) => {
+            {searchResults?.map((card) => {
               if (card.active) {
                 if (card.category === category) {
                   return (
@@ -76,7 +76,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                             style={{ color: dataCss.colorSecundary }}
                             className="price"
                           >
-                            Preço: R${card.price}
+                            R${card.price.toFixed(2)} 
                           </p>
                         </div>
                       </div>
