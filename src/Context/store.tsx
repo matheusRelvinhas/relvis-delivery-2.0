@@ -235,6 +235,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     ],
     cartImage: './img/cart.png',
     backImage: '/img/back.png',
+    iconAbout: {
+      local: '/img/local.png',
+      payment: '/img/payment.png',
+      contact: '/img/contact.png',
+      operation: '/img/operation.png',
+    },
     whatsImage: '/img/whatsapp.png',
     colorPrimary: '#226154',
     colorSecundary: '#e74c3c',

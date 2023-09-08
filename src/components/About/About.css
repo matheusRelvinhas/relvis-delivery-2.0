@@ -10,20 +10,21 @@
 
 .about-div {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 8px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   height: 100%;
   width: 40vw;
   min-width: 200px;
+  justify-content: flex-start;
+  padding: 4px 0;
 }
 
-.about-div h4 {
-  padding-bottom: 10px;
-  font-size: 20px;
+.about-title{
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
 }
 
-.about-div img {
-  padding-top: 10px;
+.whats {
+  padding-top: 8px;
 }

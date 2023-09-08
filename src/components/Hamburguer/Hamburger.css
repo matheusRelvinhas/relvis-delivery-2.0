@@ -64,19 +64,8 @@
 
 .tab-content {
   position: absolute;
-  top: 19.9vh;
-  min-width: 220px;
-  width: 45vw;
-  height: 70.8vh;
-  border-top-right-radius: 6.5px;
-  border-bottom-right-radius: 6.5px;
-  padding-top: 8px;
-  display: flex;
-  flex-direction: column;
-  overflow:auto;
-}
-
-.tab-itens {
+  top: 21vh;
+  left: 0;
   display: grid;
   flex-direction: row;
   justify-content: space-around;
@@ -85,4 +74,17 @@
   height: 100%;
   padding: 0;
   border-top-right-radius: 6.5px;
+  border-bottom-right-radius: 6.5px;
 }
+
+.tab-itens {
+  min-width: 220px;
+  width: 45vw;
+  height: 70.8vh;
+  border-top-right-radius: 6.5px;
+  border-bottom-right-radius: 6.5px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
