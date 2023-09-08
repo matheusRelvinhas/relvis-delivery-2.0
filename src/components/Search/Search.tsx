@@ -17,16 +17,20 @@ export default function Search() {
         setSearchResults(items);
       } else {
         // Caso contrário, filtre os itens com base na consulta
-        const filteredItems = items?.filter((item) =>
-          item.title.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        const filteredItems = items?.filter((item) => {
+          return (
+            item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.price.toString().includes(searchQuery)
+          );
+        });
         setSearchResults(filteredItems);
       }
     };
-
     // Chame a função de atualização dos resultados sempre que a consulta de pesquisa ou os itens mudarem
     updateResults();
   }, [searchQuery, items, setSearchResults]);
+
 
   return (
     <div className="search">
