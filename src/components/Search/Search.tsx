@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import './Search.css';
 
 export default function Search() {
-  const { dataCss, items, setSearchResults, searchResults } = useGlobalContext();
+  const { dataCss, items, setSearchResults } = useGlobalContext();
 
   const [searchQuery, setSearchQuery] = useState('');
 

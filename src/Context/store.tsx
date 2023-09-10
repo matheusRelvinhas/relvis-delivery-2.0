@@ -661,44 +661,47 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     localStorage.setItem('cep', cep);
     localStorage.setItem('road', road);
     localStorage.setItem('number', number);
-    localStorage.setItem('complement', complement);
-    localStorage.setItem('district', district);
+    localStorage.setItem('complement', complement,);
+    localStorage.setItem('district', district,);
     localStorage.setItem('city', city);
     localStorage.setItem('state', state);
-
-    const clientRef = database.ref('clients');
-    const query = clientRef.orderByChild('cellphone').equalTo(cellphone);
-
+    
+    const clientRef = firestore.collection('clients');
+    
+    const data = {
+      name: name,
+      cellphone: cellphone,
+      cep: cep,
+      road: road,
+      number: number,
+      complement: complement,
+      district: district,
+      city: city,
+      state: state,
+    };
+    
     try {
-      const snapshot = await query.once('value');
-      if (!snapshot.exists()) {
-        const data = {
-          name,
-          cellphone,
-          cep,
-          road,
-          number,
-          complement,
-          district,
-          city,
-          state,
-        };
-        clientRef.push(data);
+      // Verifique se já existe um cliente com o mesmo número de celular
+      const snapshot = await clientRef.where('cellphone', '==', cellphone).get();
+      if (!snapshot.empty) {
+        // Já existe um cliente com o mesmo número de celular, exiba uma mensagem de erro
+        const docId = snapshot.docs[0].id; // Obtenha o ID do documento existente
+        await clientRef.doc(docId).update(data); // Atualize o documento existente com os novos dados
       } else {
-        console.log('Cliente já existe na lista');
+        // Não há cliente com o mesmo número de celular, salve o novo cliente
+        await clientRef.add(data);
       }
+        // Resto do código para enviar a mensagem no WhatsApp
+        let message = `Pedido Novo\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}    Compl.: ${complement}\nBairro: ${district}\nCidade: ${city}    Estado: ${state}\n\n${messageItens}\nForma de Pagamento: ${paymentMethod}\n`;
+        if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
+          message += `Troco: R$${trocoMessage.toFixed(2)}`;
+        }
+        setTroco('');
+        const whatsappLink = `https://api.whatsapp.com/send?phone=+5531971451910&text=${encodeURIComponent(message)}`;
+        window.open(whatsappLink, '_blank');
     } catch (error) {
-      console.error('Erro ao consultar banco de dados:', error);
+      console.error('Erro ao salvar o cliente:', error);
     }
-    let message = `Pedido Novo\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}    Compl.: ${complement}\nBairro: ${district}\nCidade: ${city}    Estado: ${state}\n\n${messageItens}\nForma de Pagamento: ${paymentMethod}\n`;
-    if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
-      message += `Troco: R$${trocoMessage.toFixed(2)}`;
-    }
-    setTroco('')
-    const whatsappLink = `https://api.whatsapp.com/send?phone=+5531971451910&text=${encodeURIComponent(
-      message
-    )}`;
-    window.open(whatsappLink, '_blank');
   };
 
   const cartTotal = Object.entries(cartItems).reduce(
@@ -761,8 +764,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setState(storedState);
   }, []);
 
-  
-   
   return (
     <GlobalContext.Provider
       value={{
