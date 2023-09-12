@@ -18,7 +18,7 @@ const LoginItens: React.FC = () => {
     setIsEditItem(true)
   }
 
-  const toggleActive = async (item: any) => {
+  const toggleActiveItem = async (item: any) => {
     try {
       const itemRef = firestore.collection('items').doc(item.id); // Substitua 'seu_nome_de_colecao' pelo nome real da sua coleção Firestore
       const novoValorAtivo = !item.active; // Alterna a propriedade 'active'
@@ -31,6 +31,7 @@ const LoginItens: React.FC = () => {
   return (
     <div>
       <AddItemForm />
+      <h2>Produtos</h2>
       {items?.map((item) => (
         <div key={item.id}>
           <figure className='logo-container'>
@@ -48,7 +49,7 @@ const LoginItens: React.FC = () => {
           <p>Ativo: {item.active ? 'Sim' : 'Não'}</p>
           <button onClick={() => handleIsEditItem(item)}>Editar</button>
           <button onClick={() => handleDeleteItem(item.id)}>Excluir</button>
-          <button onClick={() => toggleActive(item)}>
+          <button onClick={() => toggleActiveItem(item)}>
             {item.active ? 'Desligar' : 'Ligar'}
           </button>
         </div>

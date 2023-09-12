@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode, FormEvent, useEffect } from 'react';
 import axios from 'axios';
-import { database, firestore, storage, auth } from '@/firebase';
+import { firestore, storage, auth } from '@/firebase';
 
 type Card = {
   id: string;
@@ -24,6 +24,19 @@ type Item = {
   active: boolean;
 };
 
+type Client = {
+  id: string;
+  name: string;
+  cellphone: string;
+  cep: string;
+  road: string;
+  number: string;
+  complement:string;
+  district: string;
+  city: string;
+  state: string;
+};
+
 interface ItemData {
   title: string;
   description: string;
@@ -31,6 +44,27 @@ interface ItemData {
   image: string;
   category: string;
   active: boolean;
+}
+
+interface ClientData {
+  name: string;
+  cellphone: string;
+  cep: string;
+  road: string;
+  number: string;
+  complement:string;
+  district: string;
+  city: string;
+  state: string;
+}
+
+interface Address {
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
 }
 
 interface ContextProps {
@@ -114,22 +148,38 @@ interface ContextProps {
   setLastCategory: React.Dispatch<React.SetStateAction<string>>;
   itemId: string;
   setItemId: React.Dispatch<React.SetStateAction<string>>;
-  isEditItem: boolean,
+  isEditItem: boolean;
   setIsEditItem: React.Dispatch<React.SetStateAction<boolean>>;
-  lastImage: string,
+  lastImage: string;
   setLastImage: React.Dispatch<React.SetStateAction<string>>;
   handleEditItem: (ItemId: string) => void;
   searchResults: Item[] | undefined;
   setSearchResults: React.Dispatch<React.SetStateAction<Item[] | undefined>>;
-}
-
-interface Address {
-  cep: string;
-  logradouro: string;
-  complemento: string;
-  bairro: string;
-  localidade: string;
-  uf: string;
+  clients: Client[] | undefined;
+  nameClient: string;
+  setNameClient: React.Dispatch<React.SetStateAction<string>>;
+  cellphoneClient: string; 
+  setCellphoneClient: React.Dispatch<React.SetStateAction<string>>;
+  cepClient: string;
+  setCepClient: React.Dispatch<React.SetStateAction<string>>;
+  roadClient: string;
+  setRoadClient: React.Dispatch<React.SetStateAction<string>>;
+  numberClient: string;
+  setNumberClient: React.Dispatch<React.SetStateAction<string>>;
+  complementClient: string;
+  setComplementClient: React.Dispatch<React.SetStateAction<string>>;
+  districtClient: string;
+  setDistrictClient: React.Dispatch<React.SetStateAction<string>>;
+  cityClient: string;
+  setCityClient: React.Dispatch<React.SetStateAction<string>>;
+  stateClient: string;
+  setStateClient: React.Dispatch<React.SetStateAction<string>>;
+  isEditClient: boolean;
+  setIsEditClient: React.Dispatch<React.SetStateAction<boolean>>;
+  addClient: (event: React.FormEvent) => Promise<void>;
+  clientId: string;
+  setClientId: React.Dispatch<React.SetStateAction<string>>;
+  handleEditClient: (clientId: string) => void;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -220,6 +270,31 @@ const GlobalContext = createContext<ContextProps>({
   handleEditItem: () => {},
   searchResults: [],
   setSearchResults: () => {},
+  clients: [],
+  nameClient: '', 
+  setNameClient: () => {},
+  cellphoneClient: '', 
+  setCellphoneClient: () => {},
+  cepClient: '', 
+  setCepClient: () => {},
+  roadClient: '', 
+  setRoadClient: () => {},
+  numberClient: '', 
+  setNumberClient: () => {},
+  complementClient: '', 
+  setComplementClient: () => {},
+  districtClient: '', 
+  setDistrictClient: () => {},
+  cityClient: '', 
+  setCityClient: () => {},
+  stateClient: '', 
+  setStateClient: () => {},
+  isEditClient: false,
+  setIsEditClient: () => {},
+  addClient: async (event: React.FormEvent) => {},
+  clientId: '',
+  setClientId: () => {},
+  handleEditClient: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -280,6 +355,18 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [isEditItem, setIsEditItem] = useState(false);
   const [lastImage, setLastImage] = useState('');
   const [searchResults, setSearchResults] = useState(items);
+  const [clients, setClients] = useState<Client[]>();
+  const [nameClient, setNameClient] = useState('');
+  const [cellphoneClient, setCellphoneClient] = useState('');
+  const [cepClient, setCepClient] = useState('');
+  const [roadClient, setRoadClient] = useState('');
+  const [numberClient, setNumberClient] = useState('');
+  const [complementClient, setComplementClient] = useState('');
+  const [districtClient, setDistrictClient] = useState('');
+  const [cityClient, setCityClient] = useState('');
+  const [stateClient, setStateClient] = useState('');
+  const [isEditClient, setIsEditClient] = useState(false);
+  const [clientId, setClientId] = useState('');
 
   const handleLogin = async () => {
     try {
@@ -492,6 +579,94 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       console.error('Erro ao excluir item:', error);
     }
   };
+  
+  async function addClient(event: React.FormEvent) {
+    event?.preventDefault();
+    const collectionRef = firestore.collection('clients');
+  
+    const data: ClientData = {
+      name: nameClient,
+      cellphone: cellphoneClient,
+      cep: cepClient,
+      road: roadClient,
+      number: numberClient,
+      complement: complementClient,
+      district: districtClient,
+      city: cityClient,
+      state: stateClient,
+    };
+
+    try {
+      // Verifica se já existe um item com o mesmo celular
+      const querySnapshot = await collectionRef.where('cellphone', '==', cellphoneClient).get();
+      if (!querySnapshot.empty) {
+        // Já existe um item com o mesmo celular, ativa o alerta
+        setAlertLogin(true);
+        // Define um timer para desativar o alerta após 3 segundos
+        setTimeout(() => {
+          setAlertLogin(false);
+        }, 3000);
+        // Não continue o processo de salvar
+        return;
+      }
+      // Salva o objeto no Firestore
+      await collectionRef.add(data);
+      setNameClient('');
+      setCellphoneClient('');
+      setCepClient('');
+      setRoadClient('');
+      setNumberClient('');
+      setComplementClient('');
+      setDistrictClient('');
+      setCityClient('');
+      setStateClient('');
+    } catch (error) {
+      console.error('Error adding client:', error);
+    }
+  }
+  
+  const handleEditClient = async (clientId: string) => {
+    const collectionRef = firestore.collection('clients');
+    const clientRef = collectionRef.doc(clientId);
+    try {
+      // Verifica se já existe um cliente com o mesmo celular
+      const existingClient = await collectionRef.where('cellphone', '==', cellphoneClient).get();
+      if (!existingClient.empty && existingClient.docs[0].id !== clientId) {
+        setAlertLogin(true);
+          setTimeout(() => {
+            setAlertLogin(false);
+          }, 3000);
+        return;
+      }
+      // Define os dados atualizados do item
+      const updatedClientData = {
+        name: nameClient,
+        cellphone: cellphoneClient,
+        cep: cepClient,
+        road: roadClient,
+        number: numberClient,
+        complement: complementClient,
+        district: districtClient,
+        city: cityClient,
+        state: stateClient,
+      };
+      setNameClient('');
+      setCellphoneClient('');
+      setCepClient('');
+      setRoadClient('');
+      setNumberClient('');
+      setComplementClient('');
+      setDistrictClient('');
+      setCityClient('');
+      setStateClient('');
+      setIsEditClient(false)
+      // Atualiza o documento do item no Firestore
+      await clientRef.update(updatedClientData);
+      console.log('Cliente editado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao editar cliete:', error);
+    }
+  };
 
   useEffect(() => {
     // Verifica se o usuário já está autenticado ao carregar a página
@@ -551,6 +726,33 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    const collectionRef = firestore.collection('clients');
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
+      const resultClients: Client[] = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data.name,
+          cellphone: data.cellphone,
+          cep: data.cep,
+          road: data.road,
+          number: data.number,
+          complement: data.complement,
+          district: data.district,
+          city: data.city,
+          state: data.state,
+        };
+      });
+      setClients(resultClients);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
 
   //CLIENT PAGE
   const [isOpen, setIsOpen] = useState(false);
@@ -853,7 +1055,32 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setLastImage,
         handleEditItem,
         searchResults, 
-        setSearchResults
+        setSearchResults,
+        clients,
+        nameClient, 
+        setNameClient,
+        cellphoneClient, 
+        setCellphoneClient,
+        cepClient, 
+        setCepClient,
+        roadClient, 
+        setRoadClient,
+        numberClient, 
+        setNumberClient,
+        complementClient, 
+        setComplementClient,
+        districtClient, 
+        setDistrictClient,
+        cityClient, 
+        setCityClient,
+        stateClient, 
+        setStateClient,
+        isEditClient,
+        setIsEditClient,
+        addClient,
+        clientId,
+        setClientId,
+        handleEditClient,
       }}
     >
       {children}
