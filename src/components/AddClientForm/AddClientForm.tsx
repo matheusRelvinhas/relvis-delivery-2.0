@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 
 const AddClientForm: React.FC = () => {
@@ -51,18 +51,26 @@ const AddClientForm: React.FC = () => {
       />
       <input
         type="text"
-        placeholder="celular"
+        placeholder="ddd + celular"
         value={cellphoneClient}
-        onChange={(event) => setCellphoneClient(event.target.value)}
+        onChange={(event) => {
+          const formattedInput = event.target.value.replace(/[^0-9]/g, '');
+          setCellphoneClient(formattedInput);
+        }}
         maxLength={11}
+        minLength={8}
         required
       />
       <input
-        type="number"
+        type="text"
         placeholder="cep"
         value={cepClient}
-        onChange={(event) => setCepClient(event.target.value)}
+        onChange={(event) => {
+          const formattedInput = event.target.value.replace(/[^0-9]/g, '');
+          setCepClient(formattedInput);
+        }}
         maxLength={8}
+        minLength={8}
         required
       />
       <input

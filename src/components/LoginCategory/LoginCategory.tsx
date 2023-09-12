@@ -22,8 +22,6 @@ const LoginCategory: React.FC = () => {
     setIsEditCategory(true);
   };
 
-  // Ordenar as categorias com base na propriedade 'order'
-  const sortedCategories = [...categories].sort((a, b) => a.order - b.order);
   const handleMoveCategoryUp = async (categoryId: string, order: number) => {
     // Verifique se a categoria pode ser movida para cima
     if (order > 1) {
@@ -73,7 +71,7 @@ const LoginCategory: React.FC = () => {
     <div>
       <AddCategoryForm />
       <h2>Categorias</h2>
-      {sortedCategories.map((category) => (
+      {categories.map((category) => (
         <div key={category.id}>
           {category.category}
           <button onClick={() => handleIsEditCategory(category.id, category.category)}>Editar</button>

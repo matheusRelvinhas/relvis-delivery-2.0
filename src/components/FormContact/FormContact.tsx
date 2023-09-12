@@ -63,11 +63,16 @@ const FormContact: React.FC<FormContactProps> = () => {
       />
       <input
         style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
-        type="number"
+        type="text"
         placeholder="telefone ex: (31)971451910"
         value={cellphone}
         required
-        onChange={(event) => setCellphone(event.target.value)}
+        onChange={(event) => {
+          const formattedInput = event.target.value.replace(/[^0-9]/g, '');
+          setCellphone(formattedInput);
+        }}
+        maxLength={11}
+        minLength={8}
       />
       <AddressLookup />
       <input

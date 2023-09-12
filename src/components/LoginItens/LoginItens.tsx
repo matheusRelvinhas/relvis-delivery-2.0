@@ -4,6 +4,7 @@ import React from 'react';
 import AddItemForm from '@/components/AddItemForm/AddItemForm';
 import { useGlobalContext } from '@/Context/store';
 import { firestore} from '@/firebase';
+import StyledInput from '../StyledInput/StyledInput';
 
 const LoginItens: React.FC = () => {
   const { items, handleDeleteItem, setItemId, setIsEditItem, setTitle, setDescription, setPrice, setLastImage, setSelectedCategory } = useGlobalContext();
@@ -28,8 +29,54 @@ const LoginItens: React.FC = () => {
     }
   };
 
+    const handleMoveItemUp = async (itemId: string, order: number) => {
+      // Verifique se a categoria pode ser movida para cima
+      if (order > 1) {
+        const batch = firestore.batch();
+        const itemRef = firestore.collection('items').doc(itemId);
+        const previousItemSnapshot = await firestore
+          .collection('items')
+          .where('order', '==', order - 1)
+          .limit(1)
+          .get();
+        if (!previousItemSnapshot.empty) {
+          // Encontrou uma categoria com a ordem anterior, portanto, pode atualizar a ordem
+          const previousItemId = previousItemSnapshot.docs[0].id;
+          const previousItemRef = firestore.collection('items').doc(previousItemId);
+          // Atualize a ordem da categoria selecionada
+          batch.update(itemRef, { order: order - 1 });
+          // Atualize a ordem da categoria anterior
+          batch.update(previousItemRef, { order: order });
+          // Execute a transação
+          await batch.commit();
+        }
+      }
+    };
+    
+    const handleMoveItemDown = async (itemId: string, order: number) => {
+      const batch = firestore.batch();
+      const itemRef = firestore.collection('items').doc(itemId);
+      const nextItemSnapshot = await firestore
+        .collection('items')
+        .where('order', '==', order + 1)
+        .limit(1)
+        .get();
+      if (!nextItemSnapshot.empty) {
+        // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
+        const nextItemId = nextItemSnapshot.docs[0].id;
+        const nextItemRef = firestore.collection('items').doc(nextItemId);
+        // Atualize a ordem da categoria selecionada
+        batch.update(itemRef, { order: order + 1 });
+        // Atualize a ordem da categoria seguinte
+        batch.update(nextItemRef, { order: order });
+        // Execute a transação
+        await batch.commit();
+      }
+    };
+
   return (
     <div>
+      <StyledInput />
       <AddItemForm />
       <h2>Produtos</h2>
       {items?.map((item) => (
@@ -52,6 +99,8 @@ const LoginItens: React.FC = () => {
           <button onClick={() => toggleActiveItem(item)}>
             {item.active ? 'Desligar' : 'Ligar'}
           </button>
+          <button onClick={() => handleMoveItemUp(item.id, item.order)}>Subir</button>
+          <button onClick={() => handleMoveItemDown(item.id, item.order)}>Descer</button>
         </div>
       ))}
     </div>

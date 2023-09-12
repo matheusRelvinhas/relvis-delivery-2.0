@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 import { firestore } from '@/firebase';
 import AddClientForm from '../AddClientForm/AddClientForm';
@@ -25,7 +25,7 @@ const LoginClient: React.FC = () => {
       const collectionRef = firestore.collection('clients');
       await collectionRef.doc(clientId).delete();
     } catch (error) {
-      console.error('Erro ao excluir categoria e itens associados:', error);
+      console.error('Erro ao excluir cliente', error);
     }
   };
 

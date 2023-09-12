@@ -12,6 +12,7 @@ type Card = {
   image: string;
   category: string;
   active: boolean;
+  order: number;
 };
 
 type Item = {
@@ -22,6 +23,7 @@ type Item = {
   image: string;
   category:string;
   active: boolean;
+  order: number;
 };
 
 type Client = {
@@ -44,6 +46,7 @@ interface ItemData {
   image: string;
   category: string;
   active: boolean;
+  order: number;
 }
 
 interface ClientData {
@@ -354,7 +357,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [itemId, setItemId] = useState('');
   const [isEditItem, setIsEditItem] = useState(false);
   const [lastImage, setLastImage] = useState('');
-  const [searchResults, setSearchResults] = useState(items);
+  const [searchResults, setSearchResults] = useState<Item[] | undefined>(items);
   const [clients, setClients] = useState<Client[]>();
   const [nameClient, setNameClient] = useState('');
   const [cellphoneClient, setCellphoneClient] = useState('');
@@ -367,7 +370,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [stateClient, setStateClient] = useState('');
   const [isEditClient, setIsEditClient] = useState(false);
   const [clientId, setClientId] = useState('');
-
+  
   const handleLogin = async () => {
     try {
       await auth.signInWithEmailAndPassword(email, password);
@@ -476,7 +479,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   async function addItem(event: React.FormEvent) {
     event?.preventDefault();
     const collectionRef = firestore.collection('items');
-  
+
+    // Consulte todas os itenss para contar quantos existem
+    const querySnapshotOrder = await collectionRef.get();
+    const totalCategories = querySnapshotOrder.size;
+    const order = totalCategories + 1; // Determine a ordem para o novo item
+    
     const data: ItemData = {
       title,
       description,
@@ -484,6 +492,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       image: '',
       category: selectedCategory,
       active: false,
+      order,
     };
 
     try {
@@ -572,8 +581,17 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const handleDeleteItem = async (itemId: string) => {
     try {
-      const collectionRef = firestore.collection('items'); // Substitua 'categories' pelo nome correto da coleção
+      const collectionRef = firestore.collection('items');
+      const itemDoc = await collectionRef.doc(itemId).get();
+      const orderToDelete = itemDoc.data()?.order;
       await collectionRef.doc(itemId).delete();
+      const querySnapshot = await collectionRef.where('order', '>', orderToDelete).get();
+      // Atualize as ordens dos itens encontradas
+      querySnapshot.forEach(async (doc) => {
+        const docRef = collectionRef.doc(doc.id);
+        const currentOrder = doc.data().order;
+        await docRef.update({ order: currentOrder - 1 });
+      });
       console.log('Item excluído com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir item:', error);
@@ -694,6 +712,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         category: doc.data().category,
         order: doc.data().order,
       }));
+      categoriesData.sort((a, b) => a.order - b.order);
       setCategories(categoriesData);
     });
 
@@ -716,9 +735,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           price: data.price,
           image: data.image,
           category: data.category,
-          active: data.active
+          active: data.active,
+          order: data.order,
         };
       });
+      resultItens.sort((a, b) => a.order - b.order);
       setItens(resultItens);
     });
 
@@ -745,6 +766,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           state: data.state,
         };
       });
+      resultClients.sort((a, b) => a.name.localeCompare(b.name));
       setClients(resultClients);
     });
 
