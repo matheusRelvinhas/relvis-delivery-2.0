@@ -62,7 +62,7 @@ const LoginClient: React.FC = () => {
             <button onClick={() => handleDeleteClient(client.id)}>
               Excluir
             </button>
-            <button onClick={() => sendWhats(client.cellphone)}>whats</button>
+            <button onClick={() => sendWhats(client.cellphone)}>Whats</button>
           </div>
         </div>
       ))}
