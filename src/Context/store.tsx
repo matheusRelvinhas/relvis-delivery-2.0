@@ -344,7 +344,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [numberClient, setNumberClient] = useState('');
   const [complementClient, setComplementClient] = useState('');
   const [districtClient, setDistrictClient] = useState('');
-  const [stateClient, setStateClient] = useState('');
   const [isEditClient, setIsEditClient] = useState(false);
   const [clientId, setClientId] = useState('');
   
@@ -459,8 +458,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
     // Consulte todas os itenss para contar quantos existem
     const querySnapshotOrder = await collectionRef.get();
-    const totalCategories = querySnapshotOrder.size;
-    const order = totalCategories + 1; // Determine a ordem para o novo item
+    const totalItems = querySnapshotOrder.size;
+    const order = totalItems + 1; // Determine a ordem para o novo item
     
     const data: ItemData = {
       title,
@@ -741,7 +740,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       unsubscribe();
     };
   }, []);
-
 
   //CLIENT PAGE
   const [isOpen, setIsOpen] = useState(false);
