@@ -7,7 +7,7 @@ import { firestore} from '@/firebase';
 import StyledInput from '../StyledInput/StyledInput';
 
 const LoginItens: React.FC = () => {
-  const { items, handleDeleteItem, setItemId, setIsEditItem, setTitle, setDescription, setPrice, setLastImage, setSelectedCategory } = useGlobalContext();
+  const { items, handleDeleteItem, setItemId, setIsEditItem, setTitle, setDescription, setPrice, setLastImage, setSelectedCategory, setImageFile } = useGlobalContext();
   
   const handleIsEditItem = (item:any) => {
     setItemId(item.id)
@@ -16,6 +16,7 @@ const LoginItens: React.FC = () => {
     setPrice(item.price)
     setSelectedCategory(item.category)
     setLastImage(item.image)
+    setImageFile(null)
     setIsEditItem(true)
   }
 
@@ -76,7 +77,6 @@ const LoginItens: React.FC = () => {
 
   return (
     <div>
-      <StyledInput />
       <AddItemForm />
       <h2>Produtos</h2>
       {items?.map((item) => (

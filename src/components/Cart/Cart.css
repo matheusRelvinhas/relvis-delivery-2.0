@@ -19,7 +19,8 @@
   padding-top: 8px;
   display: flex;
   flex-direction: column;
-  overflow:auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .tab-itens-cart {

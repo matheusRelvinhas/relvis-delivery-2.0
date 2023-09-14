@@ -1,23 +1,24 @@
 'use client';
 
 import React from 'react';
+import StyledInput from '../StyledInput/StyledInput';
 import { useGlobalContext } from '@/Context/store';
 
 const AddressLookup: React.FC = () => {
 
-  const { dataCss, cep, cepError, handleCepChange } = useGlobalContext();
+  const { cep, handleCepChange } = useGlobalContext();
 
   return (
     <div>
-      <input
-        style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
+      <StyledInput
+        label="CEP"
+        placeholder="ex.: 00000-000"
         type="text"
-        placeholder="Digite o CEP (somente números)"
         value={cep}
         onChange={handleCepChange}
         maxLength={8}
+        minLength={0}
       />
-      {cepError && <p style={{ color: 'red' }}>{cepError}</p>}
     </div>
   );
 };

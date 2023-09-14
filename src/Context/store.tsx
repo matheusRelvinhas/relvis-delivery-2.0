@@ -35,8 +35,6 @@ type Client = {
   number: string;
   complement:string;
   district: string;
-  city: string;
-  state: string;
 };
 
 interface ItemData {
@@ -57,8 +55,6 @@ interface ClientData {
   number: string;
   complement:string;
   district: string;
-  city: string;
-  state: string;
 }
 
 interface Address {
@@ -82,20 +78,15 @@ interface ContextProps {
   setCartItems: React.Dispatch<React.SetStateAction<Record<string, number>>>
   cep: string;
   address: Address | null; // Adicione essa linha à interface
-  cepError: string; // Adicione essa linha à interface
   handleCepChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   road: string;
   number: string;
   complement: string;
   district: string;
-  city: string;
-  state: string;
   setRoad: React.Dispatch<React.SetStateAction<string>>;
   setNumber: React.Dispatch<React.SetStateAction<string>>;
   setComplement: React.Dispatch<React.SetStateAction<string>>;
   setDistrict: React.Dispatch<React.SetStateAction<string>>;
-  setCity: React.Dispatch<React.SetStateAction<string>>;
-  setState: React.Dispatch<React.SetStateAction<string>>;
   isBuy: boolean;
   setIsBuy: React.Dispatch<React.SetStateAction<boolean>>;
   messageItens: string;
@@ -173,10 +164,6 @@ interface ContextProps {
   setComplementClient: React.Dispatch<React.SetStateAction<string>>;
   districtClient: string;
   setDistrictClient: React.Dispatch<React.SetStateAction<string>>;
-  cityClient: string;
-  setCityClient: React.Dispatch<React.SetStateAction<string>>;
-  stateClient: string;
-  setStateClient: React.Dispatch<React.SetStateAction<string>>;
   isEditClient: boolean;
   setIsEditClient: React.Dispatch<React.SetStateAction<boolean>>;
   addClient: (event: React.FormEvent) => Promise<void>;
@@ -197,20 +184,15 @@ const GlobalContext = createContext<ContextProps>({
   setCartItems: () => {},
   cep: '',           // Adicione essa linha para incluir a propriedade cep
   address: null,     // Adicione essa linha para incluir a propriedade address
-  cepError: '',      // Adicione essa linha para incluir a propriedade cepError
   handleCepChange: () => {}, // Adicione essa linha para incluir a propriedade handleCepChange
   road: '',
   number: '',
   complement: '',
   district: '',
-  city: '',
-  state: '',
   setRoad: () => {},
   setNumber: () => {},
   setComplement: () => {},
   setDistrict: () => {},
-  setCity: () => {},
-  setState: () => {},
   isBuy: false,
   setIsBuy: () => {},
   messageItens: '',
@@ -288,10 +270,6 @@ const GlobalContext = createContext<ContextProps>({
   setComplementClient: () => {},
   districtClient: '', 
   setDistrictClient: () => {},
-  cityClient: '', 
-  setCityClient: () => {},
-  stateClient: '', 
-  setStateClient: () => {},
   isEditClient: false,
   setIsEditClient: () => {},
   addClient: async (event: React.FormEvent) => {},
@@ -366,7 +344,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [numberClient, setNumberClient] = useState('');
   const [complementClient, setComplementClient] = useState('');
   const [districtClient, setDistrictClient] = useState('');
-  const [cityClient, setCityClient] = useState('');
   const [stateClient, setStateClient] = useState('');
   const [isEditClient, setIsEditClient] = useState(false);
   const [clientId, setClientId] = useState('');
@@ -610,8 +587,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       number: numberClient,
       complement: complementClient,
       district: districtClient,
-      city: cityClient,
-      state: stateClient,
     };
 
     try {
@@ -636,8 +611,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setNumberClient('');
       setComplementClient('');
       setDistrictClient('');
-      setCityClient('');
-      setStateClient('');
     } catch (error) {
       console.error('Error adding client:', error);
     }
@@ -665,8 +638,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         number: numberClient,
         complement: complementClient,
         district: districtClient,
-        city: cityClient,
-        state: stateClient,
       };
       setNameClient('');
       setCellphoneClient('');
@@ -675,8 +646,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setNumberClient('');
       setComplementClient('');
       setDistrictClient('');
-      setCityClient('');
-      setStateClient('');
       setIsEditClient(false)
       // Atualiza o documento do item no Firestore
       await clientRef.update(updatedClientData);
@@ -762,8 +731,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           number: data.number,
           complement: data.complement,
           district: data.district,
-          city: data.city,
-          state: data.state,
         };
       });
       resultClients.sort((a, b) => a.name.localeCompare(b.name));
@@ -782,13 +749,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [cartItems, setCartItems] = useState<Record<string, number>>({});
   const [cep, setCep] = useState('');
   const [address, setAddress] = useState<Address | null>(null);
-  const [cepError, setCepError] = useState('');
   const [road, setRoad] = useState('');
   const [number, setNumber] = useState('');
   const [complement, setComplement] = useState('');
   const [district, setDistrict] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
   const [isBuy, setIsBuy] = useState(false);
   const [messageItens, setMessageItens] = useState('');
   const [name, setName] = useState('');
@@ -842,16 +806,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     try {
       const response = await axios.get(`https://viacep.com.br/ws/${inputCep}/json/`);
       setAddress(response.data);
-      setCepError('');
       if (response.data.logradouro) {
         setRoad(response.data.logradouro);
-        setDistrict(response.data.bairro);
-        setCity(response.data.localidade)
-        setState(response.data.uf)
+        setDistrict(`${response.data.bairro}, ${response.data.localidade} -  ${response.data.uf}`);
       }
     } catch (err) {
       setAddress(null);
-      setCepError('CEP não encontrado.');
     }
   };
 
@@ -863,7 +823,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         fetchAddress(newCep);
       } else {
         setAddress(null);
-        setCepError('');
       }
     }
   };
@@ -885,11 +844,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     localStorage.setItem('cep', cep);
     localStorage.setItem('road', road);
     localStorage.setItem('number', number);
-    localStorage.setItem('complement', complement,);
-    localStorage.setItem('district', district,);
-    localStorage.setItem('city', city);
-    localStorage.setItem('state', state);
-    
+    localStorage.setItem('complement', complement);
+    localStorage.setItem('district', district);
+
     const clientRef = firestore.collection('clients');
     
     const data = {
@@ -900,8 +857,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       number: number,
       complement: complement,
       district: district,
-      city: city,
-      state: state,
     };
     
     try {
@@ -916,7 +871,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         await clientRef.add(data);
       }
         // Resto do código para enviar a mensagem no WhatsApp
-        let message = `Pedido Novo\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}    Compl.: ${complement}\nBairro: ${district}\nCidade: ${city}    Estado: ${state}\n\n${messageItens}\nForma de Pagamento: ${paymentMethod}\n`;
+        let message = `Pedido Novo!!\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}    Compl.: ${complement}\nBairro: ${district}\n-------\n${messageItens}\nForma de Pagamento: ${paymentMethod}\n`;
         if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
           message += `Troco: R$${trocoMessage.toFixed(2)}`;
         }
@@ -964,7 +919,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       (paymentMethod !== 'dinheiro' || troco !== '');
 
     setIsFormValid(isValid);
-  }, [name, cellphone, road, number, district, city, state, paymentMethod, troco]);
+  }, [name, cellphone, road, number, district, paymentMethod, troco]);
 
   useEffect(() => {
     const storedName = localStorage.getItem('name') || '';
@@ -974,9 +929,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     const storedNumber = localStorage.getItem('number') || '';
     const storedComplement = localStorage.getItem('complement') || '';
     const storedDistrict = localStorage.getItem('district') || '';
-    const storedCity = localStorage.getItem('city') || '';
-    const storedState = localStorage.getItem('state') || '';
-  
+   
     setName(storedName);
     setCellphone(storedCellphone);
     setCep(storedCep);
@@ -984,8 +937,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setNumber(storedNumber);
     setComplement(storedComplement);
     setDistrict(storedDistrict);
-    setCity(storedCity);
-    setState(storedState);
   }, []);
 
   return (
@@ -1002,20 +953,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setIsLogin,
         cep,
         address,
-        cepError,
         handleCepChange,
         road,
         number,
         complement,
         district,
-        city,
-        state,
         setRoad,
         setNumber,
         setComplement,
         setDistrict,
-        setCity,
-        setState,
         isBuy,
         setIsBuy,
         messageItens,
@@ -1093,10 +1039,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setComplementClient,
         districtClient, 
         setDistrictClient,
-        cityClient, 
-        setCityClient,
-        stateClient, 
-        setStateClient,
         isEditClient,
         setIsEditClient,
         addClient,

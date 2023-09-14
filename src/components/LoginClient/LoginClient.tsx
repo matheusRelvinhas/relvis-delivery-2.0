@@ -4,7 +4,7 @@ import { firestore } from '@/firebase';
 import AddClientForm from '../AddClientForm/AddClientForm';
 
 const LoginClient: React.FC = () => {
-  const { clients, setNameClient, setCellphoneClient, setCepClient, setRoadClient, setNumberClient, setComplementClient, setDistrictClient, setCityClient, setStateClient, setIsEditClient, setClientId } = useGlobalContext();
+  const { clients, setNameClient, setCellphoneClient, setCepClient, setRoadClient, setNumberClient, setComplementClient, setDistrictClient, setIsEditClient, setClientId } = useGlobalContext();
   
   const handleIsEditClient = (client:any) => {
     setClientId(client.id);
@@ -15,8 +15,6 @@ const LoginClient: React.FC = () => {
     setNumberClient(client.number);
     setComplementClient(client.complement);
     setDistrictClient(client.district);
-    setCityClient(client.city)
-    setStateClient(client.state)
     setIsEditClient(true);
   }
 
@@ -37,7 +35,7 @@ const LoginClient: React.FC = () => {
         <div key={client.id}>
           <p>{client.name}</p>
           <p>{client.cellphone}</p>
-          <p>{client.road}, {client.number}, {client.complement}, {client.district}, {client.city} - {client.state} - {client.cep}</p>
+          <p>{client.road}, {client.number}, {client.complement}, {client.district} - {client.cep}</p>
           <div>
             <button onClick={() => handleIsEditClient(client)}>Editar</button>
             <button onClick={() => handleDeleteClient(client.id)}>Excluir</button>

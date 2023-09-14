@@ -22,10 +22,6 @@ const AddClientForm: React.FC = () => {
     setComplementClient,
     districtClient, 
     setDistrictClient,
-    cityClient, 
-    setCityClient,
-    stateClient, 
-    setStateClient,
     isEditClient,
   } = useGlobalContext();
   
@@ -92,27 +88,12 @@ const AddClientForm: React.FC = () => {
         placeholder="complemento"
         value={complementClient}
         onChange={(event) => setComplementClient(event.target.value)}
-        required
       />
       <input
         type="text"
         placeholder="bairro"
         value={districtClient}
         onChange={(event) => setDistrictClient(event.target.value)}
-        required
-      />
-      <input
-        type="text"
-        placeholder="cidade"
-        value={cityClient}
-        onChange={(event) => setCityClient(event.target.value)}
-        required
-      />
-      <input
-        type="text"
-        placeholder="state"
-        value={stateClient}
-        onChange={(event) => setStateClient(event.target.value)}
         required
       />
       <button type="submit">{isEditClient ? 'Editar' : 'Adicionar'}</button>

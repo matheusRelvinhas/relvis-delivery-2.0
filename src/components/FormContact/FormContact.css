@@ -8,27 +8,44 @@
   width: 100%;
 }
 
+.figure-form {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.select-group {
+  position: relative;
+  margin: 6.5px 0;
+}
+
+.payment-container{
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
 .form-contact input {
   width: 45vw;
   min-width: 190px;
-  padding: 1vh 1vw;
-  border-radius: 4px;
-  margin-bottom: 1vh;
+  border-radius: 15px;
   font-size: 16px;
-  height: 15px;
+  height: 2.15rem;
 }
 
 .form-contact select {  
-  width: 47vw;
-  min-width: 195px;
-  height: 33px;
-  border-radius: 4px;
-  margin-bottom: 1vh;
+  width: 46vw;
+  min-width: 200px;
+  height: 2.2rem;
+  border-radius: 14px;
   font-size: 16px;
+  border: solid 1.5px #8c8c8c;
+  transition: border-color 0.3s;
+  padding-left: 8px;
 }
 
 .form-contact h2 {
   padding-bottom: 4px;
+  font-size: large;
 }
 
 .cart-button-finalize {
@@ -41,12 +58,12 @@
 
 .cart-button-finalize h1 {
   font-size: x-large;
-  padding: 0 6px;
 }
 
 .cart-button-finalize.disabled {
   background-color: #ccc;
   cursor: not-allowed;
+  overflow-y: hidden;
 }
 
 .cart-button-finalize:active {

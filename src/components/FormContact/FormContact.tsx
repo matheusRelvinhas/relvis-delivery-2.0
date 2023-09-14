@@ -4,6 +4,7 @@ import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 import AddressLookup from '../AddressLookup/AddressLookup';
 import StyledButton from '../StyledButton/StyledButton';
+import StyledInput from '../StyledInput/StyledInput';
 import './FormContact.css';
 
 interface FormContactProps {}
@@ -15,14 +16,10 @@ const FormContact: React.FC<FormContactProps> = () => {
     number,
     complement,
     district,
-    city,
-    state,
     setRoad,
     setNumber,
     setComplement,
     setDistrict,
-    setCity,
-    setState,
     handleFinalize,
     setName,
     paymentMethod,
@@ -39,34 +36,78 @@ const FormContact: React.FC<FormContactProps> = () => {
   } = useGlobalContext();
 
   return (
-    <form className='form-contact' onSubmit={handleFinalize}>
-      <button className="back-button-form" onClick={() => setIsBuy(false)}>
-      <figure >
-        <picture>
-          <source src={dataCss.backImage} type="image/png" />
-          <img
-            src={dataCss.backImage}
-            alt="back-img"
-            height='25px'
-            width='25px'
+    <form className="form-contact" onSubmit={handleFinalize}>
+      <div className="figure-form">
+        <figure>
+          <button className="back-button-form" onClick={() => setIsBuy(false)}>
+            <picture>
+              <source src={dataCss.backImage} type="image/png" />
+              <img
+                src={dataCss.backImage}
+                alt="back-img"
+                height="25px"
+                width="25px"
+              />
+            </picture>
+          </button>
+        </figure>
+      </div>
+      <div className="payment-container">
+        <div className="select-group">
+          <select
+            className="select"
+            style={{
+              background: `${dataCss.colorInput}`,
+              borderColor:
+                paymentMethod === '' ? '#8c8c8c' : `${dataCss.colorSecundary}`,
+            }}
+            onChange={(event) => setPaymentMethod(event.target.value)}
+            required
+          >
+            <option value="">Selecione um método de pagamento</option>
+            <option value="Crédito">Crédito</option>
+            <option value="Débito">Débito</option>
+            <option value="Pix">Pix</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Dinheiro trocado">Dinheiro trocado</option>
+          </select>
+          <label 
+            className="label"
+            style={{ 
+              background: paymentMethod === '' ? '#8c8c8c' : `${dataCss.colorSecundary}`,
+              color: paymentMethod === '' ? `${dataCss.fontColor}` : `${dataCss.summaryFont}`,
+            }}
+          >
+            Pagamento
+          </label>
+        </div>
+        {paymentMethod === 'Dinheiro' && (
+          <StyledInput
+            label="Troco?"
+            placeholder="ex.: R$10.00"
+            type="number"
+            value={troco}
+            onChange={(event) => setTroco(event.target.value)}
+            maxLength={10}
+            minLength={1}
           />
-        </picture>
-      </figure>
-      </button>
-      <input
-        style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
+        )}
+        <h2>Total: R${cartTotal.toFixed(2)}</h2>
+      </div>
+      <StyledInput
+        label="Nome"
+        placeholder="ex.: João / Maria"
         type="text"
-        placeholder="nome"
         value={name}
-        required
         onChange={(event) => setName(event.target.value)}
+        minLength={1}
+        maxLength={100}
       />
-      <input
-        style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
+      <StyledInput
+        label="Celular"
+        placeholder="ex.: (31) 99999-9999"
         type="text"
-        placeholder="telefone ex: (31)971451910"
         value={cellphone}
-        required
         onChange={(event) => {
           const formattedInput = event.target.value.replace(/[^0-9]/g, '');
           setCellphone(formattedInput);
@@ -75,79 +116,52 @@ const FormContact: React.FC<FormContactProps> = () => {
         minLength={8}
       />
       <AddressLookup />
-      <input
-        style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
+      <StyledInput
+        label="Rua / Av"
+        placeholder="ex.: Rua Itororó"
         type="text"
-        placeholder="rua"
         value={road}
-        required
         onChange={(event) => setRoad(event.target.value)}
+        maxLength={100}
+        minLength={1}
       />
-      <input
-        style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
+      <StyledInput
+        label="Número"
+        placeholder="ex.: 123"
         type="text"
-        placeholder="numero"
         value={number}
-        required
-        onChange={(event) => setNumber(event.target.value)}
+        onChange={(event) => {
+          const formattedInput = event.target.value.replace(/[^0-9]/g, '');
+          setNumber(formattedInput);
+        }}
+        maxLength={30}
+        minLength={1}
       />
-      <input
-        style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
+      <StyledInput
+        label="Complemento"
+        placeholder="ex.: ap 101 / casa A"
         type="text"
-        placeholder="complemento, ex: ap 102"
         value={complement}
         onChange={(event) => setComplement(event.target.value)}
+        maxLength={50}
+        minLength={0}
       />
-      <input
-        style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
+      <StyledInput
+        label="Bairro"
+        placeholder="ex.: Padre Eustáquio"
         type="text"
-        placeholder="bairro"
         value={district}
-        required
         onChange={(event) => setDistrict(event.target.value)}
+        maxLength={100}
+        minLength={1}
       />
-      <input
-        style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
-        type="text"
-        placeholder="cidade"
-        value={city}
-        onChange={(event) => setCity(event.target.value)}
-      />
-      <input
-        style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
-        type="text"
-        placeholder="estado"
-        value={state}
-        onChange={(event) => setState(event.target.value)}
-      />
-      <select
-        style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
-        onChange={(event) => setPaymentMethod(event.target.value)}
-        required
-      >
-        <option value="">Selecione um método de pagamento</option>
-        <option value="Crédito">Crédito</option>
-        <option value="Débito">Débito</option>
-        <option value="Pix">Pix</option>
-        <option value="Dinheiro">Dinheiro</option>
-        <option value="Dinheiro trocado">Dinheiro trocado</option>
-      </select>
-      {paymentMethod === 'Dinheiro' && (
-        <input
-          style={{ background: dataCss.colorInput, border: `1px solid ${dataCss.colorBorder}` }}
-          type="number"
-          placeholder="troco para quanto?"
-          min={cartTotal}
-          value={troco}
-          onChange={(event) => setTroco(event.target.value)}
-        />
-      )}
-      <h2>Total: R${cartTotal.toFixed(2)}</h2>
       <StyledButton
         normalBackgroundColor={dataCss.colorSecundary}
         activeBackgroundColor={dataCss.activeButtonColor}
-        className={`cart-button-finalize ${totalItems === 0 || !isFormValid ? 'disabled' : ''}`}
-        type='submit'
+        className={`cart-button-finalize ${
+          totalItems === 0 || !isFormValid ? 'disabled' : ''
+        }`}
+        type="submit"
         disabled={totalItems === 0 || !isFormValid}
       >
         <h1>Finalizar pedido</h1>
