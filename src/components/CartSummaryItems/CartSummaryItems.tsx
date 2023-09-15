@@ -2,6 +2,7 @@
 
 import { useGlobalContext } from '@/Context/store';
 import StyledButton from '../StyledButton/StyledButton';
+import StyledInput from '../StyledInput/StyledInput';
 import './CartSummaryItems.css';
 
 interface CartSummaryItemsProps {}
@@ -15,6 +16,8 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
     cartItems,
     items,
     totalItems,
+    observation,
+    setObservation,
   } = useGlobalContext();
 
   return (
@@ -54,6 +57,18 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
         </ul>
         <h2>Total: R${cartTotal.toFixed(2)}</h2>
       </div>
+      <div className='cart-summary-itens'>
+        <StyledInput
+          label="Observação"
+          placeholder=""
+          type="text"
+          value={observation}
+          onChange={(event) => setObservation(event.target.value)}
+          maxLength={100}
+          minLength={0}
+        />
+      </div>
+
       <StyledButton
         normalBackgroundColor={dataCss.colorSecundary}
         activeBackgroundColor={dataCss.activeButtonColor}

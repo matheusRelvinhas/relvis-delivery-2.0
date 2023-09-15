@@ -34,6 +34,13 @@ const FormContact: React.FC<FormContactProps> = () => {
     setIsBuy,
     isFormValid,
   } = useGlobalContext();
+  
+  const handleCellphoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newCellphone = event.target.value.replace(/\D/g, ''); // Remove qualquer caracter que não seja número
+    if (newCellphone.length <= 14) {
+      setCellphone(newCellphone);
+    }
+  }
 
   return (
     <form className="form-contact" onSubmit={handleFinalize}>
@@ -105,12 +112,14 @@ const FormContact: React.FC<FormContactProps> = () => {
       />
       <StyledInput
         label="Celular"
-        placeholder="ex.: (31) 99999-9999"
-        type="text"
+        placeholder="ex.: (31) 9 9999-9999"
+        type="number"
         value={cellphone}
         onChange={(event) => {
           const formattedInput = event.target.value.replace(/[^0-9]/g, '');
-          setCellphone(formattedInput);
+          if (formattedInput.length <= 11) {
+            setCellphone(formattedInput);
+          }
         }}
         maxLength={11}
         minLength={8}
@@ -130,10 +139,7 @@ const FormContact: React.FC<FormContactProps> = () => {
         placeholder="ex.: 123"
         type="text"
         value={number}
-        onChange={(event) => {
-          const formattedInput = event.target.value.replace(/[^0-9]/g, '');
-          setNumber(formattedInput);
-        }}
+        onChange={(event) => setNumber(event.target.value)}
         maxLength={30}
         minLength={1}
       />

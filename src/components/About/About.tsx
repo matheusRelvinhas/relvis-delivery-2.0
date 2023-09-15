@@ -48,7 +48,7 @@ const About: React.FC = () => {
       </div>
       <div className="about-div">
         <div className='about-title'>
-          <h4>Forma de Pagamento</h4>
+          <h4>Pagamento</h4>
           <figure>
             <picture>
               <source src={dataCss.iconAbout.payment} type="image/png" />
@@ -83,7 +83,7 @@ const About: React.FC = () => {
         </figure>
         </div>
         <div>
-        <p>Tel.: 31 99999-9999</p>
+        <p>Cel.: 31 99999-9999</p>
         <p>E-mail: seuemail@dominio.com</p>
         <figure>
           <a href="https://api.whatsapp.com/send?phone=+5531971451910">

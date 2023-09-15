@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import LoginItens from '@/components/LoginItens/LoginItens';
 import LoginCategory from '@/components/LoginCategory/LoginCategory';
+import LoginPurchaseRequest from '@/components/LoginPurchaseRequest/LoginPurchaseRequest';
 import LoginClient from '../LoginClient/LoginClient';
 import { useGlobalContext } from '@/Context/store';
 import './LoginNavigation.css';
@@ -95,8 +96,16 @@ const LoginNavigation: React.FC = () => {
               <LoginItens />
             </div>
           )}
-          {activeItem === 'Perfil' && <div>Conteúdo do Perfil</div>}
-          {activeItem === 'Pedidos' && <div>Conteúdo dos Pedidos</div>}
+          {activeItem === 'Perfil' && (
+            <div>
+              Perdil
+            </div>
+          )}
+          {activeItem === 'Pedidos' && (
+            <div>
+              <LoginPurchaseRequest />
+            </div>
+          )}
         </div>
       </div>
     </>

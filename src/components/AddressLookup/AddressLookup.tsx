@@ -13,7 +13,7 @@ const AddressLookup: React.FC = () => {
       <StyledInput
         label="CEP"
         placeholder="ex.: 00000-000"
-        type="text"
+        type="number"
         value={cep}
         onChange={handleCepChange}
         maxLength={8}

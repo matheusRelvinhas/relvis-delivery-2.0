@@ -2,7 +2,28 @@
 
 import React, { createContext, useContext, useState, ReactNode, FormEvent, useEffect } from 'react';
 import axios from 'axios';
+import { DateTime } from 'luxon'; 
 import { firestore, storage, auth } from '@/firebase';
+
+type PurchaseRequest = {
+  id: string;
+  name: string;
+  cellphone: number;
+  cep: number;
+  road: string;
+  number: string;
+  complement: string;
+  district: string;
+  purchase: string;
+  total: number;
+  order: number;
+  payment: string;
+  troco: number;
+  date: string;
+  time: string;
+  status: string;
+  observation: string;
+};
 
 type Card = {
   id: string;
@@ -132,6 +153,7 @@ interface ContextProps {
   handleLogin: () => Promise<void>;
   handleLogout: () => Promise<void>;
   items: Item[] | undefined;
+  purchaseRequests: PurchaseRequest[] | undefined;
   isFormValid: boolean;
   alertLogin: boolean;
   isEditCategory: boolean;
@@ -170,6 +192,8 @@ interface ContextProps {
   clientId: string;
   setClientId: React.Dispatch<React.SetStateAction<string>>;
   handleEditClient: (clientId: string) => void;
+  observation: string;
+  setObservation: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -238,6 +262,7 @@ const GlobalContext = createContext<ContextProps>({
   handleLogin: async () => {},
   handleLogout: async () => {},
   items: [],
+  purchaseRequests: [],
   isFormValid: false,
   alertLogin: false,
   isEditCategory: false,
@@ -276,6 +301,8 @@ const GlobalContext = createContext<ContextProps>({
   clientId: '',
   setClientId: () => {},
   handleEditClient: () => {},
+  observation: '',
+  setObservation: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -328,6 +355,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [items, setItens] = useState<Item[]>();
+  const [purchaseRequests, setPurchaseRequests] = useState<PurchaseRequest[]>();
   const [alertLogin, setAlertLogin] = useState(false);
   const [isEditCategory, setIsEditCategory] = useState(false);
   const [categoryId, setCategoryId] = useState('');
@@ -741,6 +769,39 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    const collectionRef = firestore.collection('purchaseRequests');
+
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
+      const resultPurchaseRequests: PurchaseRequest[] = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data.name,
+          cellphone: data.cellphone,
+          cep: data.cep,
+          road: data.road,
+          number: data.number,
+          complement: data.complement,
+          district: data.district,
+          purchase: data.purchase,
+          total: data.total,
+          order: data.order,
+          payment: data.payment,
+          troco: data.troco,
+          date: data.date,
+          time: data.time,
+          status: data.status,
+          observation: data.observation,
+        };
+      });
+      setPurchaseRequests(resultPurchaseRequests);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   //CLIENT PAGE
   const [isOpen, setIsOpen] = useState(false);
   const [isTilted, setIsTilted] = useState(false);
@@ -757,6 +818,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [cellphone, setCellphone] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [troco, setTroco] = useState('');
+  const [observation, setObservation] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
 
   const handleCheckboxChange = () => {
@@ -846,7 +908,30 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     localStorage.setItem('district', district);
 
     const clientRef = firestore.collection('clients');
+    const purchaseRequestsRef = firestore.collection('purchaseRequests');
+    let nextOrder = 1;
+
+    try {
+      // Consulta os documentos ordenados por "order" em ordem decrescente
+      const querySnapshot = await purchaseRequestsRef.orderBy('order', 'desc').limit(1).get();
+       // Valor padrão se não houver documentos existentes
+      if (!querySnapshot.empty) {
+        // Se houver documentos, pegue o valor "order" do primeiro documento
+        const lastOrder = querySnapshot.docs[0].data().order;
+        // Calcule o próximo valor para "order"
+        nextOrder = lastOrder + 1;
+      }
+      // O valor de "nextOrder" agora contém o próximo número de ordem a ser usado
+      // para o novo item que você deseja adicionar
+      // Agora você pode usar "nextOrder" para definir o campo "order" em seu novo documento
+    } catch (error) {
+      console.error('Erro ao determinar o próximo número de ordem:', error);
+    }
     
+    const now = DateTime.now().setZone('America/Sao_Paulo');
+    const formattedDate = now.toFormat('dd-MM-yyyy'); // Formato da data: '14-09-2023'
+    const formattedTime = now.toFormat('HH:mm:ss');   // Formato da hora: '16:58:48' 
+
     const data = {
       name: name,
       cellphone: cellphone,
@@ -856,10 +941,29 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       complement: complement,
       district: district,
     };
-    
+
+    const purchaseRequest = {
+      name: name,
+      cellphone: cellphone,
+      cep: cep,
+      road: road,
+      number: number,
+      complement: complement,
+      district: district,
+      purchase: messageItens,
+      total: cartTotal,
+      order: nextOrder,
+      payment: paymentMethod,
+      troco: troco,
+      date: formattedDate,
+      time: formattedTime,
+      status: 'new',
+      observation: observation,
+    };
+
     try {
       // Verifique se já existe um cliente com o mesmo número de celular
-      const snapshot = await clientRef.where('cellphone', '==', cellphone).get();
+      const snapshot = await purchaseRequestsRef.where('cellphone', '==', cellphone).get();
       if (!snapshot.empty) {
         // Já existe um cliente com o mesmo número de celular, exiba uma mensagem de erro
         const docId = snapshot.docs[0].id; // Obtenha o ID do documento existente
@@ -868,17 +972,27 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         // Não há cliente com o mesmo número de celular, salve o novo cliente
         await clientRef.add(data);
       }
-        // Resto do código para enviar a mensagem no WhatsApp
-        let message = `Pedido Novo!!\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}    Compl.: ${complement}\nBairro: ${district}\n-------\n${messageItens}\nForma de Pagamento: ${paymentMethod}\n`;
-        if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
-          message += `Troco: R$${trocoMessage.toFixed(2)}`;
-        }
-        setTroco('');
-        const whatsappLink = `https://api.whatsapp.com/send?phone=+5531971451910&text=${encodeURIComponent(message)}`;
-        window.open(whatsappLink, '_blank');
     } catch (error) {
       console.error('Erro ao salvar o cliente:', error);
     }
+    try {
+      await purchaseRequestsRef.add(purchaseRequest);
+    } catch (error) {
+      console.error('Erro ao enviar novo pedido', error);
+    }
+    const orderPurchase = `000${nextOrder}`
+    let message = `${formattedDate} / ${formattedTime}\nPedido Novo!!\nID: ${orderPurchase}\n-------\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}  Compl.: ${complement}\nBairro: ${district}\n-------\n${observation}\n${messageItens}\nForma de Pagamento: ${paymentMethod}\n`;
+    if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
+      message += `Troco: R$${trocoMessage.toFixed(2)}`;
+    }
+    const whatsappLink = `https://api.whatsapp.com/send?phone=+5531971451910&text=${encodeURIComponent(message)}`;
+    window.open(whatsappLink, '_blank');
+    setCartItems({});
+    setPaymentMethod('');
+    setTroco('');
+    setObservation('')
+    setIsBuy(false);
+    setIsTilted(false);
   };
 
   const cartTotal = Object.entries(cartItems).reduce(
@@ -1043,6 +1157,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         clientId,
         setClientId,
         handleEditClient,
+        observation,
+        setObservation,
+        purchaseRequests,
       }}
     >
       {children}

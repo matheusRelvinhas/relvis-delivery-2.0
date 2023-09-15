@@ -86,3 +86,14 @@ p {
   align-items: center;
   transition: background-color 0.2s;
 }
+
+.cart-summary-itens input {  
+  width: 46vw;
+  min-width: 200px;
+  height: 2.2rem;
+  border-radius: 14px;
+  font-size: 16px;
+  border: solid 1.5px #8c8c8c;
+  transition: border-color 0.3s;
+  padding-left: 8px;
+}
