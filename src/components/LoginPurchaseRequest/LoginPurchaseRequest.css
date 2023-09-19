@@ -1,0 +1,38 @@
+.login-purchase-requests{
+  display: flex;
+  flex-direction: row;
+}
+
+.purchase-requests-indice{
+  width: 20vw;
+  background-color: #fafafa;
+  height: calc(100vh - 8px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.purchase-requests-list{
+  width: 20vw;
+  background-color: #fafafa;
+  overflow: auto;
+  height: 80%;
+}
+
+.purchase-request {
+  width: 80%;
+  background-color: #ccc;
+  height: calc(100vh - 8px);
+  overflow: auto;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.purchase-request-selected {
+  height: 80vh;
+  width: 70vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

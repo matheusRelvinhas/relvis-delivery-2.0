@@ -22,7 +22,8 @@ p {
   font-size: medium;
 }
 
-.cart-summary h2 {
+.cart-summary, 
+.cart-summary-itens h2 {
   font-size: 1.5rem;
   margin-bottom: 10px;
 }
@@ -52,7 +53,7 @@ p {
 }
 
 .cart-button {
-  height: 10vh;
+  height: 15vh;
   min-width: 230px;
   width: 50vw;
   border-bottom-left-radius: 5px;

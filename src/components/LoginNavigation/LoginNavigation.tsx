@@ -72,7 +72,7 @@ const LoginNavigation: React.FC = () => {
         </div>
         <div className="content">
           {activeItem === 'Início' && (
-            <div>
+            <div className='rest-content'>
               {isLogin && (
                 <>
                   <p>Você está logado.</p>
@@ -82,27 +82,27 @@ const LoginNavigation: React.FC = () => {
             </div>
           )}
           {activeItem === 'Clientes' && (
-            <div>
+            <div className='rest-content'>
               <LoginClient />
             </div>
           )}
           {activeItem === 'Categorias' && (
-            <div>
+            <div className='rest-content'>
               <LoginCategory />
             </div>
           )}
           {activeItem === 'Produtos' && (
-            <div>
+            <div className='rest-content'>
               <LoginItens />
             </div>
           )}
           {activeItem === 'Perfil' && (
-            <div>
-              Perdil
+            <div className='rest-content'>
+              Perfil
             </div>
           )}
           {activeItem === 'Pedidos' && (
-            <div>
+            <div className='rest-content'>
               <LoginPurchaseRequest />
             </div>
           )}

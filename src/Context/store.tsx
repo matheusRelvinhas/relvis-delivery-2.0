@@ -68,6 +68,26 @@ interface ItemData {
   order: number;
 }
 
+interface PurchaseRequestData {
+  id: string;
+  name: string;
+  cellphone: number;
+  cep: number;
+  road: string;
+  number: string;
+  complement: string;
+  district: string;
+  purchase: string;
+  total: number;
+  order: number;
+  payment: string;
+  troco: number;
+  date: string;
+  time: string;
+  status: string;
+  observation: string;
+}
+
 interface ClientData {
   name: string;
   cellphone: string;
@@ -154,6 +174,7 @@ interface ContextProps {
   handleLogout: () => Promise<void>;
   items: Item[] | undefined;
   purchaseRequests: PurchaseRequest[] | undefined;
+  filteredPurchaseRequests: PurchaseRequest[] | undefined;
   isFormValid: boolean;
   alertLogin: boolean;
   isEditCategory: boolean;
@@ -194,6 +215,15 @@ interface ContextProps {
   handleEditClient: (clientId: string) => void;
   observation: string;
   setObservation: React.Dispatch<React.SetStateAction<string>>;
+  handlePurchaseRequestClick: (purchaseRequest: PurchaseRequest) => void;
+  selectedPurchaseRequest: string;
+  selectedOption: string;
+  setSelectedOption: React.Dispatch<React.SetStateAction<string>>;
+  startDate: string;
+  setStartDate: React.Dispatch<React.SetStateAction<string>>;
+  endDate: string;
+  setEndDate: React.Dispatch<React.SetStateAction<string>>;
+  handleAcepptPurchase: (purchaseRequest: any) => void;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -263,6 +293,7 @@ const GlobalContext = createContext<ContextProps>({
   handleLogout: async () => {},
   items: [],
   purchaseRequests: [],
+  filteredPurchaseRequests: [],
   isFormValid: false,
   alertLogin: false,
   isEditCategory: false,
@@ -303,6 +334,15 @@ const GlobalContext = createContext<ContextProps>({
   handleEditClient: () => {},
   observation: '',
   setObservation: () => {},
+  handlePurchaseRequestClick: () => {},
+  selectedPurchaseRequest: '',
+  selectedOption: 'Hoje',
+  setSelectedOption: () => {},
+  startDate: '',
+  setStartDate: () => {},
+  endDate: '',
+  setEndDate: () => {},
+  handleAcepptPurchase: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -356,6 +396,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [password, setPassword] = useState('');
   const [items, setItens] = useState<Item[]>();
   const [purchaseRequests, setPurchaseRequests] = useState<PurchaseRequest[]>();
+  const [filteredPurchaseRequests, setFilteredPurchaseRequests] = useState<PurchaseRequest[]>();
   const [alertLogin, setAlertLogin] = useState(false);
   const [isEditCategory, setIsEditCategory] = useState(false);
   const [categoryId, setCategoryId] = useState('');
@@ -374,6 +415,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [districtClient, setDistrictClient] = useState('');
   const [isEditClient, setIsEditClient] = useState(false);
   const [clientId, setClientId] = useState('');
+  const [selectedPurchaseRequest, setSelectedPurchaseRequest] = useState('');
+  const [selectedOption, setSelectedOption] = useState('Hoje');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  
   
   const handleLogin = async () => {
     try {
@@ -682,6 +728,24 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
   };
 
+  const handlePurchaseRequestClick = (purchaseRequest : PurchaseRequestData) => {
+    setSelectedPurchaseRequest(purchaseRequest.id);
+  };
+
+  const handleAcepptPurchase = async (purchaseRequest: any) => {
+    const collectionRef = firestore.collection('purchaseRequests');
+    const purchaseRequestRef = collectionRef.doc(purchaseRequest.id);
+    try {
+      const updatedPurchaseRequestData = {
+        status: 'accepted',
+      };
+      await purchaseRequestRef.update(updatedPurchaseRequestData);
+      console.log('Pedido aceito com sucesso!');
+      } catch (error) {
+      console.error('Erro aceitar pedido:', error);
+    }
+  };
+
   useEffect(() => {
     // Verifica se o usuário já está autenticado ao carregar a página
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -795,12 +859,40 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           observation: data.observation,
         };
       });
+      resultPurchaseRequests.sort((a, b) => a.order - b.order);
       setPurchaseRequests(resultPurchaseRequests);
     });
     return () => {
       unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (selectedOption === 'Hoje') {
+      const now = DateTime.now().setZone('America/Sao_Paulo');
+      const formattedDate = now.toFormat('dd-MM-yyyy');
+      const todayPurchaseRequests = purchaseRequests?.filter((purchaseRequest) => {
+        return purchaseRequest.date === formattedDate;
+      });
+      setFilteredPurchaseRequests(todayPurchaseRequests);
+    } else if (selectedOption === 'Todos') {
+      setFilteredPurchaseRequests(purchaseRequests);
+    } else {
+      setFilteredPurchaseRequests(purchaseRequests);
+    }
+  }, [selectedOption, purchaseRequests]);
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      const formattedStartDate = DateTime.fromFormat(startDate, 'yyyy-MM-dd').toFormat('dd-MM-yyyy');
+      const formattedEndDate = DateTime.fromFormat(endDate, 'yyyy-MM-dd').toFormat('dd-MM-yyyy');
+      const filteredPurchaseRequests = purchaseRequests?.filter((purchaseRequest) => {
+        const requestDate = purchaseRequest.date;
+        return requestDate >= formattedStartDate && requestDate <= formattedEndDate;
+      });
+      setFilteredPurchaseRequests(filteredPurchaseRequests);
+    }
+  }, [startDate, endDate, purchaseRequests]);
 
   //CLIENT PAGE
   const [isOpen, setIsOpen] = useState(false);
@@ -888,12 +980,20 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   };
 
   const handleFinalizeOrder = () => {
-    const cartSummaryElement = document.querySelector(
-      '.cart-summary'
-    ) as HTMLInputElement | null;
+    const cartSummaryElement = document.querySelector('.cart-summary') as HTMLInputElement | null;
     const cartSummaryText = cartSummaryElement?.innerText || '';
-    const messageItems = cartSummaryText.replace(/X/g, '-------');
-    setMessageItens(messageItems);
+    // Separa o texto em linhas
+    const lines = cartSummaryText.split('\n');
+    // Reorganiza as linhas para criar o formato desejado
+    const formattedLines = [];
+    for (let i = 0; i < lines.length; i += 3) {
+      const item = lines[i];
+      const price = lines[i + 1];
+      formattedLines.push(`${item} ${price}`);
+    }
+    // Junta as linhas usando "-------"
+    const formattedText = formattedLines.join('\n-------\n');
+    setMessageItens(formattedText);
     setIsBuy(true);
   };
 
@@ -963,7 +1063,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
     try {
       // Verifique se já existe um cliente com o mesmo número de celular
-      const snapshot = await purchaseRequestsRef.where('cellphone', '==', cellphone).get();
+      const snapshot = await clientRef.where('cellphone', '==', cellphone).get();
       if (!snapshot.empty) {
         // Já existe um cliente com o mesmo número de celular, exiba uma mensagem de erro
         const docId = snapshot.docs[0].id; // Obtenha o ID do documento existente
@@ -981,7 +1081,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       console.error('Erro ao enviar novo pedido', error);
     }
     const orderPurchase = `000${nextOrder}`
-    let message = `${formattedDate} / ${formattedTime}\nPedido Novo!!\nID: ${orderPurchase}\n-------\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}  Compl.: ${complement}\nBairro: ${district}\n-------\n${observation}\n${messageItens}\nForma de Pagamento: ${paymentMethod}\n`;
+    let message = `${formattedDate} / ${formattedTime}\nPedido Novo !!\nID: ${orderPurchase}\n--------------\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}  Compl.: ${complement}\nBairro: ${district}\n--------------\nCarrinho\n${messageItens}\n--------------\nObs.: ${observation}\n--------------\nTotal: ${cartTotal.toFixed(2)}\nForma de Pagamento: ${paymentMethod}\n`;
     if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
       message += `Troco: R$${trocoMessage.toFixed(2)}`;
     }
@@ -1160,6 +1260,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         observation,
         setObservation,
         purchaseRequests,
+        handlePurchaseRequestClick,
+        selectedPurchaseRequest,
+        filteredPurchaseRequests,
+        selectedOption,
+        setSelectedOption,
+        startDate, 
+        setStartDate,
+        endDate,
+        setEndDate,
+        handleAcepptPurchase,
       }}
     >
       {children}

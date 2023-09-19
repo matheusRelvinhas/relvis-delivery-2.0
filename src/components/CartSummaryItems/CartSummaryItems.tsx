@@ -22,8 +22,10 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
 
   return (
     <>
+      <div className='cart-summary-itens'>
+        <h2  style={{ color: dataCss.summaryFont }}>Carrinho</h2>
+      </div>
       <div className="cart-summary">
-        <h2 style={{ color: dataCss.summaryFont }}>Carrinho</h2>
         <ul>
           {Object.entries(cartItems).map(([title, quantity]) => {
             const card = items?.find((card) => card.title === title);
@@ -55,9 +57,9 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
             return null;
           })}
         </ul>
-        <h2>Total: R${cartTotal.toFixed(2)}</h2>
       </div>
       <div className='cart-summary-itens'>
+      <h2>Total: R${cartTotal.toFixed(2)}</h2>
         <StyledInput
           label="Observação"
           placeholder=""
@@ -68,7 +70,6 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
           minLength={0}
         />
       </div>
-
       <StyledButton
         normalBackgroundColor={dataCss.colorSecundary}
         activeBackgroundColor={dataCss.activeButtonColor}
