@@ -224,6 +224,9 @@ interface ContextProps {
   endDate: string;
   setEndDate: React.Dispatch<React.SetStateAction<string>>;
   handleAcepptPurchase: (purchaseRequest: any) => void;
+  handleFinishPurchase: (purchaseRequest: any) => void;
+  handleCanceledPurchase: (purchaseRequest: any) => void;
+  handleDeletePurchase: (purchaseRequest: any) => void;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -343,6 +346,9 @@ const GlobalContext = createContext<ContextProps>({
   endDate: '',
   setEndDate: () => {},
   handleAcepptPurchase: () => {},
+  handleFinishPurchase: () => {},
+  handleCanceledPurchase: () => {},
+  handleDeletePurchase: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -419,6 +425,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [selectedOption, setSelectedOption] = useState('Hoje');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+
   
   
   const handleLogin = async () => {
@@ -447,21 +454,18 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const addCategory = async () => {
     if (category.trim() !== '') {
       try {
-        const collectionRef = firestore.collection('categories');
-        // Consulte todas as categorias para contar quantas existem
+        const collectionRef = firestore.collection('categories'); // Consulte todas as categorias para contar quantas existem
         const querySnapshot = await collectionRef.get();
         const totalCategories = querySnapshot.size;
         const order = totalCategories + 1; // Determine a ordem para a nova categoria
-        // Verifique se a categoria já existe
-        const existingCategory = await collectionRef.where('category', '==', category).get();
-        if (existingCategory.size === 0) {
-          // A categoria ainda não existe, pode adicioná-la com a ordem calculada
+        const existingCategory = await collectionRef.where('category', '==', category).get(); // Verifique se a categoria já existe
+        if (existingCategory.size === 0) { // A categoria ainda não existe, pode adicioná-la com a ordem calculada
+          
           await collectionRef.add({ category, order });
           setCategory('');
           console.log('Categoria salva com sucesso!');
-        } else {
-          // A categoria já existe, defina o alertLogin como true por 3 segundos
-          setAlertLogin(true);
+        } else { // A categoria já existe, defina o alertLogin como true por 3 segundos
+          setAlertLogin(true); 
           setTimeout(() => {
             setAlertLogin(false);
           }, 3000);
@@ -476,14 +480,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     try {
       const collectionRef = firestore.collection('categories');
       const collectionItemRef = firestore.collection('items');
-      // Atualize a categoria da categoria em questão
-      await collectionRef.doc(categoryId).update({
+      await collectionRef.doc(categoryId).update({ // Atualize a categoria da categoria em questão
         category: category,
       });
-      // Encontre todos os itens com a categoria anterior ('lastCategory')
-      const querySnapshot = await collectionItemRef.where('category', '==', lastCategory).get();
-      // Atualize a categoria de todos os itens encontrados
-      const batch = firestore.batch();
+      const querySnapshot = await collectionItemRef.where('category', '==', lastCategory).get(); // Encontre todos os itens com a categoria anterior ('lastCategory')
+      const batch = firestore.batch(); // Atualize a categoria de todos os itens encontrados
       querySnapshot.forEach((doc) => {
         const itemRef = collectionItemRef.doc(doc.id);
         batch.update(itemRef, { category: category });
@@ -502,21 +503,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     try {
       const collectionRef = firestore.collection('categories');
       const collectionItemRef = firestore.collection('items');
-      // Obtenha a ordem da categoria que será excluída
-      const categoryDoc = await collectionRef.doc(categoryId).get();
+      const categoryDoc = await collectionRef.doc(categoryId).get(); // Obtenha a ordem da categoria que será excluída
       const orderToDelete = categoryDoc.data()?.order;
-      // Exclua a categoria
-      await collectionRef.doc(categoryId).delete();
-      // Consulte todas as categorias com ordens maiores que a excluída
-      const querySnapshot = await collectionRef.where('order', '>', orderToDelete).get();
-      // Atualize as ordens das categorias encontradas
-      querySnapshot.forEach(async (doc) => {
+      await collectionRef.doc(categoryId).delete(); // Exclua a categoria
+      const querySnapshot = await collectionRef.where('order', '>', orderToDelete).get(); // Consulte todas as categorias com ordens maiores que a excluída
+      querySnapshot.forEach(async (doc) => { // Atualize as ordens das categorias encontradas
         const docRef = collectionRef.doc(doc.id);
         const currentOrder = doc.data().order;
         await docRef.update({ order: currentOrder - 1 });
       });
-      // Consulte os itens com a mesma categoria e exclua-os
-      const itemQuerySnapshot = await collectionItemRef.where('category', '==', category).get();
+      const itemQuerySnapshot = await collectionItemRef.where('category', '==', category).get(); // Consulte os itens com a mesma categoria e exclua-os
       itemQuerySnapshot.forEach(async (doc) => {
         await collectionItemRef.doc(doc.id).delete();
       });
@@ -529,12 +525,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   async function addItem(event: React.FormEvent) {
     event?.preventDefault();
     const collectionRef = firestore.collection('items');
-
-    // Consulte todas os itenss para contar quantos existem
-    const querySnapshotOrder = await collectionRef.get();
+    const querySnapshotOrder = await collectionRef.get(); // Consulte todas os itenss para contar quantos existem
     const totalItems = querySnapshotOrder.size;
     const order = totalItems + 1; // Determine a ordem para o novo item
-    
     const data: ItemData = {
       title,
       description,
@@ -544,32 +537,23 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       active: false,
       order,
     };
-
-    try {
-      // Verifica se já existe um item com o mesmo título
+    try { // Verifica se já existe um item com o mesmo título
       const querySnapshot = await collectionRef.where('title', '==', title).get();
-      if (!querySnapshot.empty) {
-        // Já existe um item com o mesmo título, ativa o alerta
-        setAlertLogin(true);
-        // Define um timer para desativar o alerta após 3 segundos
-        setTimeout(() => {
+      if (!querySnapshot.empty) {      
+        setAlertLogin(true); // Já existe um item com o mesmo título, ativa o alerta
+        setTimeout(() => { // Define um timer para desativar o alerta após 3 segundos
           setAlertLogin(false);
         }, 3000);
-        // Não continue o processo de salvar
-        return;
+        return; // Não continue o processo de salvar
       }
-      // Se não houver itens com o mesmo título, continue com o processo de salvar
-      if (imageFile) {
-        // Faz upload da imagem para o Storage
-        const storageRef = storage.ref();
+      if (imageFile) { // Se não houver itens com o mesmo título, continue com o processo de salvar
+        const storageRef = storage.ref(); // Faz upload da imagem para o Storage
         const imageRef = storageRef.child(imageFile.name);
         await imageRef.put(imageFile);
-        // Obtém a URL de download da imagem
-        const imageUrl = await imageRef.getDownloadURL();
+        const imageUrl = await imageRef.getDownloadURL(); // Obtém a URL de download da imagem
         data.image = imageUrl;
       }
-      // Salva o objeto no Firestore
-      await collectionRef.add(data);
+      await collectionRef.add(data); // Salva o objeto no Firestore
       setTitle('');
       setDescription('');
       setPrice('');
@@ -583,9 +567,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const handleEditItem = async (itemId: string) => {
     const collectionRef = firestore.collection('items');
     const itemRef = collectionRef.doc(itemId);
-
-    try {
-      // Verifica se já existe um item com o mesmo título
+    try { // Verifica se já existe um item com o mesmo título
       const existingItem = await collectionRef.where('title', '==', title).get();
       if (!existingItem.empty && existingItem.docs[0].id !== itemId) {
         setAlertLogin(true);
@@ -594,9 +576,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           }, 3000);
         return;
       }
-    
-      // Define os dados atualizados do item
-      const updatedItemData = {
+      const updatedItemData = { // Define os dados atualizados do item
         title: title,
         description: description,
         price: parseFloat(price),
@@ -604,13 +584,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         image: lastImage, // Adicione esta propriedade
       };
 
-      if (imageFile) {
-        // Faz upload da nova imagem para o Firebase Storage
+      if (imageFile) { // Faz upload da nova imagem para o Firebase Storage
         const storageRef = storage.ref();
         const imageRef = storageRef.child(itemId);
         await imageRef.put(imageFile);
-        // Obtém a URL de download da nova imagem
-        const imageUrl = await imageRef.getDownloadURL();
+        const imageUrl = await imageRef.getDownloadURL(); // Obtém a URL de download da nova imagem
         updatedItemData.image = imageUrl;
       }
       setTitle('');
@@ -620,9 +598,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setSelectedCategory('');
       setLastImage('')
       setIsEditItem(false)
-      // Atualiza o documento do item no Firestore
-      await itemRef.update(updatedItemData);
-
+      await itemRef.update(updatedItemData); // Atualiza o documento do item no Firestore
       console.log('Item editado com sucesso!');
     } catch (error) {
       console.error('Erro ao editar item:', error);
@@ -635,8 +611,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const itemDoc = await collectionRef.doc(itemId).get();
       const orderToDelete = itemDoc.data()?.order;
       await collectionRef.doc(itemId).delete();
-      const querySnapshot = await collectionRef.where('order', '>', orderToDelete).get();
-      // Atualize as ordens dos itens encontradas
+      const querySnapshot = await collectionRef.where('order', '>', orderToDelete).get(); // Atualize as ordens dos itens encontradas
       querySnapshot.forEach(async (doc) => {
         const docRef = collectionRef.doc(doc.id);
         const currentOrder = doc.data().order;
@@ -651,7 +626,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   async function addClient(event: React.FormEvent) {
     event?.preventDefault();
     const collectionRef = firestore.collection('clients');
-  
     const data: ClientData = {
       name: nameClient,
       cellphone: cellphoneClient,
@@ -661,22 +635,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       complement: complementClient,
       district: districtClient,
     };
-
-    try {
-      // Verifica se já existe um item com o mesmo celular
+    try { // Verifica se já existe um item com o mesmo celular
       const querySnapshot = await collectionRef.where('cellphone', '==', cellphoneClient).get();
       if (!querySnapshot.empty) {
-        // Já existe um item com o mesmo celular, ativa o alerta
-        setAlertLogin(true);
-        // Define um timer para desativar o alerta após 3 segundos
-        setTimeout(() => {
+        setAlertLogin(true); // Já existe um item com o mesmo celular, ativa o alerta
+        setTimeout(() => { // Define um timer para desativar o alerta após 3 segundos
           setAlertLogin(false);
         }, 3000);
-        // Não continue o processo de salvar
-        return;
+        return; // Não continue o processo de salvar
       }
-      // Salva o objeto no Firestore
-      await collectionRef.add(data);
+      await collectionRef.add(data); // Salva o objeto no Firestore
       setNameClient('');
       setCellphoneClient('');
       setCepClient('');
@@ -692,8 +660,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const handleEditClient = async (clientId: string) => {
     const collectionRef = firestore.collection('clients');
     const clientRef = collectionRef.doc(clientId);
-    try {
-      // Verifica se já existe um cliente com o mesmo celular
+    try { // Verifica se já existe um cliente com o mesmo celular
       const existingClient = await collectionRef.where('cellphone', '==', cellphoneClient).get();
       if (!existingClient.empty && existingClient.docs[0].id !== clientId) {
         setAlertLogin(true);
@@ -702,8 +669,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           }, 3000);
         return;
       }
-      // Define os dados atualizados do item
-      const updatedClientData = {
+      const updatedClientData = { // Define os dados atualizados do item
         name: nameClient,
         cellphone: cellphoneClient,
         cep: cepClient,
@@ -720,8 +686,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setComplementClient('');
       setDistrictClient('');
       setIsEditClient(false)
-      // Atualiza o documento do item no Firestore
-      await clientRef.update(updatedClientData);
+      await clientRef.update(updatedClientData); // Atualiza o documento do item no Firestore
       console.log('Cliente editado com sucesso!');
     } catch (error) {
       console.error('Erro ao editar cliete:', error);
@@ -746,27 +711,61 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
   };
 
-  useEffect(() => {
-    // Verifica se o usuário já está autenticado ao carregar a página
-    const unsubscribe = auth.onAuthStateChanged(user => {
+  const handleFinishPurchase = async (purchaseRequest: any) => {
+    const collectionRef = firestore.collection('purchaseRequests');
+    const purchaseRequestRef = collectionRef.doc(purchaseRequest.id);
+    try {
+      const updatedPurchaseRequestData = {
+        status: 'finish',
+      };
+      await purchaseRequestRef.update(updatedPurchaseRequestData);
+      console.log('Pedido finalizado com sucesso!');
+      } catch (error) {
+      console.error('Erro ao finalizar pedido:', error);
+    }
+  };
+
+  const handleCanceledPurchase = async (purchaseRequest: any) => {
+    const collectionRef = firestore.collection('purchaseRequests');
+    const purchaseRequestRef = collectionRef.doc(purchaseRequest.id);
+    try {
+      const updatedPurchaseRequestData = {
+        status: 'canceled',
+      };
+      await purchaseRequestRef.update(updatedPurchaseRequestData);
+      console.log('Pedido cancelado com sucesso!');
+      } catch (error) {
+      console.error('Erro ao cancelar pedido:', error);
+    }
+  };
+
+  const handleDeletePurchase = async (purchaseRequest: any) => {
+    const collectionRef = firestore.collection('purchaseRequests');
+    try {
+      await collectionRef.doc(purchaseRequest.id).delete();
+      setSelectedPurchaseRequest('')
+      console.log('Pedido excluído com sucesso!');
+    } catch (error) {
+      console.error('Erro ao excluir pedido:', error);
+    }
+  };
+
+  useEffect(() => { // Verifica se o usuário já está autenticado ao carregar a página
+    const unsubscribe = auth.onAuthStateChanged(user => { 
       if (user) {
         setIsLogin(true);
       } else {
         setIsLogin(false);
       }
     });
-
     return () => {
-      // Remove o listener quando o componente é desmontado
-      unsubscribe();
+      unsubscribe(); // Remove o listener quando o componente é desmontado
     };
   }, [setIsLogin]); // Executa somente uma vez ao carregar o componente
 
   useEffect(() => {
     const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
-
-    // Cria o listener para mudanças na coleção
-    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => { // Cria o listener para mudanças na coleção
       const categoriesData: { id: string; category: string; order: number }[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         category: doc.data().category,
@@ -775,16 +774,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       categoriesData.sort((a, b) => a.order - b.order);
       setCategories(categoriesData);
     });
-
     return () => {
-      // Remove o listener quando o componente é desmontado
-      unsubscribe();
+      unsubscribe(); // Remove o listener quando o componente é desmontado
     };
   }, []);
 
   useEffect(() => {
     const collectionRef = firestore.collection('items');
-
     const unsubscribe = collectionRef.onSnapshot((snapshot) => {
       const resultItens: Item[] = snapshot.docs.map((doc) => {
         const data = doc.data();
@@ -802,7 +798,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       resultItens.sort((a, b) => a.order - b.order);
       setItens(resultItens);
     });
-
     return () => {
       unsubscribe();
     };
@@ -827,7 +822,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       resultClients.sort((a, b) => a.name.localeCompare(b.name));
       setClients(resultClients);
     });
-
     return () => {
       unsubscribe();
     };
@@ -835,7 +829,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   useEffect(() => {
     const collectionRef = firestore.collection('purchaseRequests');
-
     const unsubscribe = collectionRef.onSnapshot((snapshot) => {
       const resultPurchaseRequests: PurchaseRequest[] = snapshot.docs.map((doc) => {
         const data = doc.data();
@@ -859,7 +852,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           observation: data.observation,
         };
       });
-      resultPurchaseRequests.sort((a, b) => a.order - b.order);
+      resultPurchaseRequests.sort((a, b) => b.order - a.order);
       setPurchaseRequests(resultPurchaseRequests);
     });
     return () => {
@@ -875,20 +868,24 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         return purchaseRequest.date === formattedDate;
       });
       setFilteredPurchaseRequests(todayPurchaseRequests);
+      setStartDate('')
+      setEndDate('')
     } else if (selectedOption === 'Todos') {
       setFilteredPurchaseRequests(purchaseRequests);
+      setStartDate('')
+      setEndDate('')
+    } else if (selectedOption === 'Período') {
+      setFilteredPurchaseRequests([]);
     } else {
       setFilteredPurchaseRequests(purchaseRequests);
     }
   }, [selectedOption, purchaseRequests]);
 
   useEffect(() => {
-    if (startDate && endDate) {
-      const formattedStartDate = DateTime.fromFormat(startDate, 'yyyy-MM-dd').toFormat('dd-MM-yyyy');
-      const formattedEndDate = DateTime.fromFormat(endDate, 'yyyy-MM-dd').toFormat('dd-MM-yyyy');
-      const filteredPurchaseRequests = purchaseRequests?.filter((purchaseRequest) => {
-        const requestDate = purchaseRequest.date;
-        return requestDate >= formattedStartDate && requestDate <= formattedEndDate;
+    if (startDate && endDate) { // Mantenha startDate e endDate no formato 'yyyy-MM-dd'
+      const filteredPurchaseRequests = purchaseRequests?.filter((purchaseRequest) => { // Filtrar as purchaseRequests com as datas no mesmo formato 'yyyy-MM-dd'
+        const requestDate = DateTime.fromFormat(purchaseRequest.date, 'dd-MM-yyyy').toFormat('yyyy-MM-dd'); // Converter a data de purchaseRequest para 'yyyy-MM-dd'
+        return requestDate >= startDate && requestDate <= endDate; // Fazer a comparação
       });
       setFilteredPurchaseRequests(filteredPurchaseRequests);
     }
@@ -943,7 +940,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const handleQuantityChange = (card: Card, e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuantity = parseInt(e.target.value);
     if (isNaN(newQuantity)) return;
-
     setCartItems((prevItems) => ({
       ...prevItems,
       [card.title]: newQuantity,
@@ -981,17 +977,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const handleFinalizeOrder = () => {
     const cartSummaryElement = document.querySelector('.cart-summary') as HTMLInputElement | null;
-    const cartSummaryText = cartSummaryElement?.innerText || '';
-    // Separa o texto em linhas
-    const lines = cartSummaryText.split('\n');
-    // Reorganiza as linhas para criar o formato desejado
+    const cartSummaryText = cartSummaryElement?.innerText || ''; // Separa o texto em linhas
+    const lines = cartSummaryText.split('\n'); // Reorganiza as linhas para criar o formato desejado
     const formattedLines = [];
     for (let i = 0; i < lines.length; i += 3) {
       const item = lines[i];
       const price = lines[i + 1];
-      formattedLines.push(`${item} ${price}`);
+      formattedLines.push(`${item} ${price}`); // Junta as linhas usando "-------"
     }
-    // Junta as linhas usando "-------"
     const formattedText = formattedLines.join('\n-------\n');
     setMessageItens(formattedText);
     setIsBuy(true);
@@ -1006,32 +999,21 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     localStorage.setItem('number', number);
     localStorage.setItem('complement', complement);
     localStorage.setItem('district', district);
-
     const clientRef = firestore.collection('clients');
     const purchaseRequestsRef = firestore.collection('purchaseRequests');
     let nextOrder = 1;
-
     try {
-      // Consulta os documentos ordenados por "order" em ordem decrescente
-      const querySnapshot = await purchaseRequestsRef.orderBy('order', 'desc').limit(1).get();
-       // Valor padrão se não houver documentos existentes
-      if (!querySnapshot.empty) {
-        // Se houver documentos, pegue o valor "order" do primeiro documento
-        const lastOrder = querySnapshot.docs[0].data().order;
-        // Calcule o próximo valor para "order"
-        nextOrder = lastOrder + 1;
+      const querySnapshot = await purchaseRequestsRef.orderBy('order', 'desc').limit(1).get(); // Consulta os documentos ordenados por "order" em ordem decrescente
+      if (!querySnapshot.empty) { // Valor padrão se não houver documentos existentes      
+        const lastOrder = querySnapshot.docs[0].data().order; // Se houver documentos, pegue o valor "order" do primeiro documento
+        nextOrder = lastOrder + 1; // Calcule o próximo valor para "order"
       }
-      // O valor de "nextOrder" agora contém o próximo número de ordem a ser usado
-      // para o novo item que você deseja adicionar
-      // Agora você pode usar "nextOrder" para definir o campo "order" em seu novo documento
     } catch (error) {
       console.error('Erro ao determinar o próximo número de ordem:', error);
     }
-    
     const now = DateTime.now().setZone('America/Sao_Paulo');
     const formattedDate = now.toFormat('dd-MM-yyyy'); // Formato da data: '14-09-2023'
     const formattedTime = now.toFormat('HH:mm:ss');   // Formato da hora: '16:58:48' 
-
     const data = {
       name: name,
       cellphone: cellphone,
@@ -1041,7 +1023,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       complement: complement,
       district: district,
     };
-
     const purchaseRequest = {
       name: name,
       cellphone: cellphone,
@@ -1060,16 +1041,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       status: 'new',
       observation: observation,
     };
-
-    try {
-      // Verifique se já existe um cliente com o mesmo número de celular
+    try { // Verifique se já existe um cliente com o mesmo número de celular
       const snapshot = await clientRef.where('cellphone', '==', cellphone).get();
-      if (!snapshot.empty) {
-        // Já existe um cliente com o mesmo número de celular, exiba uma mensagem de erro
+      if (!snapshot.empty) { // Já existe um cliente com o mesmo número de celular, exiba uma mensagem de erro
         const docId = snapshot.docs[0].id; // Obtenha o ID do documento existente
         await clientRef.doc(docId).update(data); // Atualize o documento existente com os novos dados
-      } else {
-        // Não há cliente com o mesmo número de celular, salve o novo cliente
+      } else { // Não há cliente com o mesmo número de celular, salve o novo cliente
         await clientRef.add(data);
       }
     } catch (error) {
@@ -1158,118 +1135,121 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         isLogin,
         isOpen,
         isTilted,
-        handleCheckboxChange,
-        handleCartClick,
         cartItems,
-        setCartItems,
-        setIsLogin,
         cep,
         address,
-        handleCepChange,
         road,
         number,
         complement,
         district,
-        setRoad,
-        setNumber,
-        setComplement,
-        setDistrict,
         isBuy,
-        setIsBuy,
         messageItens,
-        handleFinalizeOrder,
-        handleFinalize,
-        setName,
         paymentMethod,
-        setPaymentMethod,
         troco,
-        setTroco,
         name,
         cellphone,
-        setCellphone,
         categories,
-        handleDeleteCategory,
-        handleDeleteItem,
         category,
-        setCategory,
-        addCategory,
         title,
-        setTitle, 
-        price, 
-        setPrice, 
         description, 
-        setDescription,
+        price, 
         selectedCategory, 
-        setSelectedCategory,
-        imageFile,
-        setImageFile,
-        addItem,
-        handleAddItem,
-        handleRemoveItem,
-        handleQuantityChange,
-        getItemQuantity,
         cartTotal,
         totalItems,
-        handleRemoveAllItems,
         email,
-        setEmail,
         password,
-        setPassword,
-        handleLogin,
-        handleLogout,
         items,
         isFormValid,
         alertLogin,
         isEditCategory,
-        setIsEditCategory,
         categoryId,
-        setCategoryId,
         lastCategory,
-        setLastCategory,
-        handleEditCategory,
-        itemId,
-        setItemId,
         isEditItem,
-        setIsEditItem,
+        itemId,
         lastImage,
-        setLastImage,
-        handleEditItem,
         searchResults, 
-        setSearchResults,
         clients,
-        nameClient, 
-        setNameClient,
+        nameClient,
         cellphoneClient, 
-        setCellphoneClient,
         cepClient, 
-        setCepClient,
         roadClient, 
-        setRoadClient,
         numberClient, 
-        setNumberClient,
         complementClient, 
-        setComplementClient,
         districtClient, 
-        setDistrictClient,
         isEditClient,
-        setIsEditClient,
-        addClient,
         clientId,
-        setClientId,
-        handleEditClient,
         observation,
-        setObservation,
         purchaseRequests,
-        handlePurchaseRequestClick,
         selectedPurchaseRequest,
         filteredPurchaseRequests,
         selectedOption,
-        setSelectedOption,
         startDate, 
-        setStartDate,
         endDate,
+        imageFile,
+        setRoad,
+        setNumber,
+        setComplement,
+        setDistrict,
+        setIsBuy,
+        setName,
+        setPaymentMethod,
+        setTroco,
+        setCellphone,
+        setCartItems,
+        setIsLogin,
+        setEmail,
+        setCategory,
+        addCategory,
+        setTitle, 
+        setPrice, 
+        setDescription,
+        setSelectedCategory,
+        setImageFile,
+        setPassword,
+        setIsEditCategory,
+        setCategoryId,
+        setLastCategory,
+        setItemId,
+        setIsEditItem,
+        setLastImage,
+        setSearchResults,
+        setNameClient,
+        setCellphoneClient,
+        setCepClient,
+        setRoadClient,
+        setNumberClient,
+        setComplementClient,
+        setDistrictClient,
+        setIsEditClient,
+        setClientId,
+        setObservation,
+        setSelectedOption,
+        setStartDate,
         setEndDate,
+        addClient,
+        addItem,
+        getItemQuantity,
+        handleFinalizeOrder,
+        handleFinalize,
+        handleDeleteCategory,
+        handleCheckboxChange,
+        handleCartClick,
+        handleCepChange,
+        handleDeleteItem,
+        handleAddItem,
+        handleRemoveItem,
+        handleQuantityChange,
+        handleRemoveAllItems,
+        handleLogin,
+        handleLogout,
+        handleEditCategory,
+        handleEditItem,
+        handleEditClient,
+        handlePurchaseRequestClick,
         handleAcepptPurchase,
+        handleFinishPurchase,
+        handleCanceledPurchase,
+        handleDeletePurchase,
       }}
     >
       {children}
