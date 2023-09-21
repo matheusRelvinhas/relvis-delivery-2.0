@@ -227,6 +227,14 @@ interface ContextProps {
   handleFinishPurchase: (purchaseRequest: any) => void;
   handleCanceledPurchase: (purchaseRequest: any) => void;
   handleDeletePurchase: (purchaseRequest: any) => void;
+  isEditPurchase: boolean;
+  setIsEditPurchase: React.Dispatch<React.SetStateAction<boolean>>;
+  message: string;
+  setMessage: React.Dispatch<React.SetStateAction<string>>;
+  isEditMessage: boolean; 
+  setIsEditMessage: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpenStore: boolean;
+  setIsOpenStore: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -349,6 +357,14 @@ const GlobalContext = createContext<ContextProps>({
   handleFinishPurchase: () => {},
   handleCanceledPurchase: () => {},
   handleDeletePurchase: () => {},
+  isEditPurchase: false,
+  setIsEditPurchase: () => {},
+  message: '',
+  setMessage: () => {},
+  isEditMessage: false,
+  setIsEditMessage: () => {},
+  isOpenStore: true,
+  setIsOpenStore: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -425,9 +441,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [selectedOption, setSelectedOption] = useState('Hoje');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [isEditPurchase, setIsEditPurchase] = useState(false);
+  const [message, setMessage] = useState('');
+  const [isEditMessage, setIsEditMessage] = useState(false);
+  const [isOpenStore, setIsOpenStore] = useState(true);
 
-  
-  
   const handleLogin = async () => {
     try {
       await auth.signInWithEmailAndPassword(email, password);
@@ -687,7 +705,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setDistrictClient('');
       setIsEditClient(false)
       await clientRef.update(updatedClientData); // Atualiza o documento do item no Firestore
-      console.log('Cliente editado com sucesso!');
     } catch (error) {
       console.error('Erro ao editar cliete:', error);
     }
@@ -705,7 +722,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         status: 'accepted',
       };
       await purchaseRequestRef.update(updatedPurchaseRequestData);
-      console.log('Pedido aceito com sucesso!');
+
       } catch (error) {
       console.error('Erro aceitar pedido:', error);
     }
@@ -719,7 +736,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         status: 'finish',
       };
       await purchaseRequestRef.update(updatedPurchaseRequestData);
-      console.log('Pedido finalizado com sucesso!');
       } catch (error) {
       console.error('Erro ao finalizar pedido:', error);
     }
@@ -733,7 +749,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         status: 'canceled',
       };
       await purchaseRequestRef.update(updatedPurchaseRequestData);
-      console.log('Pedido cancelado com sucesso!');
       } catch (error) {
       console.error('Erro ao cancelar pedido:', error);
     }
@@ -744,7 +759,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     try {
       await collectionRef.doc(purchaseRequest.id).delete();
       setSelectedPurchaseRequest('')
-      console.log('Pedido excluído com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir pedido:', error);
     }
@@ -762,6 +776,34 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       unsubscribe(); // Remove o listener quando o componente é desmontado
     };
   }, [setIsLogin]); // Executa somente uma vez ao carregar o componente
+
+  useEffect(() => {
+    const collectionRef = firestore.collection('message'); // Substitua 'categories' pelo nome correto da coleção
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => { // Cria o listener para mudanças na coleção
+      const data: { message: string }[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        message: doc.data().message,
+      }));
+      setMessage(data[0].message);
+    });
+    return () => {
+      unsubscribe(); // Remove o listener quando o componente é desmontado
+    };
+  }, []);
+
+  useEffect(() => {
+    const collectionRef = firestore.collection('openStore'); 
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
+      const data: { openStore: boolean }[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        openStore: doc.data().openStore,
+      }));
+      setIsOpenStore(data[0].openStore);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
@@ -1099,6 +1141,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   useEffect(() => {
     const isValid =
+      isOpenStore !== false &&
       name !== '' &&
       cellphone !== '' &&
       road !== '' &&
@@ -1108,7 +1151,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       (paymentMethod !== 'dinheiro' || troco !== '');
 
     setIsFormValid(isValid);
-  }, [name, cellphone, road, number, district, paymentMethod, troco]);
+  }, [name, cellphone, road, number, district, paymentMethod, troco, isOpenStore]);
 
   useEffect(() => {
     const storedName = localStorage.getItem('name') || '';
@@ -1250,6 +1293,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         handleFinishPurchase,
         handleCanceledPurchase,
         handleDeletePurchase,
+        isEditPurchase,
+        setIsEditPurchase,
+        message,
+        setMessage,
+        isEditMessage,
+        setIsEditMessage,
+        isOpenStore,
+        setIsOpenStore,
       }}
     >
       {children}

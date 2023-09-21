@@ -6,14 +6,17 @@ import Hamburger from '../Hamburguer/Hamburguer';
 import Cart from '../Cart/Cart';
 
 export default function Header() {
-  const { dataCss } = useGlobalContext();
+  const { dataCss, isOpenStore } = useGlobalContext();
 
   return (
     <header 
       style={{background: dataCss.backgroundColorHeader, color: dataCss.fontColor}}
       className='header'
-    >
-      <Hamburger/>
+    > 
+      <div>
+        <Hamburger/>
+        <span>{isOpenStore ? 'Aberto' : 'Fechado'}</span>
+      </div>
       <figure>
         <picture className='logo-img'>
           <source src={dataCss.logoImage[3]} type="image/webp" />

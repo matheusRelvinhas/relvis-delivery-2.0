@@ -7,11 +7,12 @@ import LoginPurchaseRequest from '@/components/LoginPurchaseRequest/LoginPurchas
 import LoginClient from '../LoginClient/LoginClient';
 import { useGlobalContext } from '@/Context/store';
 import './LoginNavigation.css';
+import LoginProfile from '../LoginProfile/LoginProfile';
 
 const LoginNavigation: React.FC = () => {
   const { alertLogin, isLogin, handleLogout } = useGlobalContext();
 
-  const [activeItem, setActiveItem] = useState<string>('Início');
+  const [activeItem, setActiveItem] = useState<string>('Perfil');
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
 
   const handleItemClick = (item: string) => {
@@ -33,10 +34,10 @@ const LoginNavigation: React.FC = () => {
           </div>
           <ul>
             <li
-              onClick={() => handleItemClick('Início')}
-              className={activeItem === 'Início' ? 'active' : ''}
+              onClick={() => handleItemClick('Perfil')}
+              className={activeItem === 'Perfil' ? 'active' : ''}
             >
-              Início
+              Perfil
             </li>
             <li
               onClick={() => handleItemClick('Clientes')}
@@ -57,12 +58,6 @@ const LoginNavigation: React.FC = () => {
               Produtos
             </li>
             <li
-              onClick={() => handleItemClick('Perfil')}
-              className={activeItem === 'Perfil' ? 'active' : ''}
-            >
-              Perfil
-            </li>
-            <li
               onClick={() => handleItemClick('Pedidos')}
               className={activeItem === 'Pedidos' ? 'active' : ''}
             >
@@ -71,14 +66,9 @@ const LoginNavigation: React.FC = () => {
           </ul>
         </div>
         <div className="content">
-          {activeItem === 'Início' && (
+          {activeItem === 'Perfil' && (
             <div className='rest-content'>
-              {isLogin && (
-                <>
-                  <p>Você está logado.</p>
-                  <button onClick={handleLogout}>Logout</button>
-                </>
-              )}
+              <LoginProfile />
             </div>
           )}
           {activeItem === 'Clientes' && (
@@ -94,11 +84,6 @@ const LoginNavigation: React.FC = () => {
           {activeItem === 'Produtos' && (
             <div className='rest-content'>
               <LoginItens />
-            </div>
-          )}
-          {activeItem === 'Perfil' && (
-            <div className='rest-content'>
-              Perfil
             </div>
           )}
           {activeItem === 'Pedidos' && (
