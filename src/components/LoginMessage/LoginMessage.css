@@ -1,0 +1,37 @@
+.login-message-container {
+  min-width: 200px;
+  width: 80%;
+  background-color: #fef0ef;
+  border: #f04134 solid 2px;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  padding: 6px;
+}
+
+.login-message-container textarea{
+  resize: none;
+  width: 100%;
+}
+
+.login-message-container button {
+  background-color: #f04134;
+  color: #fff;
+  border-radius: 5px;
+  width: 80%;
+  min-width: 200px;
+  height: 4vh;
+  min-height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.login-message-container button:active {
+  background-color: #df2e22;
+}
+
+.login-message-container button figure img {
+  margin-top: 3px;
+  height: 22px;
+  width: 22px;
+}

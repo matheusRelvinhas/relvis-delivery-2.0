@@ -5,9 +5,10 @@ import LoginMessage from '../LoginMessage/LoginMessage';
 import { firestore } from '@/firebase';
 
 const LoginProfile: React.FC = () => {
-  const { dataCss, isLogin, handleLogout, isOpenStore } = useGlobalContext();
-  
-  const handleEditOpenStore = async (openStore:boolean) => {
+  const { dataCss, isLogin, handleLogout, isOpenStore, setIsLoading } = useGlobalContext();
+
+  const handleEditOpenStore = async (openStore: boolean) => {
+    setIsLoading(true);
     const collectionRef = firestore.collection('openStore');
     const openStoreRef = collectionRef.doc('openStoreID');
     const isOpen = !openStore;
@@ -16,26 +17,61 @@ const LoginProfile: React.FC = () => {
         openStore: isOpen,
       };
       await openStoreRef.update(updatedOpenStoreData);
-      console.log('Loja aberta / fechada com sucesso!');
-      } catch (error) {
-      console.error('Erro ao editar mensagem:', error);
+    } catch (error) {
+      console.error('Erro ao editar status da loja:', error);
     }
+    setIsLoading(false);
   };
 
   return (
     <div className="login-profile-container">
-      Perfil
-      {isLogin && (
-        <>
-          <p>Você está logado.</p>
-          <button onClick={handleLogout}>Logout</button>
-        </>
-      )}
-      <div>
-        {isOpenStore ? 'Loja Aberta' : 'Loja Fechada'}
-        <button onClick={() => handleEditOpenStore(isOpenStore)}>{isOpenStore ? 'Fechar' : 'Abrir'}</button>
+      <div className="login-profile-title">
+        <span>Perfil</span>
+        <figure >
+            <picture>
+              <source src={dataCss.storeImage} type="image/png" />
+              <img
+                src={dataCss.storeImage}
+                alt="icon-img"
+              />
+            </picture>
+        </figure>
       </div>
+      <div className="login-profile">
+        <div className="login-profile-logged">
+          <h1>Bem vindo, {dataCss.profileName} !!</h1>
+        </div>
+        <div className="login-profile-open-store">
+          {isOpenStore ? 'Loja Aberta' : 'Loja Fechada'}
+          <div className="toggle-switch">
+            <input
+              className="toggle-input"
+              id="toggle"
+              type="checkbox"
+              checked={isOpenStore}
+              onClick={() => handleEditOpenStore(isOpenStore)}
+            />
+            <label className="toggle-label" htmlFor="toggle"></label>
+          </div>
+        </div>
+        {isLogin && (
+          <button onClick={handleLogout}>
+            <span>Sair</span>
+            <figure >
+              <picture>
+                <source src={dataCss.logoutImage} type="image/png" />
+                <img
+                  src={dataCss.logoutImage}
+                  alt="icon-img"
+                />
+              </picture>
+            </figure>
+          </button>
+        )}
+      </div>
+      <div className='login-margin'></div>
       <LoginMessage />
+      <div className='login-margin'></div>
     </div>
   );
 };

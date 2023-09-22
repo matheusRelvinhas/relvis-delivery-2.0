@@ -235,6 +235,10 @@ interface ContextProps {
   setIsEditMessage: React.Dispatch<React.SetStateAction<boolean>>;
   isOpenStore: boolean;
   setIsOpenStore: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  errorMessage: string;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -365,6 +369,10 @@ const GlobalContext = createContext<ContextProps>({
   setIsEditMessage: () => {},
   isOpenStore: true,
   setIsOpenStore: () => {},
+  isLoading: true,
+  setIsLoading: () => {},
+  errorMessage: '',
+  setErrorMessage: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -376,6 +384,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 }) => {
 
   const dataCss = {
+    profileName: 'Relvis Delivery',
     logoImage: [
       './img/logo.png',
       './img/logo.webp',
@@ -385,6 +394,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     cartImage: './img/cart.png',
     backImage: '/img/back.png',
     searchImage:'/img/search.png',
+    logoutImage: '/img/logout.png',
+    storeImage: '/img/store.png',
     iconAbout: {
       local: '/img/local.png',
       payment: '/img/payment.png',
@@ -445,28 +456,44 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [message, setMessage] = useState('');
   const [isEditMessage, setIsEditMessage] = useState(false);
   const [isOpenStore, setIsOpenStore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = async () => {
+    setIsLoading(true);
     try {
       await auth.signInWithEmailAndPassword(email, password);
-      console.log('Login successful');
       setEmail('');
       setPassword('');
     } catch (error) {
       console.error('Login error:', error);
       setEmail('');
       setPassword('');
+      setAlertLogin(true)
+      setErrorMessage('Email ou senha incorretos')
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('')
+      }, 3000);
     }
+    setIsLoading(false);
   };
 
   const handleLogout = async () => {
+    setIsLoading(true);
     try {
       await auth.signOut();
       console.log('Logout successful');
       setIsLogin(false);
     } catch (error) {
       console.error('Logout error:', error);
+      setErrorMessage('Error ao deslogar')
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('')
+      }, 3000);
     }
+    setIsLoading(false);
   };
 
   const addCategory = async () => {
@@ -1301,6 +1328,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setIsEditMessage,
         isOpenStore,
         setIsOpenStore,
+        isLoading,
+        setIsLoading,
+        errorMessage,
+        setErrorMessage,
       }}
     >
       {children}

@@ -1,0 +1,18 @@
+.error-message {
+  position: fixed;
+  left: 2%;
+  top: 2vh;
+  background-color: #f04134;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  color: #fff;
+  min-width: 200px;
+  width: 25vw;
+  min-height: 38px;
+  height: 6vh;
+  padding: 4px;
+}
+
+.error-message  span {
+  width: 100%;
+}

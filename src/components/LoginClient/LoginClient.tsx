@@ -7,6 +7,7 @@ const LoginClient: React.FC = () => {
   const {
     dataCss,
     clients,
+    message,
     setNameClient,
     setCellphoneClient,
     setCepClient,
@@ -40,7 +41,6 @@ const LoginClient: React.FC = () => {
   };
   
   const sendWhats = (cellphone:string) => {
-    const message = 'Olá, segue nosso cardápio, agora vc pode pedir direto de nossa plataforma https://relvis-delivery-2.vercel.app'
     const whatsappLink = `https://api.whatsapp.com/send?phone=+55${cellphone}&text=${encodeURIComponent(message)}`;
     window.open(whatsappLink, '_blank');
   }

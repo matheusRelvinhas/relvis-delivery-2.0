@@ -1,0 +1,18 @@
+.loader {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #f04134;
+  border-top-color: transparent;
+  animation: rot1 1.2s linear infinite;
+  position: fixed;
+  z-index: 999;
+  top: 45vh;
+  left: 45%;
+}
+
+@keyframes rot1 {
+  to {
+    transform: rotate(360deg);
+  }
+}
