@@ -30,7 +30,7 @@ const LoginNavigation: React.FC = () => {
       <div className={`login-navigation ${isNavOpen ? 'navigation-open' : ''}`}>
         <div className={`navigation-bar ${isNavOpen ? 'open' : ''}`}>
           <label className="burger" htmlFor="burger">
-            <input type="checkbox" id="burger" onClick={toggleNav} />
+            <input type="checkbox" id="burger" onClick={toggleNav} checked={isNavOpen} />
             <span></span>
             <span></span>
             <span></span>

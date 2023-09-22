@@ -396,6 +396,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     searchImage:'/img/search.png',
     logoutImage: '/img/logout.png',
     storeImage: '/img/store.png',
+    loginImage: '/img/login.png',
     iconAbout: {
       local: '/img/local.png',
       payment: '/img/payment.png',

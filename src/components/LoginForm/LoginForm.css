@@ -63,6 +63,16 @@
   justify-content: space-around;
 }
 
-.login-form button:active {
+.login-form button:active  {
   background-color: #df2e22;
+}
+
+.login-form button:focus  {
+  background-color: #df2e22;
+}
+
+.login-form button figure img {
+  margin-top: 3px;
+  height: 22px;
+  width: 22px;
 }

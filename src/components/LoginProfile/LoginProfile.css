@@ -41,7 +41,7 @@
 }
 
 .login-profile {
-  margin-top: 40px;
+  margin-top: 42px;
   height: 22.5vh;
   min-height: 115px;
   width: 40vw;
@@ -78,6 +78,10 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
+}
+
+.login-profile button:focus {
+  background-color: #df2e22;
 }
 
 .login-profile button:active {

@@ -5,7 +5,7 @@ import { useGlobalContext } from '@/Context/store';
 import './LoginForm.css';
 
 const LoginForm: React.FC = () => {
-  const { email, setEmail, password, setPassword, handleLogin } =
+  const { dataCss, email, setEmail, password, setPassword, handleLogin } =
     useGlobalContext();
 
   return (
@@ -25,7 +25,15 @@ const LoginForm: React.FC = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button onClick={handleLogin}>Entrar</button>
+        <button onClick={handleLogin}>
+          <span>Entrar</span>
+          <figure>
+            <picture>
+              <source src={dataCss.loginImage} type="image/png" />
+              <img src={dataCss.loginImage} alt="icon-img" />
+            </picture>
+          </figure>
+        </button>
       </div>
     </div>
   );
