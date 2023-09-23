@@ -213,6 +213,7 @@ interface ContextProps {
   clientId: string;
   setClientId: React.Dispatch<React.SetStateAction<string>>;
   handleEditClient: (clientId: string) => void;
+  handleDeleteClient: (clientId: string) => void;
   observation: string;
   setObservation: React.Dispatch<React.SetStateAction<string>>;
   handlePurchaseRequestClick: (purchaseRequest: PurchaseRequest) => void;
@@ -239,6 +240,8 @@ interface ContextProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   errorMessage: string;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  isContentOpen: boolean;
+  setIsContentOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -347,6 +350,7 @@ const GlobalContext = createContext<ContextProps>({
   clientId: '',
   setClientId: () => {},
   handleEditClient: () => {},
+  handleDeleteClient: () => {},
   observation: '',
   setObservation: () => {},
   handlePurchaseRequestClick: () => {},
@@ -373,6 +377,8 @@ const GlobalContext = createContext<ContextProps>({
   setIsLoading: () => {},
   errorMessage: '',
   setErrorMessage: () => {},
+  isContentOpen: false,
+  setIsContentOpen: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -397,6 +403,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     logoutImage: '/img/logout.png',
     storeImage: '/img/store.png',
     loginImage: '/img/login.png',
+    clientsImage: '/img/clients.png',
+    addClientImage: 'img/add-edit-client.png',
+    addIconImage:'img/add-icon.png',
+    editIconImage:'img/edit-icon.png',
+    deleteIconImage:'img/delete-icon.png',
     iconAbout: {
       local: '/img/local.png',
       payment: '/img/payment.png',
@@ -459,6 +470,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [isOpenStore, setIsOpenStore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isContentOpen, setIsContentOpen] = useState(false);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -671,6 +683,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   
   async function addClient(event: React.FormEvent) {
     event?.preventDefault();
+    setIsLoading(true);
     const collectionRef = firestore.collection('clients');
     const data: ClientData = {
       name: nameClient,
@@ -684,9 +697,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     try { // Verifica se já existe um item com o mesmo celular
       const querySnapshot = await collectionRef.where('cellphone', '==', cellphoneClient).get();
       if (!querySnapshot.empty) {
-        setAlertLogin(true); // Já existe um item com o mesmo celular, ativa o alerta
-        setTimeout(() => { // Define um timer para desativar o alerta após 3 segundos
+        setErrorMessage('Celular já cadastrado')
+        setAlertLogin(true);
+        setIsLoading(false);
+        setTimeout(() => {
           setAlertLogin(false);
+          setErrorMessage('')
         }, 3000);
         return; // Não continue o processo de salvar
       }
@@ -698,21 +714,35 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setNumberClient('');
       setComplementClient('');
       setDistrictClient('');
+      setIsContentOpen(false);
     } catch (error) {
-      console.error('Error adding client:', error);
+      console.error('Erro ao adicionar cliente:', error);
+      setErrorMessage('Erro ao adicionar cliente')
+      setAlertLogin(true);
+      setIsLoading(false);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('')
+      }, 3000);
     }
+    setIsEditClient(false)
+    setIsLoading(false);
   }
   
   const handleEditClient = async (clientId: string) => {
+    setIsLoading(true);
     const collectionRef = firestore.collection('clients');
     const clientRef = collectionRef.doc(clientId);
     try { // Verifica se já existe um cliente com o mesmo celular
       const existingClient = await collectionRef.where('cellphone', '==', cellphoneClient).get();
       if (!existingClient.empty && existingClient.docs[0].id !== clientId) {
+        setErrorMessage('Celular já cadastrado')
         setAlertLogin(true);
-          setTimeout(() => {
-            setAlertLogin(false);
-          }, 3000);
+        setIsLoading(false);
+        setTimeout(() => {
+          setAlertLogin(false);
+          setErrorMessage('')
+        }, 3000);
         return;
       }
       const updatedClientData = { // Define os dados atualizados do item
@@ -731,11 +761,36 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setNumberClient('');
       setComplementClient('');
       setDistrictClient('');
+      setIsContentOpen(false);
       setIsEditClient(false)
       await clientRef.update(updatedClientData); // Atualiza o documento do item no Firestore
     } catch (error) {
-      console.error('Erro ao editar cliete:', error);
+      console.error('Erro ao editar cliente:', error);
+      setAlertLogin(true)
+      setErrorMessage('Erro ao editar cliente')
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('')
+      }, 3000);
     }
+    setIsLoading(false);
+  };
+
+  const handleDeleteClient = async (clientId: string) => {
+    setIsLoading(true);
+    try {
+      const collectionRef = firestore.collection('clients');
+      await collectionRef.doc(clientId).delete();
+    } catch (error) {
+      console.error('Erro ao excluir cliente', error);
+      setAlertLogin(true)
+      setErrorMessage('Erro ao excluir cliente')
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('')
+      }, 3000);
+    }
+    setIsLoading(false);
   };
 
   const handlePurchaseRequestClick = (purchaseRequest : PurchaseRequestData) => {
@@ -1333,6 +1388,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setIsLoading,
         errorMessage,
         setErrorMessage,
+        isContentOpen,
+        setIsContentOpen,
+        handleDeleteClient,
       }}
     >
       {children}

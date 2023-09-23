@@ -10,7 +10,7 @@ import './LoginNavigation.css';
 import LoginProfile from '../LoginProfile/LoginProfile';
 
 const LoginNavigation: React.FC = () => {
-  const { dataCss, alertLogin } = useGlobalContext();
+  const { dataCss } = useGlobalContext();
 
   const [activeItem, setActiveItem] = useState<string>('Perfil');
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
@@ -26,11 +26,15 @@ const LoginNavigation: React.FC = () => {
 
   return (
     <>
-      {alertLogin && <div>MENSAGEM ERROR</div>}
       <div className={`login-navigation ${isNavOpen ? 'navigation-open' : ''}`}>
         <div className={`navigation-bar ${isNavOpen ? 'open' : ''}`}>
           <label className="burger" htmlFor="burger">
-            <input type="checkbox" id="burger" onClick={toggleNav} checked={isNavOpen} />
+            <input
+              type="checkbox"
+              id="burger"
+              onClick={toggleNav}
+              checked={isNavOpen}
+            />
             <span></span>
             <span></span>
             <span></span>
@@ -54,7 +58,15 @@ const LoginNavigation: React.FC = () => {
               onClick={() => handleItemClick('Clientes')}
               className={activeItem === 'Clientes' ? 'active' : ''}
             >
-              Clientes
+              <div className="login-navigation-li">
+                <figure>
+                  <picture>
+                    <source src={dataCss.clientsImage} type="image/png" />
+                    <img  src={dataCss.clientsImage} alt="icon-img" width={'30px'} />
+                  </picture>
+                </figure>
+                <span>Clientes</span>
+              </div>
             </li>
             <li
               onClick={() => handleItemClick('Categorias')}

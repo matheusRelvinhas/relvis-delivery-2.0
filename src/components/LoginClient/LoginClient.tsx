@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
-import { firestore } from '@/firebase';
 import AddClientForm from '../AddClientForm/AddClientForm';
+import './LoginClient.css';
 
 const LoginClient: React.FC = () => {
   const {
@@ -17,9 +17,13 @@ const LoginClient: React.FC = () => {
     setDistrictClient,
     setIsEditClient,
     setClientId,
+    setIsContentOpen,
+    setIsLoading,
+    handleDeleteClient,
   } = useGlobalContext();
 
   const handleIsEditClient = (client: any) => {
+    setIsContentOpen(true);
     setClientId(client.id);
     setNameClient(client.name);
     setCellphoneClient(client.cellphone);
@@ -31,41 +35,67 @@ const LoginClient: React.FC = () => {
     setIsEditClient(true);
   };
 
-  const handleDeleteClient = async (clientId: string) => {
-    try {
-      const collectionRef = firestore.collection('clients');
-      await collectionRef.doc(clientId).delete();
-    } catch (error) {
-      console.error('Erro ao excluir cliente', error);
-    }
-  };
-  
-  const sendWhats = (cellphone:string) => {
-    const whatsappLink = `https://api.whatsapp.com/send?phone=+55${cellphone}&text=${encodeURIComponent(message)}`;
+  const sendWhats = (cellphone: string) => {
+    const whatsappLink = `https://api.whatsapp.com/send?phone=+55${cellphone}&text=${encodeURIComponent(
+      message
+    )}`;
     window.open(whatsappLink, '_blank');
-  }
+  };
 
   return (
-    <div>
+    <div className="login-client-container">
+      <div className="login-client-title">
+        <span>Clientes</span>
+        <figure>
+          <picture>
+            <source src={dataCss.clientsImage} type="image/png" />
+            <img src={dataCss.clientsImage} alt="icon-img" />
+          </picture>
+        </figure>
+      </div>
       <AddClientForm />
-      <h2>Clientes</h2>
-      {clients?.map((client) => (
-        <div key={client.id}>
-          <p>{client.name}</p>
-          <p>{client.cellphone}</p>
-          <p>
-            {client.road}, {client.number}, {client.complement},{' '}
-            {client.district} - {client.cep}
-          </p>
-          <div>
-            <button onClick={() => handleIsEditClient(client)}>Editar</button>
-            <button onClick={() => handleDeleteClient(client.id)}>
-              Excluir
-            </button>
-            <button onClick={() => sendWhats(client.cellphone)}>Whats</button>
+      <div className="login-client-list">
+        {clients?.map((client) => (
+          <div key={client.id} className="login-client-items">
+            <div className="login-client-items-title">
+              <h3>{client.name}</h3>
+              <span>+55 {client.cellphone}</span>
+            </div>
+            <p>
+              {client.road}, {client.number}, {client.complement},{' '}
+              {client.district} - {client.cep}
+            </p>
+            <div className="login-client-buttons">
+            <div>
+              <button onClick={() => handleIsEditClient(client)}>
+                <figure>
+                  <picture>
+                    <source src={dataCss.editIconImage} type="image/png" />
+                    <img src={dataCss.editIconImage} alt="icon-img" />
+                  </picture>
+                </figure>
+              </button>
+              <button onClick={() => sendWhats(client.cellphone)}>
+                <figure>
+                  <picture>
+                    <source src={dataCss.whatsImage} type="image/png" />
+                    <img src={dataCss.whatsImage} alt="icon-img" />
+                  </picture>
+                </figure>
+              </button>
+              </div>
+              <button onClick={() => handleDeleteClient(client.id)}>
+                <figure>
+                  <picture>
+                    <source src={dataCss.deleteIconImage} type="image/png" />
+                    <img src={dataCss.deleteIconImage} alt="icon-img" />
+                  </picture>
+                </figure>
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

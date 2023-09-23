@@ -1,10 +1,8 @@
 .login-profile-container {
   width: 100%;
-  min-height: calc(100%);
   height: calc(100vh);
   display: flex;
   flex-direction: column;
-  margin-bottom: 50px;
 }
 
 .login-profile-title {
@@ -23,7 +21,7 @@
   text-align: center;
   justify-content: space-around;
   position: fixed;
-  z-index: 999;
+  z-index: 998;
 }
 
 .login-profile-title span {
@@ -41,7 +39,7 @@
 }
 
 .login-profile {
-  margin-top: 42px;
+  margin-top: 46px;
   height: 22.5vh;
   min-height: 115px;
   width: 40vw;

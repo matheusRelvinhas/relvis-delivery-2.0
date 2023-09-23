@@ -19,21 +19,16 @@
   min-width: 230px;
 }
 
-.hamburger {
-  font-size: 24px;
-  cursor: pointer;
-  padding: 10px;
-}
-
 ul {
   list-style-type: none;
   padding: 0;
 }
 
 li {
-  padding: 15px;
+  padding: 10px;
   cursor: pointer;
   transition: 0.2s;
+  align-items: center;
 }
 
 li:hover {
@@ -60,9 +55,12 @@ li:hover {
 }
 
 .login-navigation-li figure img {
-  height: 25px;
-  width: 25px;
+  height: 26px;
+  width: 30px;
+  margin-right: 6px;
 }
+
+
 
 .login-navigation-li span {
   padding-left: 12px;
