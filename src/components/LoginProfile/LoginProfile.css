@@ -12,6 +12,7 @@
   border-radius: 10px;
   border-bottom-left-radius: 0;
   height: 5vh;
+  max-height: 40px;
   min-height: 30px;
   color: #fff;
   font-size: larger;
@@ -51,7 +52,7 @@
   padding: 1px 4px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .login-margin {
@@ -73,9 +74,11 @@
   min-width: 170px;
   height: 4vh;
   min-height: 25px;
+  max-height: 35px;
   display: flex;
   align-items: center;
   justify-content: space-around;
+  margin: 0 0 5px 2px;
 }
 
 .login-profile button:focus {

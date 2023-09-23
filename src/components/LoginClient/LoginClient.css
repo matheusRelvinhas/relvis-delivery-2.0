@@ -13,6 +13,7 @@
   border-radius: 10px;
   border-bottom-left-radius: 0;
   height: 5vh;
+  max-height: 40px;
   min-height: 30px;
   color: #fff;
   font-size: larger;
@@ -96,6 +97,7 @@
   min-width: 36px;
   height: 4vh;
   min-height: 25px;
+  max-height: 35px;
   display: flex;
   align-items: center;
   justify-content: space-around;

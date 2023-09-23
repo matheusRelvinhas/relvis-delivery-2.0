@@ -20,6 +20,7 @@
   width: 30vw;
   min-width: 200px;
   height: 4vh;
+  max-height: 35px;
   min-height: 25px;
   display: flex;
   align-items: center;
