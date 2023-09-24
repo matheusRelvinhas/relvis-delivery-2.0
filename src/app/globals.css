@@ -10,7 +10,6 @@ body {
 html, body {
   width: 100%;
   height: 100vh;
-
 }
 
 a, Link {
@@ -37,4 +36,34 @@ a, Link {
 
 ::-webkit-scrollbar-track {
   background: transparent; /* Cor de fundo da trilha da scrollbar */
+}
+
+/* Estilize o botão de seleção de arquivo */
+.add-items-form input[type='file']::-webkit-file-upload-button {
+  background-color: transparent;
+  color: #1f1f1f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* Estilize o botão de seleção de arquivo para navegadores não baseados no WebKit (Firefox, Edge) */
+.add-items-form input[type='file']::file-selector-button {
+  background-color: transparent;
+  color: #1f1f1f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* Estilize o botão de seleção de arquivo para IE */
+.add-items-form input[type='file']::-ms-browse {
+  background-color: transparent;
+  color: #1f1f1f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 4px;
 }

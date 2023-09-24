@@ -62,7 +62,10 @@ const LoginNavigation: React.FC = () => {
                 <figure>
                   <picture>
                     <source src={dataCss.clientsImage} type="image/png" />
-                    <img  src={dataCss.clientsImage} alt="icon-img" width={'30px'} />
+                    <img
+                      src={dataCss.clientsImage}
+                      alt="icon-img"
+                    />
                   </picture>
                 </figure>
                 <span>Clientes</span>
@@ -72,11 +75,14 @@ const LoginNavigation: React.FC = () => {
               onClick={() => handleItemClick('Categorias')}
               className={activeItem === 'Categorias' ? 'active' : ''}
             >
-                            <div className="login-navigation-li">
+              <div className="login-navigation-li">
                 <figure>
                   <picture>
                     <source src={dataCss.categoryImage} type="image/png" />
-                    <img  src={dataCss.categoryImage} alt="icon-img" width={'30px'} />
+                    <img
+                      src={dataCss.categoryImage}
+                      alt="icon-img"
+                    />
                   </picture>
                 </figure>
                 <span>Categorias</span>
@@ -86,7 +92,18 @@ const LoginNavigation: React.FC = () => {
               onClick={() => handleItemClick('Produtos')}
               className={activeItem === 'Produtos' ? 'active' : ''}
             >
-              Produtos
+              <div className="login-navigation-li">
+                <figure>
+                  <picture>
+                    <source src={dataCss.itemsImage} type="image/png" />
+                    <img
+                      src={dataCss.itemsImage}
+                      alt="icon-img"
+                    />
+                  </picture>
+                </figure>
+                <span>Produtos</span>
+              </div>
             </li>
             <li
               onClick={() => handleItemClick('Pedidos')}

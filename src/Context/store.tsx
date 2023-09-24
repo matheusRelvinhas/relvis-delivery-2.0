@@ -163,6 +163,8 @@ interface ContextProps {
   addItem: (event: React.FormEvent) => Promise<void>;
   handleAddItem: (card: Card) => void;
   handleRemoveItem: (card: Card) => void;
+  handleMoveItemUp: (itemId: string, order: number) => void;
+  handleMoveItemDown: (itemId: string, order: number) => void;
   handleQuantityChange: (card: Card, e: React.ChangeEvent<HTMLInputElement>) => void;
   getItemQuantity: (card: Card) => number;
   cartTotal: number;
@@ -246,6 +248,8 @@ interface ContextProps {
   setIsContentClientOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isContentCategoryOpen: boolean;
   setIsContentCategoryOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isContentItemOpen: boolean,
+  setIsContentItemOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -303,6 +307,8 @@ const GlobalContext = createContext<ContextProps>({
   setImageFile: () => {},
   addItem: async (event: React.FormEvent) => {},
   handleAddItem: (card: Card) => {},
+  handleMoveItemUp: () => {},
+  handleMoveItemDown: () => {},
   handleRemoveItem: (card: Card) => {},
   handleQuantityChange: (card: Card, e: React.ChangeEvent<HTMLInputElement>) => {},
   getItemQuantity: (card: Card) => 0,
@@ -387,6 +393,8 @@ const GlobalContext = createContext<ContextProps>({
   setIsContentClientOpen: () => {},
   isContentCategoryOpen: false,
   setIsContentCategoryOpen: () => {},
+  isContentItemOpen: false,
+  setIsContentItemOpen: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -413,6 +421,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     loginImage: '/img/login.png',
     clientsImage: '/img/clients.png',
     categoryImage: '/img/category.png',
+    itemsImage: '/img/items.png',
+    itemImage: '/img/item.png',
     addIconImage:'img/add-icon.png',
     editIconImage:'img/edit-icon.png',
     deleteIconImage:'img/delete-icon.png',
@@ -480,6 +490,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [errorMessage, setErrorMessage] = useState('');
   const [isContentClientOpen, setIsContentClientOpen] = useState(false);
   const [isContentCategoryOpen, setIsContentCategoryOpen] = useState(false);
+  const [isContentItemOpen, setIsContentItemOpen] = useState(false);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -704,6 +715,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         data.image = imageUrl;
       }
       await collectionRef.add(data); // Salva o objeto no Firestore
+      setIsContentItemOpen(false);
       setTitle('');
       setDescription('');
       setPrice('');
@@ -733,7 +745,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         category: selectedCategory,
         image: lastImage, // Adicione esta propriedade
       };
-
       if (imageFile) { // Faz upload da nova imagem para o Firebase Storage
         const storageRef = storage.ref();
         const imageRef = storageRef.child(itemId);
@@ -741,15 +752,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const imageUrl = await imageRef.getDownloadURL(); // Obtém a URL de download da nova imagem
         updatedItemData.image = imageUrl;
       }
+      await itemRef.update(updatedItemData); // Atualiza o documento do item no Firestore
       setTitle('');
       setDescription('');
       setPrice('');
       setImageFile(null);
       setSelectedCategory('');
-      setLastImage('')
-      setIsEditItem(false)
-      await itemRef.update(updatedItemData); // Atualiza o documento do item no Firestore
-      console.log('Item editado com sucesso!');
+      setLastImage('');
+      setIsEditItem(false);
+      setIsContentItemOpen(false);
     } catch (error) {
       console.error('Erro ao editar item:', error);
     }
@@ -770,6 +781,44 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       console.log('Item excluído com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir item:', error);
+    }
+  };
+
+  const handleMoveItemUp = async (itemId: string, order: number) => {
+    if (order > 1) { // Verifique se a categoria pode ser movida para cima
+      const batch = firestore.batch();
+      const itemRef = firestore.collection('items').doc(itemId);
+      const previousItemSnapshot = await firestore
+        .collection('items')
+        .where('order', '==', order - 1)
+        .limit(1)
+        .get();
+      if (!previousItemSnapshot.empty) {
+        const previousItemId = previousItemSnapshot.docs[0].id; // Encontrou uma categoria com a ordem anterior, portanto, pode atualizar a ordem
+        const previousItemRef = firestore
+          .collection('items')
+          .doc(previousItemId);
+        batch.update(itemRef, { order: order - 1 }); // Atualize a ordem da categoria selecionada
+        batch.update(previousItemRef, { order: order }); // Atualize a ordem da categoria anterior
+        await batch.commit(); // Execute a transação
+      }
+    }
+  };
+
+  const handleMoveItemDown = async (itemId: string, order: number) => {
+    const batch = firestore.batch();
+    const itemRef = firestore.collection('items').doc(itemId);
+    const nextItemSnapshot = await firestore
+      .collection('items')
+      .where('order', '==', order + 1)
+      .limit(1)
+      .get();
+    if (!nextItemSnapshot.empty) { // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
+      const nextItemId = nextItemSnapshot.docs[0].id;
+      const nextItemRef = firestore.collection('items').doc(nextItemId); // Atualize a ordem da categoria selecionada
+      batch.update(itemRef, { order: order + 1 }); // Atualize a ordem da categoria seguinte
+      batch.update(nextItemRef, { order: order }); // Execute a transação
+      await batch.commit();
     }
   };
   
@@ -1487,6 +1536,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setIsContentCategoryOpen,
         handleMoveCategoryUp,
         handleMoveCategoryDown,
+        handleMoveItemUp,
+        handleMoveItemDown,
+        isContentItemOpen,
+        setIsContentItemOpen,
       }}
     >
       {children}

@@ -3,22 +3,38 @@
 import React from 'react';
 import AddItemForm from '@/components/AddItemForm/AddItemForm';
 import { useGlobalContext } from '@/Context/store';
-import { firestore} from '@/firebase';
-import StyledInput from '../StyledInput/StyledInput';
+import { firestore } from '@/firebase';
+import './LoginItens.css';
 
 const LoginItens: React.FC = () => {
-  const { items, handleDeleteItem, setItemId, setIsEditItem, setTitle, setDescription, setPrice, setLastImage, setSelectedCategory, setImageFile } = useGlobalContext();
-  
-  const handleIsEditItem = (item:any) => {
-    setItemId(item.id)
-    setTitle(item.title)
-    setDescription(item.description)
-    setPrice(item.price)
-    setSelectedCategory(item.category)
-    setLastImage(item.image)
-    setImageFile(null)
-    setIsEditItem(true)
-  }
+  const {
+    dataCss,
+    items,
+    handleDeleteItem,
+    setItemId,
+    setIsEditItem,
+    setTitle,
+    setDescription,
+    setPrice,
+    setLastImage,
+    setSelectedCategory,
+    setImageFile,
+    handleMoveItemUp,
+    handleMoveItemDown,
+    setIsContentItemOpen,
+  } = useGlobalContext();
+
+  const handleIsEditItem = (item: any) => {
+    setItemId(item.id);
+    setTitle(item.title);
+    setDescription(item.description);
+    setPrice(item.price);
+    setSelectedCategory(item.category);
+    setLastImage(item.image);
+    setImageFile(null);
+    setIsEditItem(true);
+    setIsContentItemOpen(true);
+  };
 
   const toggleActiveItem = async (item: any) => {
     try {
@@ -30,79 +46,89 @@ const LoginItens: React.FC = () => {
     }
   };
 
-    const handleMoveItemUp = async (itemId: string, order: number) => {
-      // Verifique se a categoria pode ser movida para cima
-      if (order > 1) {
-        const batch = firestore.batch();
-        const itemRef = firestore.collection('items').doc(itemId);
-        const previousItemSnapshot = await firestore
-          .collection('items')
-          .where('order', '==', order - 1)
-          .limit(1)
-          .get();
-        if (!previousItemSnapshot.empty) {
-          // Encontrou uma categoria com a ordem anterior, portanto, pode atualizar a ordem
-          const previousItemId = previousItemSnapshot.docs[0].id;
-          const previousItemRef = firestore.collection('items').doc(previousItemId);
-          // Atualize a ordem da categoria selecionada
-          batch.update(itemRef, { order: order - 1 });
-          // Atualize a ordem da categoria anterior
-          batch.update(previousItemRef, { order: order });
-          // Execute a transação
-          await batch.commit();
-        }
-      }
-    };
-    
-    const handleMoveItemDown = async (itemId: string, order: number) => {
-      const batch = firestore.batch();
-      const itemRef = firestore.collection('items').doc(itemId);
-      const nextItemSnapshot = await firestore
-        .collection('items')
-        .where('order', '==', order + 1)
-        .limit(1)
-        .get();
-      if (!nextItemSnapshot.empty) {
-        // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
-        const nextItemId = nextItemSnapshot.docs[0].id;
-        const nextItemRef = firestore.collection('items').doc(nextItemId);
-        // Atualize a ordem da categoria selecionada
-        batch.update(itemRef, { order: order + 1 });
-        // Atualize a ordem da categoria seguinte
-        batch.update(nextItemRef, { order: order });
-        // Execute a transação
-        await batch.commit();
-      }
-    };
-
   return (
-    <div>
+    <div className="login-items-container">
+      <div className="login-items-title">
+        <span>Produtos</span>
+        <figure>
+          <picture>
+            <source src={dataCss.itemsImage} type="image/png" />
+            <img src={dataCss.itemsImage} alt="icon-img" />
+          </picture>
+        </figure>
+      </div>
       <AddItemForm />
-      <h2>Produtos</h2>
-      {items?.map((item) => (
-        <div key={item.id}>
-          <figure className='logo-container'>
-            <picture>
-              <source src={item.image} type="image/webp" />
-              <source src={item.image} type="image/png" />
-              <source src={item.image} type="image/jpeg" />
-              <img src={item.image} height='100px' width='100px' alt={item.title} />
-            </picture>
-          </figure>
-          <h3>Titulo: {item.title}</h3>
-          <p>Descrição: {item.description}</p>
-          <p>Preço: {item.price}</p>
-          <p>Categoria: {item.category}</p>
-          <p>Ativo: {item.active ? 'Sim' : 'Não'}</p>
-          <button onClick={() => handleIsEditItem(item)}>Editar</button>
-          <button onClick={() => handleDeleteItem(item.id)}>Excluir</button>
-          <button onClick={() => toggleActiveItem(item)}>
-            {item.active ? 'Desligar' : 'Ligar'}
-          </button>
-          <button onClick={() => handleMoveItemUp(item.id, item.order)}>Subir</button>
-          <button onClick={() => handleMoveItemDown(item.id, item.order)}>Descer</button>
-        </div>
-      ))}
+      <div className="login-items-list">
+        {items?.map((item) => (
+          <div key={item.id} className="login-items">
+            <div className="login-items-div-title">
+              <span>{item.category}</span>
+              <figure>
+                <picture>
+                  <source src={dataCss.itemImage} type="image/png" />
+                  <img src={dataCss.itemImage} alt="icon-img" />
+                </picture>
+              </figure>
+            </div>
+            <div className="login-items-div">
+              <div className="login-items-img-toogle">
+                <figure>
+                  <picture>
+                    <source src={item.image} type="image/webp" />
+                    <source src={item.image} type="image/png" />
+                    <source src={item.image} type="image/jpeg" />
+                    <img
+                      src={item.image}
+                      height="100px"
+                      width="100px"
+                      alt={item.title}
+                    />
+                  </picture>
+                </figure>
+                <div>
+                  <button onClick={() => toggleActiveItem(item)}>
+                    <div className="toggle-switch">
+                      <input
+                        className="toggle-input"
+                        id="toggle"
+                        type="checkbox"
+                        checked={item.active}
+                      />
+                      <label className="toggle-label"></label>
+                    </div>
+                  </button>
+                  <div>
+                    <span>{item.active ? 'Ligado' : 'Desligado'}</span>
+                  </div>
+                  <div className="login-items-move">
+                    <button
+                      onClick={() => handleMoveItemUp(item.id, item.order)}
+                    >
+                      <span>◀</span>
+                    </button>
+                    <button
+                      onClick={() => handleMoveItemDown(item.id, item.order)}
+                    >
+                      <span>▶</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="login-items-info">
+                <span>{item.title}</span>
+                <span>{item.description}</span>
+                <span>R$ {item.price}</span>
+              </div>
+              <div>
+                <button onClick={() => handleIsEditItem(item)}>Editar</button>
+                <button onClick={() => handleDeleteItem(item.id)}>
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
