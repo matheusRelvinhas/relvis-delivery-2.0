@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 import './AddClientForm.css';
 
@@ -25,13 +25,12 @@ const AddClientForm: React.FC = () => {
     districtClient,
     setDistrictClient,
     isEditClient,
-    isContentOpen,
-    setIsContentOpen,
+    isContentClientOpen,
+    setIsContentClientOpen,
     setIsEditClient,
   } = useGlobalContext();
 
-
-  const toggleContent = () => {
+  const toggleContentClient = () => {
     setNameClient('');
     setCellphoneClient('');
     setCepClient('');
@@ -39,7 +38,7 @@ const AddClientForm: React.FC = () => {
     setNumberClient('');
     setComplementClient('');
     setDistrictClient('');
-    setIsContentOpen(!isContentOpen);
+    setIsContentClientOpen(!isContentClientOpen);
     setIsEditClient(false);
   };
 
@@ -54,19 +53,19 @@ const AddClientForm: React.FC = () => {
 
   return (
     <div className="add-client-form-container">
-      <button onClick={toggleContent}>
+      <button onClick={toggleContentClient}>
         <div className="add-client-form-title">
-          <span>{isContentOpen ? '-' : '+'}</span>
+          <span>{isContentClientOpen ? '-' : '+'}</span>
           <h2>{isEditClient ? 'Editar' : 'Adicionar'}</h2>
           <figure>
             <picture>
-              <source src={dataCss.addClientImage} type="image/png" />
-              <img src={dataCss.addClientImage} alt="icon-img" />
+              <source src={dataCss.clientsImage} type="image/png" />
+              <img src={dataCss.clientsImage} alt="icon-img" />
             </picture>
           </figure>
         </div>
       </button>
-      {isContentOpen && (
+      {isContentClientOpen && (
         <form onSubmit={handleSubmitClient} className="add-client-form">
           <input
             type="text"
@@ -127,21 +126,18 @@ const AddClientForm: React.FC = () => {
           />
           <button type="submit">
             <span>{isEditClient ? 'Editar' : 'Adicionar'}</span>
-            {isEditClient ? (
-              <figure>
-                <picture>
-                  <source src={dataCss.editIconImage} type="image/png" />
-                  <img src={dataCss.editIconImage} alt="icon-img" />
-                </picture>
-              </figure>
-            ) : (
-              <figure>
-                <picture>
-                  <source src={dataCss.addIconImage} type="image/png" />
-                  <img src={dataCss.addIconImage} alt="icon-img" />
-                </picture>
-              </figure>
-            )}
+            <figure>
+              <picture>
+                <source
+                  src={ isEditClient ? dataCss.editIconImage : dataCss.addIconImage }
+                  type="image/png"
+                />
+                <img
+                  src={ isEditClient ? dataCss.editIconImage : dataCss.addIconImage }
+                  alt="icon-img"
+                />
+              </picture>
+            </figure>
           </button>
         </form>
       )}

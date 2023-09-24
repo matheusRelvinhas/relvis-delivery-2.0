@@ -1,11 +1,11 @@
-.login-client-container {
+.login-category-container {
   width: 100%;
   height: calc(100vh);
   display: flex;
   flex-direction: column;
 }
 
-.login-client-title {
+.login-category-title {
   width: 25vw;
   min-width: 200px;
   background-color: #f04134;
@@ -25,69 +25,57 @@
   z-index: 998;
 }
 
-.login-client-title span {
+.login-category-title span {
   text-align: center;
   align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-  
-.login-client-title figure img {
+
+.login-category-title figure img {
   height: 25px;
   width: 35px;
   margin-top: 3px;
 }
 
-.login-client-list {
+.login-category-list {
   margin-top: 90px;
 }
 
-.login-client-items {
+.login-category-items {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  margin-top: 4px;
 }
 
-.login-client-items-title {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-}
-
-.login-client-items-title h3 {
-  font-size: large;
-  width: 35vw;
-  min-width: 120px;
-  font-weight: bold;
-
-}
-
-.login-client-items-title span {
-  font-size: small;
-  margin-left: 2vw;
-}
-
-.login-client-items  p{
+.login-category-items-title {
   background-color: #fef0ef;
-  align-items: center;
+  width: 100%;
+  height: 5vh;
+  min-height: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.login-client-buttons {
+.login-category-items-title span{
+  font-size: large;
+}
+
+.login-category-buttons {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.login-client-buttons div {
+.login-category-buttons div {
   display: flex;
 }
 
-.login-client-buttons div button{
-  margin-right: 20px;
+.login-category-buttons div button{
+  margin-right: 10px;
 }
 
-.login-client-buttons button {
+.login-category-buttons button {
   font-size: larger;
   background-color: #f04134;
   color: #fff;
@@ -102,16 +90,17 @@
   margin: 4px 0;
 }
 
-.login-client-buttons button:focus {
+.login-category-buttons button:focus {
   background-color: #df2e22;
 }
 
-.login-client-buttons button:active {
+.login-category-buttons button:active {
   background-color: #df2e22;
 }
 
-.login-client-buttons button figure img {
+.login-category-buttons button figure img {
   margin-top: 3px;
   height: 22px;
   width: 22px;
 }
+

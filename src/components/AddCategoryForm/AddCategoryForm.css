@@ -1,4 +1,4 @@
-.add-client-form-container {
+.add-category-form-container {
   margin-top: 46px;
   width: 35%;
   min-width: 210px;
@@ -11,7 +11,7 @@
   position: fixed;
 }
 
-.add-client-form-title {
+.add-category-form-title {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -21,17 +21,17 @@
   align-items: center;
 }
 
-.add-client-form-title span {
+.add-category-form-title span {
   margin: 0 20px 0 4px;
 }
 
-.add-client-form-title figure img {
+.add-category-form-title figure img {
   height: 25px;
   width: 30px;
   margin-top: 2px;
 }
 
-.add-client-form {
+.add-category-form {
   background-color: #fef0ef;
   display: flex;
   flex-direction: column;
@@ -44,7 +44,7 @@
   padding: 4px 0 6px 0;
 }
 
-.add-client-form input {
+.add-category-form input {
   background-color: #f7e0df;
   border: #f04134 solid 2px;
   border-radius: 10px;
@@ -57,8 +57,8 @@
   padding: 0.5px 6px;
   margin: 3px 2px;
 }
-  
-.add-client-form button {
+
+.add-category-form button {
   background-color: #f04134;
   color: #fff;
   border-radius: 5px;
@@ -73,28 +73,28 @@
   margin-top: 2px;
 }
 
-.add-client-form button figure img {
+.add-category-form button figure img {
   height: 22px;
   width: 22px;
   margin-top: 3px;
 }
 
-.add-client-form button:focus {
+.add-category-form button:focus {
   background-color: #df2e22;
 }
 
-.add-client-form button:active {
+.add-category-form button:active {
   background-color: #df2e22;
 }
 
-.add-client-form input:active {
+.add-category-form input:active {
   background-color: #f3cac7;
 }
 
-.add-client-form input:focus {
+.add-category-form input:focus {
   background-color: #f3cac7;
 }
 
-.add-client-form input:not(:placeholder-shown) {
+.add-category-form input:not(:placeholder-shown) {
   background-color: #f3cac7; /* Cor de fundo quando tiver um valor */
 }

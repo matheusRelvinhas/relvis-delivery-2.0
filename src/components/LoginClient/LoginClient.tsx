@@ -17,13 +17,12 @@ const LoginClient: React.FC = () => {
     setDistrictClient,
     setIsEditClient,
     setClientId,
-    setIsContentOpen,
-    setIsLoading,
+    setIsContentClientOpen,
     handleDeleteClient,
   } = useGlobalContext();
 
   const handleIsEditClient = (client: any) => {
-    setIsContentOpen(true);
+    setIsContentClientOpen(true);
     setClientId(client.id);
     setNameClient(client.name);
     setCellphoneClient(client.cellphone);
@@ -66,23 +65,23 @@ const LoginClient: React.FC = () => {
               {client.district} - {client.cep}
             </p>
             <div className="login-client-buttons">
-            <div>
-              <button onClick={() => handleIsEditClient(client)}>
-                <figure>
-                  <picture>
-                    <source src={dataCss.editIconImage} type="image/png" />
-                    <img src={dataCss.editIconImage} alt="icon-img" />
-                  </picture>
-                </figure>
-              </button>
-              <button onClick={() => sendWhats(client.cellphone)}>
-                <figure>
-                  <picture>
-                    <source src={dataCss.whatsImage} type="image/png" />
-                    <img src={dataCss.whatsImage} alt="icon-img" />
-                  </picture>
-                </figure>
-              </button>
+              <div>
+                <button onClick={() => handleIsEditClient(client)}>
+                  <figure>
+                    <picture>
+                      <source src={dataCss.editIconImage} type="image/png" />
+                      <img src={dataCss.editIconImage} alt="icon-img" />
+                    </picture>
+                  </figure>
+                </button>
+                <button onClick={() => sendWhats(client.cellphone)}>
+                  <figure>
+                    <picture>
+                      <source src={dataCss.whatsImage} type="image/png" />
+                      <img src={dataCss.whatsImage} alt="icon-img" />
+                    </picture>
+                  </figure>
+                </button>
               </div>
               <button onClick={() => handleDeleteClient(client.id)}>
                 <figure>

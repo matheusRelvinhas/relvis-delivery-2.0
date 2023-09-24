@@ -72,7 +72,15 @@ const LoginNavigation: React.FC = () => {
               onClick={() => handleItemClick('Categorias')}
               className={activeItem === 'Categorias' ? 'active' : ''}
             >
-              Categorias
+                            <div className="login-navigation-li">
+                <figure>
+                  <picture>
+                    <source src={dataCss.categoryImage} type="image/png" />
+                    <img  src={dataCss.categoryImage} alt="icon-img" width={'30px'} />
+                  </picture>
+                </figure>
+                <span>Categorias</span>
+              </div>
             </li>
             <li
               onClick={() => handleItemClick('Produtos')}

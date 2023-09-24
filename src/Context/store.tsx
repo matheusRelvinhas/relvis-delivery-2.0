@@ -143,6 +143,8 @@ interface ContextProps {
   setCellphone: React.Dispatch<React.SetStateAction<string>>;
   categories: { id: string; category: string; order: number }[];
   handleDeleteCategory: (categoryId: string, category: string) => void;
+  handleMoveCategoryUp: (categoryId: string, order: number) => void;
+  handleMoveCategoryDown: (categoryId: string, order: number) => void;
   handleEditCategory: (categoryId: string, category: string) => void;
   handleDeleteItem: (categoryId: string) => void;
   category: string;
@@ -240,8 +242,10 @@ interface ContextProps {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   errorMessage: string;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-  isContentOpen: boolean;
-  setIsContentOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isContentClientOpen: boolean;
+  setIsContentClientOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isContentCategoryOpen: boolean;
+  setIsContentCategoryOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -281,6 +285,8 @@ const GlobalContext = createContext<ContextProps>({
   categories: [],
   handleDeleteCategory: () => {},
   handleEditCategory: () => {},
+  handleMoveCategoryUp: () => {},
+  handleMoveCategoryDown: () => {},
   handleDeleteItem: () => {},
   category: '',
   setCategory: () => {},
@@ -377,8 +383,10 @@ const GlobalContext = createContext<ContextProps>({
   setIsLoading: () => {},
   errorMessage: '',
   setErrorMessage: () => {},
-  isContentOpen: false,
-  setIsContentOpen: () => {},
+  isContentClientOpen: false,
+  setIsContentClientOpen: () => {},
+  isContentCategoryOpen: false,
+  setIsContentCategoryOpen: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -404,7 +412,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     storeImage: '/img/store.png',
     loginImage: '/img/login.png',
     clientsImage: '/img/clients.png',
-    addClientImage: 'img/add-edit-client.png',
+    categoryImage: '/img/category.png',
     addIconImage:'img/add-icon.png',
     editIconImage:'img/edit-icon.png',
     deleteIconImage:'img/delete-icon.png',
@@ -470,7 +478,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [isOpenStore, setIsOpenStore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [isContentOpen, setIsContentOpen] = useState(false);
+  const [isContentClientOpen, setIsContentClientOpen] = useState(false);
+  const [isContentCategoryOpen, setIsContentCategoryOpen] = useState(false);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -510,54 +519,87 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   };
 
   const addCategory = async () => {
+    setIsLoading(true);
     if (category.trim() !== '') {
       try {
         const collectionRef = firestore.collection('categories'); // Consulte todas as categorias para contar quantas existem
         const querySnapshot = await collectionRef.get();
         const totalCategories = querySnapshot.size;
         const order = totalCategories + 1; // Determine a ordem para a nova categoria
-        const existingCategory = await collectionRef.where('category', '==', category).get(); // Verifique se a categoria já existe
+        const existingCategory = await collectionRef.where('category', '==', category.toLowerCase()).get(); // Verifique se a categoria já existe
         if (existingCategory.size === 0) { // A categoria ainda não existe, pode adicioná-la com a ordem calculada
           
           await collectionRef.add({ category, order });
           setCategory('');
-          console.log('Categoria salva com sucesso!');
+          setIsContentCategoryOpen(false);
         } else { // A categoria já existe, defina o alertLogin como true por 3 segundos
-          setAlertLogin(true); 
+          setErrorMessage('Categoria já cadastrada')
+          setAlertLogin(true);
+          setIsLoading(false);
           setTimeout(() => {
             setAlertLogin(false);
+            setErrorMessage('')
           }, 3000);
         }
       } catch (error) {
-        console.error('Erro ao salvar categoria:', error);
+        console.error('Erro ao adicioanar categoria:', error);
+        setErrorMessage('Erro ao adicioanar categoria')
+        setAlertLogin(true);
+        setIsLoading(false);
+        setTimeout(() => {
+          setAlertLogin(false);
+          setErrorMessage('')
+        }, 3000);
       }
     }
+    setIsLoading(false);
   };
 
   const handleEditCategory = async (categoryId: string, lastCategory: string) => {
+    setIsLoading(true);
     try {
       const collectionRef = firestore.collection('categories');
       const collectionItemRef = firestore.collection('items');
-      await collectionRef.doc(categoryId).update({ // Atualize a categoria da categoria em questão
+      const existingCategoryQuery = await collectionRef.where('category', '==', category.toLowerCase()).get();  // Verifique se a nova categoria já existe (independentemente de ser maiúscula ou minúscula)
+      if (existingCategoryQuery.size > 0) {
+        setErrorMessage('Categoria já cadastrada');
+        setAlertLogin(true);
+        setIsLoading(false);
+        setTimeout(() => {
+          setAlertLogin(false);
+          setErrorMessage('');
+        }, 3000);
+        return;
+      }
+      await collectionRef.doc(categoryId).update({
         category: category,
       });
-      const querySnapshot = await collectionItemRef.where('category', '==', lastCategory).get(); // Encontre todos os itens com a categoria anterior ('lastCategory')
-      const batch = firestore.batch(); // Atualize a categoria de todos os itens encontrados
+      setIsContentCategoryOpen(false);
+      const querySnapshot = await collectionItemRef.where('category', '==', lastCategory).get();
+      const batch = firestore.batch();
       querySnapshot.forEach((doc) => {
         const itemRef = collectionItemRef.doc(doc.id);
         batch.update(itemRef, { category: category });
       });
       await batch.commit();
       setIsEditCategory(false);
-      setLastCategory('')
+      setLastCategory('');
       setCategory('');
       console.log('Categoria editada com sucesso e itens atualizados!');
     } catch (error) {
-      console.error('Erro ao editar categoria!', error);
+      console.error('Erro ao editar categoria: ', error);
+      setErrorMessage('Erro ao editar categoria');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
     }
+    setIsLoading(false);
   };
 
   const handleDeleteCategory = async (categoryId: string, category: string) => {
+    setIsLoading(true);
     try {
       const collectionRef = firestore.collection('categories');
       const collectionItemRef = firestore.collection('items');
@@ -574,10 +616,60 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       itemQuerySnapshot.forEach(async (doc) => {
         await collectionItemRef.doc(doc.id).delete();
       });
-      console.log('Categoria e itens associados excluídos com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir categoria e itens associados:', error);
+      setErrorMessage('Erro ao excluir categoria e itens associados');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
     }
+    setIsLoading(false);
+  };
+
+  const handleMoveCategoryUp = async (categoryId: string, order: number) => {
+    setIsLoading(true);
+    if (order > 1) { // Verifique se a categoria pode ser movida para cima
+      const batch = firestore.batch();
+      const categoryRef = firestore.collection('categories').doc(categoryId);
+      const previousCategorySnapshot = await firestore
+        .collection('categories')
+        .where('order', '==', order - 1)
+        .limit(1)
+        .get();
+      if (!previousCategorySnapshot.empty) { // Encontrou uma categoria com a ordem anterior, portanto, pode atualizar a ordem
+        const previousCategoryId = previousCategorySnapshot.docs[0].id;
+        const previousCategoryRef = firestore
+          .collection('categories')
+          .doc(previousCategoryId);
+        batch.update(categoryRef, { order: order - 1 }); // Atualize a ordem da categoria selecionada
+        batch.update(previousCategoryRef, { order: order }); // Atualize a ordem da categoria anterior
+        await batch.commit(); // Execute a transação
+      }
+    }
+    setIsLoading(false);
+  };
+
+  const handleMoveCategoryDown = async (categoryId: string, order: number) => {
+    setIsLoading(true);
+    const batch = firestore.batch();
+    const categoryRef = firestore.collection('categories').doc(categoryId);
+    const nextCategorySnapshot = await firestore
+      .collection('categories')
+      .where('order', '==', order + 1)
+      .limit(1)
+      .get();
+    if (!nextCategorySnapshot.empty) { // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
+      const nextCategoryId = nextCategorySnapshot.docs[0].id;
+      const nextCategoryRef = firestore
+        .collection('categories')
+        .doc(nextCategoryId);
+      batch.update(categoryRef, { order: order + 1 }); // Atualize a ordem da categoria selecionada
+      batch.update(nextCategoryRef, { order: order }); // Atualize a ordem da categoria seguinte
+      await batch.commit(); // Execute a transação
+    }
+    setIsLoading(false);
   };
 
   async function addItem(event: React.FormEvent) {
@@ -714,7 +806,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setNumberClient('');
       setComplementClient('');
       setDistrictClient('');
-      setIsContentOpen(false);
+      setIsContentClientOpen(false);
     } catch (error) {
       console.error('Erro ao adicionar cliente:', error);
       setErrorMessage('Erro ao adicionar cliente')
@@ -761,7 +853,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setNumberClient('');
       setComplementClient('');
       setDistrictClient('');
-      setIsContentOpen(false);
+      setIsContentClientOpen(false);
       setIsEditClient(false)
       await clientRef.update(updatedClientData); // Atualiza o documento do item no Firestore
     } catch (error) {
@@ -1388,9 +1480,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setIsLoading,
         errorMessage,
         setErrorMessage,
-        isContentOpen,
-        setIsContentOpen,
+        isContentClientOpen,
+        setIsContentClientOpen,
         handleDeleteClient,
+        isContentCategoryOpen,
+        setIsContentCategoryOpen,
+        handleMoveCategoryUp,
+        handleMoveCategoryDown,
       }}
     >
       {children}
