@@ -22,6 +22,7 @@ const LoginItens: React.FC = () => {
     handleMoveItemUp,
     handleMoveItemDown,
     setIsContentItemOpen,
+    toggleActiveItem,
   } = useGlobalContext();
 
   const handleIsEditItem = (item: any) => {
@@ -34,16 +35,6 @@ const LoginItens: React.FC = () => {
     setImageFile(null);
     setIsEditItem(true);
     setIsContentItemOpen(true);
-  };
-
-  const toggleActiveItem = async (item: any) => {
-    try {
-      const itemRef = firestore.collection('items').doc(item.id); // Substitua 'seu_nome_de_colecao' pelo nome real da sua coleção Firestore
-      const novoValorAtivo = !item.active; // Alterna a propriedade 'active'
-      await itemRef.update({ active: novoValorAtivo }); // Atualiza o Firestore
-    } catch (error) {
-      console.error('Erro ao atualizar o status ativo no Firestore:', error);
-    }
   };
 
   return (
@@ -79,14 +70,12 @@ const LoginItens: React.FC = () => {
                     <source src={item.image} type="image/jpeg" />
                     <img
                       src={item.image}
-                      height="100px"
-                      width="100px"
-                      alt={item.title}
+                      alt='img-item'
                     />
                   </picture>
                 </figure>
                 <div>
-                  <button onClick={() => toggleActiveItem(item)}>
+                  <button onClick={() => toggleActiveItem(item.id, item.active)}>
                     <div className="toggle-switch">
                       <input
                         className="toggle-input"
@@ -115,14 +104,26 @@ const LoginItens: React.FC = () => {
                 </div>
               </div>
               <div className="login-items-info">
-                <span>{item.title}</span>
-                <span>{item.description}</span>
-                <span>R$ {item.price}</span>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
               </div>
-              <div>
-                <button onClick={() => handleIsEditItem(item)}>Editar</button>
+              <div className="login-items-buttons-price">
+                <button onClick={() => handleIsEditItem(item)}>
+                  <figure>
+                    <picture>
+                      <source src={dataCss.editIconImage} type="image/png" />
+                      <img src={dataCss.editIconImage} alt="icon-img" />
+                    </picture>
+                  </figure>
+                </button>
+                <span>R$ {item.price.toFixed(2)}</span>
                 <button onClick={() => handleDeleteItem(item.id)}>
-                  Excluir
+                  <figure>
+                    <picture>
+                      <source src={dataCss.deleteIconImage} type="image/png" />
+                      <img src={dataCss.deleteIconImage} alt="icon-img" />
+                    </picture>
+                  </figure>
                 </button>
               </div>
             </div>

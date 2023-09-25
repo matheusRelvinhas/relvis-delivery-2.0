@@ -165,6 +165,7 @@ interface ContextProps {
   handleRemoveItem: (card: Card) => void;
   handleMoveItemUp: (itemId: string, order: number) => void;
   handleMoveItemDown: (itemId: string, order: number) => void;
+  toggleActiveItem:(itemId: string, itemActive: boolean) => void;
   handleQuantityChange: (card: Card, e: React.ChangeEvent<HTMLInputElement>) => void;
   getItemQuantity: (card: Card) => number;
   cartTotal: number;
@@ -291,6 +292,7 @@ const GlobalContext = createContext<ContextProps>({
   handleEditCategory: () => {},
   handleMoveCategoryUp: () => {},
   handleMoveCategoryDown: () => {},
+  toggleActiveItem:() => {},
   handleDeleteItem: () => {},
   category: '',
   setCategory: () => {},
@@ -685,6 +687,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   async function addItem(event: React.FormEvent) {
     event?.preventDefault();
+    setIsLoading(true);
     const collectionRef = firestore.collection('items');
     const querySnapshotOrder = await collectionRef.get(); // Consulte todas os itenss para contar quantos existem
     const totalItems = querySnapshotOrder.size;
@@ -701,9 +704,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     try { // Verifica se já existe um item com o mesmo título
       const querySnapshot = await collectionRef.where('title', '==', title).get();
       if (!querySnapshot.empty) {      
-        setAlertLogin(true); // Já existe um item com o mesmo título, ativa o alerta
-        setTimeout(() => { // Define um timer para desativar o alerta após 3 segundos
+        setErrorMessage('Item já cadastrado');
+        setAlertLogin(true);
+        setIsLoading(false);
+        setTimeout(() => {
           setAlertLogin(false);
+          setErrorMessage('');
         }, 3000);
         return; // Não continue o processo de salvar
       }
@@ -722,20 +728,31 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setImageFile(null);
       setSelectedCategory('');
     } catch (error) {
-      console.error('Error adding item:', error);
+      console.error('Erro ao adicionar item:', error);
+      setErrorMessage('Erro ao adicionar item');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
     }
+    setIsLoading(false);
   }
 
   const handleEditItem = async (itemId: string) => {
+    setIsLoading(true);
     const collectionRef = firestore.collection('items');
     const itemRef = collectionRef.doc(itemId);
     try { // Verifica se já existe um item com o mesmo título
       const existingItem = await collectionRef.where('title', '==', title).get();
       if (!existingItem.empty && existingItem.docs[0].id !== itemId) {
+        setErrorMessage('Item já cadastrado');
         setAlertLogin(true);
-          setTimeout(() => {
-            setAlertLogin(false);
-          }, 3000);
+        setIsLoading(false);
+        setTimeout(() => {
+          setAlertLogin(false);
+          setErrorMessage('');
+        }, 3000);
         return;
       }
       const updatedItemData = { // Define os dados atualizados do item
@@ -763,10 +780,36 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setIsContentItemOpen(false);
     } catch (error) {
       console.error('Erro ao editar item:', error);
+      setErrorMessage('Erro ao editar item');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
     }
+    setIsLoading(false);
+  };
+
+  const toggleActiveItem = async (itemId:string, itemActive:boolean) => {
+    setIsLoading(true);
+    try {
+      const itemRef = firestore.collection('items').doc(itemId); // Substitua 'seu_nome_de_colecao' pelo nome real da sua coleção Firestore
+      const newValueActive = !itemActive; // Alterna a propriedade 'active'
+      await itemRef.update({ active: newValueActive }); // Atualiza o Firestore
+    } catch (error) {
+      console.error('Erro ao editar item:', error);
+      setErrorMessage('Erro ao editar item');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
+    }
+    setIsLoading(false);
   };
 
   const handleDeleteItem = async (itemId: string) => {
+    setIsLoading(true);
     try {
       const collectionRef = firestore.collection('items');
       const itemDoc = await collectionRef.doc(itemId).get();
@@ -778,13 +821,20 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const currentOrder = doc.data().order;
         await docRef.update({ order: currentOrder - 1 });
       });
-      console.log('Item excluído com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir item:', error);
+      setErrorMessage('Erro ao excluir item');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
     }
+    setIsLoading(false);
   };
 
   const handleMoveItemUp = async (itemId: string, order: number) => {
+    setIsLoading(true);
     if (order > 1) { // Verifique se a categoria pode ser movida para cima
       const batch = firestore.batch();
       const itemRef = firestore.collection('items').doc(itemId);
@@ -803,9 +853,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         await batch.commit(); // Execute a transação
       }
     }
+    setIsLoading(false);
   };
 
   const handleMoveItemDown = async (itemId: string, order: number) => {
+    setIsLoading(true);
     const batch = firestore.batch();
     const itemRef = firestore.collection('items').doc(itemId);
     const nextItemSnapshot = await firestore
@@ -820,6 +872,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       batch.update(nextItemRef, { order: order }); // Execute a transação
       await batch.commit();
     }
+    setIsLoading(false);
   };
   
   async function addClient(event: React.FormEvent) {
@@ -1540,6 +1593,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         handleMoveItemDown,
         isContentItemOpen,
         setIsContentItemOpen,
+        toggleActiveItem,
       }}
     >
       {children}
