@@ -109,7 +109,18 @@ const LoginNavigation: React.FC = () => {
               onClick={() => handleItemClick('Pedidos')}
               className={activeItem === 'Pedidos' ? 'active' : ''}
             >
-              Pedidos
+                            <div className="login-navigation-li">
+                <figure>
+                  <picture>
+                    <source src={dataCss.purchaseRequestsImage} type="image/png" />
+                    <img
+                      src={dataCss.purchaseRequestsImage}
+                      alt="icon-img"
+                    />
+                  </picture>
+                </figure>
+                <span>Pedidos</span>
+              </div>
             </li>
           </ul>
         </div>

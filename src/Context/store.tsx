@@ -425,6 +425,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     categoryImage: '/img/category.png',
     itemsImage: '/img/items.png',
     itemImage: '/img/item.png',
+    purchaseRequestsImage: 'img/purchase-requests.png',
     addIconImage:'img/add-icon.png',
     editIconImage:'img/edit-icon.png',
     deleteIconImage:'img/delete-icon.png',

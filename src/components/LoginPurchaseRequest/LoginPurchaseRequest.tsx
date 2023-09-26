@@ -70,15 +70,19 @@ const LoginPurchaseRequest: React.FC = () => {
     if (!purchaseRequests || purchaseRequests.length === 0) {
       return '0.00'; // Retorna 0.00 se a lista estiver vazia ou indefinida
     }
-    const total = purchaseRequests.reduce((acc :number, purchaseRequest: any) => { // Usa reduce para somar os valores 'total' de todos os itens com status 'finish'
-      if (purchaseRequest.status === 'finish') {
-        const itemTotal = parseFloat(purchaseRequest.total); // Converte para número
-        if (!isNaN(itemTotal)) {
-          return acc + itemTotal;
+    const total = purchaseRequests.reduce(
+      (acc: number, purchaseRequest: any) => {
+        // Usa reduce para somar os valores 'total' de todos os itens com status 'finish'
+        if (purchaseRequest.status === 'finish') {
+          const itemTotal = parseFloat(purchaseRequest.total); // Converte para número
+          if (!isNaN(itemTotal)) {
+            return acc + itemTotal;
+          }
         }
-      }
-      return acc;
-    }, 0);
+        return acc;
+      },
+      0
+    );
     return total.toFixed(2); // Formata o total com 2 casas decimais
   };
 
@@ -102,15 +106,15 @@ const LoginPurchaseRequest: React.FC = () => {
       };
       await purchaseRequestRef.update(updatedPurchaseRequestData);
       console.log('Pedido editado com sucesso!');
-      } catch (error) {
+    } catch (error) {
       console.error('Erro ao editar pedido:', error);
     }
   };
 
   const handleIsEditPurchase = (purchaseRequest: any) => {
     if (isEditPurchase) {
-      handleEditPurchase(purchaseRequest)
-      setIsEditPurchase(false)
+      handleEditPurchase(purchaseRequest);
+      setIsEditPurchase(false);
     } else {
       setNamePurchase(purchaseRequest.name);
       setCellphonePurchase(purchaseRequest.cellphone);
@@ -124,15 +128,38 @@ const LoginPurchaseRequest: React.FC = () => {
       setPaymentPurchase(purchaseRequest.payment);
       setTrocoPurchase(purchaseRequest.troco);
       setTotalPurchase(purchaseRequest.total);
-      setIsEditPurchase(true)
+      setIsEditPurchase(true);
+    }
+  };
+
+  const getStatusClassName = (purchaseRequestStatus: string) => {
+    switch (purchaseRequestStatus) {
+      case 'new':
+        return 'border-orange';
+      case 'accepted':
+        return 'border-yellow';
+      case 'finish':
+        return 'border-green';
+      case 'canceled':
+        return 'border-gray';
+      default:
+        return ''; // Use uma classe padrão ou vazia se o status não corresponder a nenhum caso
     }
   };
 
   return (
     <div className="login-purchase-requests">
-      <div className="purchase-requests-indice">
-        <div>
-          <h2>Pedidos</h2>
+      <div className="login-purchase-requests-indice">
+        <div className="login-purchase-requests-title">
+          <span>Pedidos</span>
+          <figure>
+            <picture>
+              <source src={dataCss.purchaseRequestsImage} type="image/png" />
+              <img src={dataCss.purchaseRequestsImage} alt="icon-img" />
+            </picture>
+          </figure>
+        </div>
+        <div className="login-purchase-requests-select">
           <select
             value={selectedOption}
             onChange={(e) => setSelectedOption(e.target.value)}
@@ -141,6 +168,8 @@ const LoginPurchaseRequest: React.FC = () => {
             <option value="Período">Período</option>
             <option value="Todos">Todos</option>
           </select>
+        </div>
+        <div className="login-purchase-requests-date">
           <input
             type="date"
             value={startDate}
@@ -161,21 +190,44 @@ const LoginPurchaseRequest: React.FC = () => {
               onClick={() => handlePurchaseRequestClick(purchaseRequest)}
               className="purchase-request-item"
             >
-              <p>ID: 000{purchaseRequest.order}</p>
-              <p>Cliente: {purchaseRequest.name}</p>
-              R$ {parseFloat(purchaseRequest.total.toString()).toFixed(2)}
-              {purchaseRequest.status}
+              <div>
+                <span className="purchase-requests-item-order">
+                  # 000{purchaseRequest.order}
+                </span>
+                <div
+                  className={`purchase-requests-item-status ${getStatusClassName(purchaseRequest.status)}`}
+                >
+                  <span>
+                    {purchaseRequest.status}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <span className="purchase-requests-item-name">
+                  {purchaseRequest.name}
+                </span>
+              </div>
+              <div>
+                <span className="purchase-requests-item-price">
+                  R$ {parseFloat(purchaseRequest.total.toString()).toFixed(2)}
+                </span>
+              </div>
             </div>
           ))}
         </div>
-        <div>Total : R$ {calculateTotal(filteredPurchaseRequests)}</div>
+        <div className="purchase-requests-total">
+          <span>Total</span>
+          <span>R$ {calculateTotal(filteredPurchaseRequests)}</span>
+        </div>
       </div>
       <div className="purchase-request">
         {selectedPurchaseRequest !== '' ? (
           <div className="purchase-request-container">
             <div className="purchase-request-print">
               <button onClick={handlePrint}>Imprimir</button>
-              <button onClick={() =>handleIsEditPurchase(purchaseRequest)}>{ isEditPurchase ? 'Salvar' : 'Editar'}</button>
+              <button onClick={() => handleIsEditPurchase(purchaseRequest)}>
+                {isEditPurchase ? 'Salvar' : 'Editar'}
+              </button>
             </div>
             <div
               className="purchase-request-selected"
@@ -190,127 +242,193 @@ const LoginPurchaseRequest: React.FC = () => {
                 <p>ID: 000{purchaseRequest?.order}</p>
               </div>
               <div>
-                <p>Cliente: {isEditPurchase ? (
-                  <input
-                    type="text"
-                    placeholder="Cliente"
-                    value={namePurchase}
-                    onChange={(event) => setNamePurchase(event.target.value)}
-                  />
-                  ) : purchaseRequest?.name}
+                <p>
+                  Cliente:{' '}
+                  {isEditPurchase ? (
+                    <input
+                      type="text"
+                      placeholder="Cliente"
+                      value={namePurchase}
+                      onChange={(event) => setNamePurchase(event.target.value)}
+                    />
+                  ) : (
+                    purchaseRequest?.name
+                  )}
                 </p>
-                <p>Celular: {isEditPurchase ? (
-                  <input
-                    type="number"
-                    placeholder="Celular"
-                    value={cellphonePurchase}
-                    onChange={(event) => {
-                      const formattedInput = event.target.value.replace(/[^0-9]/g, '');
-                      if (formattedInput.length <= 11) {
-                        setCellphonePurchase(formattedInput);
+                <p>
+                  Celular:{' '}
+                  {isEditPurchase ? (
+                    <input
+                      type="number"
+                      placeholder="Celular"
+                      value={cellphonePurchase}
+                      onChange={(event) => {
+                        const formattedInput = event.target.value.replace(
+                          /[^0-9]/g,
+                          ''
+                        );
+                        if (formattedInput.length <= 11) {
+                          setCellphonePurchase(formattedInput);
+                        }
+                      }}
+                    />
+                  ) : (
+                    purchaseRequest?.cellphone
+                  )}
+                </p>
+                <p>
+                  Cep:{' '}
+                  {isEditPurchase ? (
+                    <input
+                      type="number"
+                      placeholder="Cep"
+                      value={cepPurchase}
+                      onChange={(event) => {
+                        const formattedInput = event.target.value.replace(
+                          /[^0-9]/g,
+                          ''
+                        );
+                        if (formattedInput.length <= 8) {
+                          setCepPurchase(formattedInput);
+                        }
+                      }}
+                    />
+                  ) : (
+                    purchaseRequest?.cep
+                  )}
+                </p>
+                <p>
+                  Rua / Av.:{' '}
+                  {isEditPurchase ? (
+                    <input
+                      type="text"
+                      placeholder="Rua / Av.:"
+                      value={roadPurchase}
+                      onChange={(event) => setRoadPurchase(event.target.value)}
+                    />
+                  ) : (
+                    purchaseRequest?.road
+                  )}
+                </p>
+                <p>
+                  Nº:{' '}
+                  {isEditPurchase ? (
+                    <input
+                      type="text"
+                      placeholder="Número"
+                      value={numberPurchase}
+                      onChange={(event) =>
+                        setNumberPurchase(event.target.value)
                       }
-                    }}
-                  />
-                  ) : purchaseRequest?.cellphone}
+                    />
+                  ) : (
+                    purchaseRequest?.number
+                  )}
                 </p>
-                <p>Cep: {isEditPurchase ? (
-                  <input
-                    type="number"
-                    placeholder="Cep"
-                    value={cepPurchase}
-                    onChange={(event) => {
-                      const formattedInput = event.target.value.replace(/[^0-9]/g, '');
-                      if (formattedInput.length <= 8) {
-                        setCepPurchase(formattedInput);
+                <p>
+                  Complemento:{' '}
+                  {isEditPurchase ? (
+                    <input
+                      type="text"
+                      placeholder="Complemento"
+                      value={complementPurchase}
+                      onChange={(event) =>
+                        setComplementPurchase(event.target.value)
                       }
-                    }}
-                  />
-                  ) : purchaseRequest?.cep}
+                    />
+                  ) : (
+                    purchaseRequest?.complement
+                  )}
                 </p>
-                <p>Rua / Av.: {isEditPurchase ? (
-                  <input
-                    type="text"
-                    placeholder="Rua / Av.:"
-                    value={roadPurchase}
-                    onChange={(event) => setRoadPurchase(event.target.value)}
-                  />
-                  ) : purchaseRequest?.road}
-                </p>
-                <p>Nº: {isEditPurchase ? (
-                  <input
-                    type="text"
-                    placeholder="Número"
-                    value={numberPurchase}
-                    onChange={(event) => setNumberPurchase(event.target.value)}
-                  />
-                  ) : purchaseRequest?.number}
-                </p>
-                <p>Complemento: {isEditPurchase ? (
-                  <input
-                    type="text"
-                    placeholder="Complemento"
-                    value={complementPurchase}
-                    onChange={(event) => setComplementPurchase(event.target.value)}
-                  />
-                  ) : purchaseRequest?.complement}
-                </p>
-                <p>Bairro: {isEditPurchase ? (
-                  <input
-                    type="text"
-                    placeholder="Bairro"
-                    value={districtPurchase}
-                    onChange={(event) => setDistrictPurchase(event.target.value)}
-                  />
-                  ) : purchaseRequest?.district}
+                <p>
+                  Bairro:{' '}
+                  {isEditPurchase ? (
+                    <input
+                      type="text"
+                      placeholder="Bairro"
+                      value={districtPurchase}
+                      onChange={(event) =>
+                        setDistrictPurchase(event.target.value)
+                      }
+                    />
+                  ) : (
+                    purchaseRequest?.district
+                  )}
                 </p>
               </div>
               <div>
-                <p>Pedido: {isEditPurchase ? (
-                  <textarea
-                    rows={3}
-                    placeholder="Pedido"
-                    value={purchasePurchase}
-                    onChange={(event) => setPurchasePurchase(event.target.value)}
-                  />
-                  ) : purchaseRequest?.purchase}
+                <p>
+                  Pedido:{' '}
+                  {isEditPurchase ? (
+                    <textarea
+                      rows={3}
+                      placeholder="Pedido"
+                      value={purchasePurchase}
+                      onChange={(event) =>
+                        setPurchasePurchase(event.target.value)
+                      }
+                    />
+                  ) : (
+                    purchaseRequest?.purchase
+                  )}
                 </p>
-                <p>Obs.: {isEditPurchase ? (
-                  <input
-                    type="text"
-                    placeholder="Observação"
-                    value={observationPurchase}
-                    onChange={(event) => setObservationPurchase(event.target.value)}
-                  />
-                  ) : purchaseRequest?.observation}
+                <p>
+                  Obs.:{' '}
+                  {isEditPurchase ? (
+                    <input
+                      type="text"
+                      placeholder="Observação"
+                      value={observationPurchase}
+                      onChange={(event) =>
+                        setObservationPurchase(event.target.value)
+                      }
+                    />
+                  ) : (
+                    purchaseRequest?.observation
+                  )}
                 </p>
               </div>
               <div>
-                <p>Pagamento: {isEditPurchase ? (
-                  <input
-                    type="text"
-                    placeholder="Pagamento"
-                    value={paymentPurchase}
-                    onChange={(event) => setPaymentPurchase(event.target.value)}
-                  />
-                  ) : purchaseRequest?.payment}
+                <p>
+                  Pagamento:{' '}
+                  {isEditPurchase ? (
+                    <input
+                      type="text"
+                      placeholder="Pagamento"
+                      value={paymentPurchase}
+                      onChange={(event) =>
+                        setPaymentPurchase(event.target.value)
+                      }
+                    />
+                  ) : (
+                    purchaseRequest?.payment
+                  )}
                 </p>
-                <p>Troco: {isEditPurchase ? (
-                  <input
-                    type="number"
-                    placeholder="Troco"
-                    value={trocoPurchase}
-                    onChange={(event) => setTrocoPurchase(event.target.value)}
-                  />
-                  ) : purchaseRequest?.troco}
+                <p>
+                  Troco:{' '}
+                  {isEditPurchase ? (
+                    <input
+                      type="number"
+                      placeholder="Troco"
+                      value={trocoPurchase}
+                      onChange={(event) => setTrocoPurchase(event.target.value)}
+                    />
+                  ) : (
+                    purchaseRequest?.troco
+                  )}
                 </p>
-                <p>Total: {isEditPurchase ? (
-                  <input
-                    type="text"
-                    placeholder="Total"
-                    value={totalPurchase}
-                    onChange={(event) => setTotalPurchase(event.target.value)}
-                  />
-                  ) : parseFloat(purchaseRequest?.total.toString()).toFixed(2)}
+                <p>
+                  Total:{' '}
+                  {isEditPurchase ? (
+                    <input
+                      type="text"
+                      placeholder="Total"
+                      value={totalPurchase}
+                      onChange={(event) => setTotalPurchase(event.target.value)}
+                    />
+                  ) : (
+                    parseFloat(purchaseRequest?.total.toString()).toFixed(2)
+                  )}
                 </p>
               </div>
             </div>
@@ -338,13 +456,17 @@ const LoginPurchaseRequest: React.FC = () => {
               </button>
               <button
                 onClick={() => handleCanceledPurchase(purchaseRequest)}
-                disabled={purchaseRequest?.status === 'canceled' || isEditPurchase}
+                disabled={
+                  purchaseRequest?.status === 'canceled' || isEditPurchase
+                }
               >
                 Cancelar
               </button>
               <button
                 onClick={() => handleDeletePurchase(purchaseRequest)}
-                disabled={purchaseRequest?.status !== 'canceled' || isEditPurchase}
+                disabled={
+                  purchaseRequest?.status !== 'canceled' || isEditPurchase
+                }
               >
                 Excluir
               </button>
