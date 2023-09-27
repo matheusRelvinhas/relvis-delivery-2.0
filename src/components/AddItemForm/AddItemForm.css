@@ -1,7 +1,8 @@
 .add-item-form-container {
   margin-top: 46px;
-  width: 35%;
-  min-width: 210px;
+  width: 30%;
+  min-width: 260px;
+  max-width: 600px;
   border: #f04134 solid 2px;
   background-color: #f04134;
   border-radius: 10px;
@@ -50,8 +51,7 @@
   border: #f04134 solid 2px;
   border-radius: 10px;
   border-bottom-left-radius: 0;
-  min-width: 180px;
-  width: 25vw;
+  width: 90%;
   height: 4vh;
   max-height: 35px;
   min-height: 25px;
@@ -64,8 +64,7 @@
   border: #f04134 solid 2px;
   border-radius: 10px;
   border-bottom-left-radius: 0;
-  min-width: 195px;
-  width: 26.4vw;
+  width: 95%;
   height: 5vh;
   max-height: 40px;
   min-height: 30px;
@@ -85,8 +84,7 @@
   background-color: #f04134;
   color: #fff;
   border-radius: 5px;
-  width: 30vw;
-  min-width: 196px;
+  width: 95%;
   height: 4vh;
   max-height: 35px;
   min-height: 25px;

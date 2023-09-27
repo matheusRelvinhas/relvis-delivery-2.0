@@ -1,6 +1,7 @@
 import React, { useRef, RefObject } from 'react';
 import { useGlobalContext } from '@/Context/store';
 import './LoginPurchaseRequest.css';
+import AlertSound from '../AlertSound/AlertSound';
 
 const LoginPurchaseRequest: React.FC = () => {
   const {
@@ -138,6 +139,7 @@ const LoginPurchaseRequest: React.FC = () => {
 
   return (
     <div className="login-purchase-requests">
+      <AlertSound />
       <div className="login-purchase-requests-indice">
         <div className="login-purchase-requests-title">
           <span>Pedidos</span>
@@ -502,7 +504,7 @@ const LoginPurchaseRequest: React.FC = () => {
                   isEditPurchase
                 }
               >
-                {purchaseRequest?.status === 'canceled' ? 'Reabrir' : 'Aceitar'}
+                <span>{purchaseRequest?.status === 'canceled' ? 'Reabrir' : 'Aceitar'}</span>
               </button>
               <button
                 onClick={() => handleFinishPurchase(purchaseRequest)}
@@ -513,7 +515,7 @@ const LoginPurchaseRequest: React.FC = () => {
                   isEditPurchase
                 }
               >
-                Finalizar
+                <span>Finalizar</span>
               </button>
               <button
                 onClick={() => handleCanceledPurchase(purchaseRequest)}
@@ -521,7 +523,7 @@ const LoginPurchaseRequest: React.FC = () => {
                   purchaseRequest?.status === 'canceled' || isEditPurchase
                 }
               >
-                Cancelar
+                <span>Cancelar</span>
               </button>
               <button
                 onClick={() => handleDeletePurchase(purchaseRequest)}
@@ -529,7 +531,7 @@ const LoginPurchaseRequest: React.FC = () => {
                   purchaseRequest?.status !== 'canceled' || isEditPurchase
                 }
               >
-                Excluir
+                <span>Excluir</span>
               </button>
             </div>
           </div>

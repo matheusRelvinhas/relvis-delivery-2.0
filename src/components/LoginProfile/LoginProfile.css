@@ -6,7 +6,7 @@
 }
 
 .login-profile-title {
-  width: 25vw;
+  width: 30%;
   min-width: 200px;
   background-color: #f04134;
   border-radius: 10px;
@@ -42,9 +42,11 @@
 .login-profile {
   margin-top: 46px;
   height: 22.5vh;
+  max-height: 200px;
   min-height: 115px;
   width: 40vw;
   min-width: 200px;
+  max-width: 300px;
   background-color: #fef0ef;
   border: #f04134 solid 2px;
   border-radius: 10px;
@@ -70,7 +72,7 @@
   background-color: #f04134;
   color: #fff;
   border-radius: 5px;
-  width: 50%;
+  width: 100%;
   min-width: 170px;
   height: 4vh;
   min-height: 25px;
@@ -78,7 +80,7 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin: 0 0 5px 2px;
+  margin-bottom: 3px;
 }
 
 .login-profile button:focus {
@@ -97,8 +99,6 @@
 
 .login-profile-open-store {
   display: flex;
-  width: 15vw;
-  min-width: 180px;
   justify-content: space-between;
   align-items: center;
 }

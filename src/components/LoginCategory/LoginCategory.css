@@ -6,7 +6,7 @@
 }
 
 .login-category-title {
-  width: 25vw;
+  width: 30%;
   min-width: 200px;
   background-color: #f04134;
   border-radius: 10px;
@@ -58,8 +58,20 @@
   justify-content: center;
 }
 
+.login-category-items-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.login-category-items-name figure img{
+  height: 15px;
+  width: 15px;
+}
+
 .login-category-items-title span{
   font-size: large;
+  margin-left: 2vw;
 }
 
 .login-category-buttons {

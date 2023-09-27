@@ -57,7 +57,15 @@ const LoginClient: React.FC = () => {
         {clients?.map((client) => (
           <div key={client.id} className="login-client-items">
             <div className="login-client-items-title">
-              <h3>{client.name}</h3>
+              <div className="login-client-items-name">
+                <figure>
+                  <picture>
+                    <source src={dataCss.clientImage} type="image/png" />
+                    <img src={dataCss.clientImage} alt="icon-img" />
+                  </picture>
+                </figure>
+                <h3>{client.name}</h3>
+              </div>
               <span>+55 {client.cellphone}</span>
             </div>
             <p>

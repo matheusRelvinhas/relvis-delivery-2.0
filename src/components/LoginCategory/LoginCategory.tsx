@@ -43,7 +43,15 @@ const LoginCategory: React.FC = () => {
         {categories.map((category) => (
           <div key={category.id} className="login-category-items">
             <div className="login-category-items-title">
-              <span>{category.category}</span>
+              <div className="login-category-items-name">
+                <figure>
+                  <picture>
+                    <source src={dataCss.categoryItemImage} type="image/png" />
+                    <img src={dataCss.categoryItemImage} alt="icon-img" />
+                  </picture>
+                </figure>
+                <span>{category.category}</span>
+              </div>
             </div>
             <div className="login-category-buttons">
               <button
@@ -59,20 +67,20 @@ const LoginCategory: React.FC = () => {
                 </figure>
               </button>
               <div>
-              <button
-                onClick={() =>
-                  handleMoveCategoryUp(category.id, category.order)
-                }
-              >
-                <span>▲</span>
-              </button>
-              <button
-                onClick={() =>
-                  handleMoveCategoryDown(category.id, category.order)
-                }
-              >
-                <span>▼</span>
-              </button>
+                <button
+                  onClick={() =>
+                    handleMoveCategoryUp(category.id, category.order)
+                  }
+                >
+                  <span>▲</span>
+                </button>
+                <button
+                  onClick={() =>
+                    handleMoveCategoryDown(category.id, category.order)
+                  }
+                >
+                  <span>▼</span>
+                </button>
               </div>
               <button
                 onClick={() =>

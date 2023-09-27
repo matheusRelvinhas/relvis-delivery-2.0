@@ -1,11 +1,46 @@
-.login-message-container {
-  min-width: 200px;
-  width: 80%;
-  background-color: #fef0ef;
+.login-message {
+  width: 40%;
+  min-width: 270px;
+  max-width: 600px;
   border: #f04134 solid 2px;
+  background-color: #f04134;
   border-radius: 10px;
   border-top-left-radius: 0;
-  padding: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-message-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: larger;
+  color: #fff;
+  width: 90%;
+  align-items: center;
+}
+
+.login-message-title span {
+  margin: 0 20px 0 4px;
+}
+
+.login-message-title figure img {
+  height: 25px;
+  width: 30px;
+  margin-top: 2px;
+}
+
+.login-message-container {
+  background-color: #fef0ef;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  width: 100%;
+  border-bottom-left-radius: 9px;
+  border-bottom-right-radius: 9px;
+  align-items: center;
+  padding: 4px 0 6px 0;
 }
 
 .login-message-container textarea{
@@ -17,8 +52,7 @@
   background-color: #f04134;
   color: #fff;
   border-radius: 5px;
-  width: 30vw;
-  min-width: 200px;
+  width: 98%;
   height: 4vh;
   max-height: 35px;
   min-height: 25px;

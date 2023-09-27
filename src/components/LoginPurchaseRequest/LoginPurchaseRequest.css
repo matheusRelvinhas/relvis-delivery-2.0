@@ -385,7 +385,10 @@
   margin-left: 3vw;
   font-size: small;
   color: #fff;
-  margin-bottom: 1vh;
+  margin: 0.5vh 0.5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .purchase-request-buttons button:disabled {

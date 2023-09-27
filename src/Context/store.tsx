@@ -276,6 +276,8 @@ interface ContextProps {
   setTrocoPurchase: React.Dispatch<React.SetStateAction<string>>;
   totalPurchase: string;
   setTotalPurchase: React.Dispatch<React.SetStateAction<string>>;
+  isContentMessageOpen: boolean;
+  setIsContentMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -447,6 +449,8 @@ const GlobalContext = createContext<ContextProps>({
   setTrocoPurchase: () => {},
   totalPurchase: '',
   setTotalPurchase: () => {},
+  isContentMessageOpen: false,
+  setIsContentMessageOpen: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -472,7 +476,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     storeImage: '/img/store.png',
     loginImage: '/img/login.png',
     clientsImage: '/img/clients.png',
+    clientImage: '/img/client.png',
     categoryImage: '/img/category.png',
+    categoryItemImage: '/img/category-item.png',
     itemsImage: '/img/items.png',
     itemImage: '/img/item.png',
     purchaseRequestsImage: 'img/purchase-requests.png',
@@ -558,6 +564,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [paymentPurchase, setPaymentPurchase] = useState('');
   const [trocoPurchase, setTrocoPurchase] = useState('');
   const [totalPurchase, setTotalPurchase] = useState('');
+  const [isContentMessageOpen, setIsContentMessageOpen] = useState(false);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -1748,6 +1755,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         totalPurchase,
         setTotalPurchase,
         handleEditPurchase,
+        isContentMessageOpen,
+        setIsContentMessageOpen,
       }}
     >
       {children}
