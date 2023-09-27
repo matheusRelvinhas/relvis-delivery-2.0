@@ -1,6 +1,5 @@
-import React, { useRef, RefObject, useState } from 'react';
+import React, { useRef, RefObject } from 'react';
 import { useGlobalContext } from '@/Context/store';
-import { firestore } from '@/firebase';
 import './LoginPurchaseRequest.css';
 
 const LoginPurchaseRequest: React.FC = () => {
@@ -22,20 +21,32 @@ const LoginPurchaseRequest: React.FC = () => {
     handleDeletePurchase,
     isEditPurchase,
     setIsEditPurchase,
+    namePurchase,
+    setNamePurchase,
+    cellphonePurchase,
+    setCellphonePurchase,
+    cepPurchase,
+    setCepPurchase,
+    roadPurchase,
+    setRoadPurchase,
+    numberPurchase,
+    setNumberPurchase,
+    complementPurchase,
+    setComplementPurchase,
+    districtPurchase,
+    setDistrictPurchase,
+    purchasePurchase,
+    setPurchasePurchase,
+    observationPurchase,
+    setObservationPurchase,
+    paymentPurchase,
+    setPaymentPurchase,
+    trocoPurchase,
+    setTrocoPurchase,
+    totalPurchase,
+    setTotalPurchase,
+    handleEditPurchase,
   } = useGlobalContext();
-
-  const [namePurchase, setNamePurchase] = useState('');
-  const [cellphonePurchase, setCellphonePurchase] = useState('');
-  const [cepPurchase, setCepPurchase] = useState('');
-  const [roadPurchase, setRoadPurchase] = useState('');
-  const [numberPurchase, setNumberPurchase] = useState('');
-  const [complementPurchase, setComplementPurchase] = useState('');
-  const [districtPurchase, setDistrictPurchase] = useState('');
-  const [purchasePurchase, setPurchasePurchase] = useState('');
-  const [observationPurchase, setObservationPurchase] = useState('');
-  const [paymentPurchase, setPaymentPurchase] = useState('');
-  const [trocoPurchase, setTrocoPurchase] = useState('');
-  const [totalPurchase, setTotalPurchase] = useState('');
 
   const purchaseRequest: any = purchaseRequests?.find(
     (purchaseRequest) => purchaseRequest.id === selectedPurchaseRequest
@@ -46,7 +57,6 @@ const LoginPurchaseRequest: React.FC = () => {
   const handlePrint = () => {
     if (printRef.current) {
       const printContent = printRef.current.innerHTML;
-
       const printWindow = window.open('', '', 'width=45');
       if (printWindow) {
         printWindow.document.open();
@@ -72,8 +82,7 @@ const LoginPurchaseRequest: React.FC = () => {
     }
     const total = purchaseRequests.reduce(
       (acc: number, purchaseRequest: any) => {
-        // Usa reduce para somar os valores 'total' de todos os itens com status 'finish'
-        if (purchaseRequest.status === 'finish') {
+        if (purchaseRequest.status === 'finish') { // Usa reduce para somar os valores 'total' de todos os itens com status 'finish'
           const itemTotal = parseFloat(purchaseRequest.total); // Converte para número
           if (!isNaN(itemTotal)) {
             return acc + itemTotal;
@@ -84,31 +93,6 @@ const LoginPurchaseRequest: React.FC = () => {
       0
     );
     return total.toFixed(2); // Formata o total com 2 casas decimais
-  };
-
-  const handleEditPurchase = async (purchaseRequest: any) => {
-    const collectionRef = firestore.collection('purchaseRequests');
-    const purchaseRequestRef = collectionRef.doc(purchaseRequest.id);
-    try {
-      const updatedPurchaseRequestData = {
-        name: namePurchase,
-        cellphone: cellphonePurchase,
-        cep: cepPurchase,
-        road: roadPurchase,
-        number: numberPurchase,
-        complement: complementPurchase,
-        district: districtPurchase,
-        purchase: purchasePurchase,
-        observation: observationPurchase,
-        payment: paymentPurchase,
-        troco: trocoPurchase,
-        total: totalPurchase,
-      };
-      await purchaseRequestRef.update(updatedPurchaseRequestData);
-      console.log('Pedido editado com sucesso!');
-    } catch (error) {
-      console.error('Erro ao editar pedido:', error);
-    }
   };
 
   const handleIsEditPurchase = (purchaseRequest: any) => {
@@ -143,9 +127,14 @@ const LoginPurchaseRequest: React.FC = () => {
       case 'canceled':
         return 'border-gray';
       default:
-        return ''; // Use uma classe padrão ou vazia se o status não corresponder a nenhum caso
+        return;
     }
   };
+
+  function formatPurchaseString(purchaseString: string) {
+    const lines = purchaseString.split('-------');
+    return lines.map((line, index) => <div key={index} className="purchase-request-p">{line}</div>);
+  }
 
   return (
     <div className="login-purchase-requests">
@@ -262,7 +251,7 @@ const LoginPurchaseRequest: React.FC = () => {
               <div className="purchase-request-p-span">
                 <div>
                   <p>
-                    Status: <span>{`${purchaseRequest?.status}`}</span>
+                    Status: <h4 className={`${getStatusClassName(purchaseRequest.status)}`}>{`${purchaseRequest?.status}`}</h4>
                   </p>
                 </div>
                 <div>
@@ -351,7 +340,9 @@ const LoginPurchaseRequest: React.FC = () => {
                         type="text"
                         placeholder="Rua / Av.:"
                         value={roadPurchase}
-                        onChange={(event) => setRoadPurchase(event.target.value)}
+                        onChange={(event) =>
+                          setRoadPurchase(event.target.value)
+                        }
                       />
                     ) : (
                       <span>{purchaseRequest?.road}</span>
@@ -424,7 +415,7 @@ const LoginPurchaseRequest: React.FC = () => {
                         }
                       />
                     ) : (
-                      <span>{purchaseRequest?.purchase}</span>
+                      <span>{formatPurchaseString(purchaseRequest?.purchase)}</span>
                     )}
                   </p>
                 </div>
@@ -460,7 +451,7 @@ const LoginPurchaseRequest: React.FC = () => {
                         }
                       />
                     ) : (
-                    <span>{purchaseRequest?.payment}</span>
+                      <span>{purchaseRequest?.payment}</span>
                     )}
                   </p>
                 </div>
@@ -472,7 +463,9 @@ const LoginPurchaseRequest: React.FC = () => {
                         type="number"
                         placeholder="Troco"
                         value={trocoPurchase}
-                        onChange={(event) => setTrocoPurchase(event.target.value)}
+                        onChange={(event) =>
+                          setTrocoPurchase(event.target.value)
+                        }
                       />
                     ) : (
                       <span>{purchaseRequest?.troco}</span>
@@ -487,16 +480,20 @@ const LoginPurchaseRequest: React.FC = () => {
                         type="number"
                         placeholder="Total"
                         value={totalPurchase}
-                        onChange={(event) => setTotalPurchase(event.target.value)}
+                        onChange={(event) =>
+                          setTotalPurchase(event.target.value)
+                        }
                       />
                     ) : (
-                      <span>{parseFloat(purchaseRequest?.total.toString()).toFixed(2)}</span>
+                      <span>
+                        R$ {parseFloat(purchaseRequest?.total.toString()).toFixed(2)}
+                      </span>
                     )}
                   </p>
                 </div>
               </div>
             </div>
-            <div>
+            <div className="purchase-request-buttons">
               <button
                 onClick={() => handleAcepptPurchase(purchaseRequest)}
                 disabled={

@@ -229,10 +229,11 @@ interface ContextProps {
   setStartDate: React.Dispatch<React.SetStateAction<string>>;
   endDate: string;
   setEndDate: React.Dispatch<React.SetStateAction<string>>;
-  handleAcepptPurchase: (purchaseRequest: any) => void;
-  handleFinishPurchase: (purchaseRequest: any) => void;
-  handleCanceledPurchase: (purchaseRequest: any) => void;
-  handleDeletePurchase: (purchaseRequest: any) => void;
+  handleAcepptPurchase: (purchaseRequest: PurchaseRequestData) => void;
+  handleFinishPurchase: (purchaseRequest: PurchaseRequestData) => void;
+  handleCanceledPurchase: (purchaseRequest: PurchaseRequestData) => void;
+  handleDeletePurchase: (purchaseRequest: PurchaseRequestData) => void;
+  handleEditPurchase: (purchaseRequest: PurchaseRequestData) => void;
   isEditPurchase: boolean;
   setIsEditPurchase: React.Dispatch<React.SetStateAction<boolean>>;
   message: string;
@@ -251,6 +252,30 @@ interface ContextProps {
   setIsContentCategoryOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isContentItemOpen: boolean,
   setIsContentItemOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  namePurchase: string;
+  setNamePurchase: React.Dispatch<React.SetStateAction<string>>;
+  cellphonePurchase: string;
+  setCellphonePurchase: React.Dispatch<React.SetStateAction<string>>;
+  cepPurchase: string;
+  setCepPurchase: React.Dispatch<React.SetStateAction<string>>;
+  roadPurchase: string;
+  setRoadPurchase: React.Dispatch<React.SetStateAction<string>>;
+  numberPurchase: string;
+  setNumberPurchase: React.Dispatch<React.SetStateAction<string>>;
+  complementPurchase: string;
+  setComplementPurchase: React.Dispatch<React.SetStateAction<string>>;
+  districtPurchase: string;
+  setDistrictPurchase: React.Dispatch<React.SetStateAction<string>>;
+  purchasePurchase: string;
+  setPurchasePurchase: React.Dispatch<React.SetStateAction<string>>;
+  observationPurchase: string;
+  setObservationPurchase: React.Dispatch<React.SetStateAction<string>>;
+  paymentPurchase: string;
+  setPaymentPurchase: React.Dispatch<React.SetStateAction<string>>;
+  trocoPurchase: string;
+  setTrocoPurchase: React.Dispatch<React.SetStateAction<string>>;
+  totalPurchase: string;
+  setTotalPurchase: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -379,6 +404,7 @@ const GlobalContext = createContext<ContextProps>({
   handleFinishPurchase: () => {},
   handleCanceledPurchase: () => {},
   handleDeletePurchase: () => {},
+  handleEditPurchase: () => {},
   isEditPurchase: false,
   setIsEditPurchase: () => {},
   message: '',
@@ -397,6 +423,30 @@ const GlobalContext = createContext<ContextProps>({
   setIsContentCategoryOpen: () => {},
   isContentItemOpen: false,
   setIsContentItemOpen: () => {},
+  namePurchase: '',
+  setNamePurchase: () => {},
+  cellphonePurchase: '',
+  setCellphonePurchase: () => {},
+  cepPurchase: '',
+  setCepPurchase: () => {},
+  roadPurchase: '',
+  setRoadPurchase: () => {},
+  numberPurchase: '',
+  setNumberPurchase: () => {},
+  complementPurchase: '',
+  setComplementPurchase: () => {},
+  districtPurchase: '',
+  setDistrictPurchase: () => {},
+  purchasePurchase: '',
+  setPurchasePurchase: () => {},
+  observationPurchase: '',
+  setObservationPurchase: () => {},
+  paymentPurchase: '',
+  setPaymentPurchase: () => {},
+  trocoPurchase: '',
+  setTrocoPurchase: () => {},
+  totalPurchase: '',
+  setTotalPurchase: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -496,6 +546,18 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [isContentClientOpen, setIsContentClientOpen] = useState(false);
   const [isContentCategoryOpen, setIsContentCategoryOpen] = useState(false);
   const [isContentItemOpen, setIsContentItemOpen] = useState(false);
+  const [namePurchase, setNamePurchase] = useState('');
+  const [cellphonePurchase, setCellphonePurchase] = useState('');
+  const [cepPurchase, setCepPurchase] = useState('');
+  const [roadPurchase, setRoadPurchase] = useState('');
+  const [numberPurchase, setNumberPurchase] = useState('');
+  const [complementPurchase, setComplementPurchase] = useState('');
+  const [districtPurchase, setDistrictPurchase] = useState('');
+  const [purchasePurchase, setPurchasePurchase] = useState('');
+  const [observationPurchase, setObservationPurchase] = useState('');
+  const [paymentPurchase, setPaymentPurchase] = useState('');
+  const [trocoPurchase, setTrocoPurchase] = useState('');
+  const [totalPurchase, setTotalPurchase] = useState('');
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -995,6 +1057,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   };
 
   const handleAcepptPurchase = async (purchaseRequest: any) => {
+    setIsLoading(true);
     const collectionRef = firestore.collection('purchaseRequests');
     const purchaseRequestRef = collectionRef.doc(purchaseRequest.id);
     try {
@@ -1005,10 +1068,50 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
       } catch (error) {
       console.error('Erro aceitar pedido:', error);
+      setAlertLogin(true)
+      setErrorMessage('Erro aceitar pedido')
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('')
+      }, 3000);
     }
+    setIsLoading(false);
   };
 
-  const handleFinishPurchase = async (purchaseRequest: any) => {
+  const handleEditPurchase = async (purchaseRequest: PurchaseRequestData) => {
+    setIsLoading(true);
+    const collectionRef = firestore.collection('purchaseRequests');
+    const purchaseRequestRef = collectionRef.doc(purchaseRequest.id);
+    try {
+      const updatedPurchaseRequestData = {
+        name: namePurchase,
+        cellphone: cellphonePurchase,
+        cep: cepPurchase,
+        road: roadPurchase,
+        number: numberPurchase,
+        complement: complementPurchase,
+        district: districtPurchase,
+        purchase: purchasePurchase,
+        observation: observationPurchase,
+        payment: paymentPurchase,
+        troco: trocoPurchase,
+        total: totalPurchase,
+      };
+      await purchaseRequestRef.update(updatedPurchaseRequestData);
+    } catch (error) {
+      console.error('Erro ao editar pedido:', error);
+      setAlertLogin(true)
+      setErrorMessage('Erro ao editar pedido')
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('')
+      }, 3000);
+    }
+    setIsLoading(false);
+  };
+
+  const handleFinishPurchase = async (purchaseRequest: PurchaseRequestData) => {
+    setIsLoading(true);
     const collectionRef = firestore.collection('purchaseRequests');
     const purchaseRequestRef = collectionRef.doc(purchaseRequest.id);
     try {
@@ -1018,10 +1121,18 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       await purchaseRequestRef.update(updatedPurchaseRequestData);
       } catch (error) {
       console.error('Erro ao finalizar pedido:', error);
+      setAlertLogin(true)
+      setErrorMessage('Erro ao finalizar pedido')
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('')
+      }, 3000);
     }
+    setIsLoading(false);
   };
 
-  const handleCanceledPurchase = async (purchaseRequest: any) => {
+  const handleCanceledPurchase = async (purchaseRequest: PurchaseRequestData) => {
+    setIsLoading(true);
     const collectionRef = firestore.collection('purchaseRequests');
     const purchaseRequestRef = collectionRef.doc(purchaseRequest.id);
     try {
@@ -1031,17 +1142,32 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       await purchaseRequestRef.update(updatedPurchaseRequestData);
       } catch (error) {
       console.error('Erro ao cancelar pedido:', error);
+      setAlertLogin(true)
+      setErrorMessage('Erro ao cancelar pedido')
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('')
+      }, 3000);
     }
+    setIsLoading(false);
   };
 
-  const handleDeletePurchase = async (purchaseRequest: any) => {
+  const handleDeletePurchase = async (purchaseRequest: PurchaseRequestData) => {
+    setIsLoading(true);
     const collectionRef = firestore.collection('purchaseRequests');
     try {
       await collectionRef.doc(purchaseRequest.id).delete();
       setSelectedPurchaseRequest('')
     } catch (error) {
       console.error('Erro ao excluir pedido:', error);
+      setAlertLogin(true)
+      setErrorMessage('Erro ao excluir pedido')
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('')
+      }, 3000);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => { // Verifica se o usuário já está autenticado ao carregar a página
@@ -1597,6 +1723,31 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         isContentItemOpen,
         setIsContentItemOpen,
         toggleActiveItem,
+        namePurchase,
+        setNamePurchase,
+        cellphonePurchase,
+        setCellphonePurchase,
+        cepPurchase,
+        setCepPurchase,
+        roadPurchase,
+        setRoadPurchase,
+        numberPurchase,
+        setNumberPurchase,
+        complementPurchase,
+        setComplementPurchase,
+        districtPurchase,
+        setDistrictPurchase,
+        purchasePurchase,
+        setPurchasePurchase,
+        observationPurchase,
+        setObservationPurchase,
+        paymentPurchase,
+        setPaymentPurchase,
+        trocoPurchase,
+        setTrocoPurchase,
+        totalPurchase,
+        setTotalPurchase,
+        handleEditPurchase,
       }}
     >
       {children}
