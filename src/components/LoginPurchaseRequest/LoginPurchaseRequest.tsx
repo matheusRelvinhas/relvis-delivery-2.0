@@ -194,10 +194,10 @@ const LoginPurchaseRequest: React.FC = () => {
                 <span className="purchase-requests-item-order">
                   # 000{purchaseRequest.order}
                 </span>
-                <div
-                  className={`purchase-requests-item-status ${getStatusClassName(purchaseRequest.status)}`}
-                >
-                  <span>
+                <div className="purchase-requests-item-status">
+                  <span
+                    className={`${getStatusClassName(purchaseRequest.status)}`}
+                  >
                     {purchaseRequest.status}
                   </span>
                 </div>
@@ -223,23 +223,52 @@ const LoginPurchaseRequest: React.FC = () => {
       <div className="purchase-request">
         {selectedPurchaseRequest !== '' ? (
           <div className="purchase-request-container">
-            <div className="purchase-request-print">
-              <button onClick={handlePrint}>Imprimir</button>
-              <button onClick={() => handleIsEditPurchase(purchaseRequest)}>
-                {isEditPurchase ? 'Salvar' : 'Editar'}
-              </button>
+            <div>
+              <div className="purchase-request-print-edit">
+                <button onClick={handlePrint} disabled={isEditPurchase}>
+                  <figure>
+                    <picture>
+                      <source src={dataCss.printIconImage} type="image/png" />
+                      <img src={dataCss.printIconImage} alt="icon-img" />
+                    </picture>
+                  </figure>
+                </button>
+              </div>
+              <div className="purchase-request-print-edit">
+                <button onClick={() => handleIsEditPurchase(purchaseRequest)}>
+                  {isEditPurchase ? (
+                    <figure>
+                      <picture>
+                        <source src={dataCss.saveIconImage} type="image/png" />
+                        <img src={dataCss.saveIconImage} alt="icon-img" />
+                      </picture>
+                    </figure>
+                  ) : (
+                    <figure>
+                      <picture>
+                        <source src={dataCss.editIconImage} type="image/png" />
+                        <img src={dataCss.editIconImage} alt="icon-img" />
+                      </picture>
+                    </figure>
+                  )}
+                </button>
+              </div>
             </div>
             <div
               className="purchase-request-selected"
               key={purchaseRequest?.id}
               ref={printRef}
             >
-              <div>
-                <p>Status: {purchaseRequest?.status}</p>
-                <p>
-                  Data / Hora: {purchaseRequest?.date} {purchaseRequest?.time}
-                </p>
-                <p>ID: 000{purchaseRequest?.order}</p>
+              <div className='purchase-request-p-span'>
+                <div>
+                  <p>Status:</p><span>{`${purchaseRequest?.status}`}</span>
+                </div>
+                <div>
+                  <p>Data / Hora: </p><span>{purchaseRequest?.date} {purchaseRequest?.time}</span>
+                </div>
+                <div>
+                  <p>ID: </p> <span>000{purchaseRequest?.order}</span>
+                </div>
               </div>
               <div>
                 <p>

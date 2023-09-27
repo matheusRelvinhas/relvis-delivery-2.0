@@ -429,6 +429,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     addIconImage:'img/add-icon.png',
     editIconImage:'img/edit-icon.png',
     deleteIconImage:'img/delete-icon.png',
+    printIconImage:'img/print.png',
+    saveIconImage:'img/save.png',
     iconAbout: {
       local: '/img/local.png',
       payment: '/img/payment.png',
