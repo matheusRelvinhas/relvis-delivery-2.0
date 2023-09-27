@@ -259,206 +259,241 @@ const LoginPurchaseRequest: React.FC = () => {
               key={purchaseRequest?.id}
               ref={printRef}
             >
-              <div className='purchase-request-p-span'>
+              <div className="purchase-request-p-span">
                 <div>
-                  <p>Status:</p><span>{`${purchaseRequest?.status}`}</span>
+                  <p>
+                    Status: <span>{`${purchaseRequest?.status}`}</span>
+                  </p>
                 </div>
                 <div>
-                  <p>Data / Hora: </p><span>{purchaseRequest?.date} {purchaseRequest?.time}</span>
+                  <p>
+                    Data / Hora:{' '}
+                    <span>
+                      {purchaseRequest?.date} {purchaseRequest?.time}
+                    </span>
+                  </p>
                 </div>
                 <div>
-                  <p>ID: </p> <span>000{purchaseRequest?.order}</span>
+                  <p>
+                    ID: <span>000{purchaseRequest?.order}</span>
+                  </p>
                 </div>
               </div>
-              <div>
-                <p>
-                  Cliente:{' '}
-                  {isEditPurchase ? (
-                    <input
-                      type="text"
-                      placeholder="Cliente"
-                      value={namePurchase}
-                      onChange={(event) => setNamePurchase(event.target.value)}
-                    />
-                  ) : (
-                    purchaseRequest?.name
-                  )}
-                </p>
-                <p>
-                  Celular:{' '}
-                  {isEditPurchase ? (
-                    <input
-                      type="number"
-                      placeholder="Celular"
-                      value={cellphonePurchase}
-                      onChange={(event) => {
-                        const formattedInput = event.target.value.replace(
-                          /[^0-9]/g,
-                          ''
-                        );
-                        if (formattedInput.length <= 11) {
-                          setCellphonePurchase(formattedInput);
+              <div className="purchase-request-p-span">
+                <div>
+                  <p>
+                    Cliente:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="text"
+                        placeholder="Cliente"
+                        value={namePurchase}
+                        onChange={(event) =>
+                          setNamePurchase(event.target.value)
                         }
-                      }}
-                    />
-                  ) : (
-                    purchaseRequest?.cellphone
-                  )}
-                </p>
-                <p>
-                  Cep:{' '}
-                  {isEditPurchase ? (
-                    <input
-                      type="number"
-                      placeholder="Cep"
-                      value={cepPurchase}
-                      onChange={(event) => {
-                        const formattedInput = event.target.value.replace(
-                          /[^0-9]/g,
-                          ''
-                        );
-                        if (formattedInput.length <= 8) {
-                          setCepPurchase(formattedInput);
+                      />
+                    ) : (
+                      <span>{purchaseRequest?.name}</span>
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    Celular:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="number"
+                        placeholder="Celular"
+                        value={cellphonePurchase}
+                        onChange={(event) => {
+                          const formattedInput = event.target.value.replace(
+                            /[^0-9]/g,
+                            ''
+                          );
+                          if (formattedInput.length <= 11) {
+                            setCellphonePurchase(formattedInput);
+                          }
+                        }}
+                      />
+                    ) : (
+                      <span>{purchaseRequest?.cellphone}</span>
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    Cep:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="number"
+                        placeholder="Cep"
+                        value={cepPurchase}
+                        onChange={(event) => {
+                          const formattedInput = event.target.value.replace(
+                            /[^0-9]/g,
+                            ''
+                          );
+                          if (formattedInput.length <= 8) {
+                            setCepPurchase(formattedInput);
+                          }
+                        }}
+                      />
+                    ) : (
+                      <span>{purchaseRequest?.cep}</span>
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    Rua / Av.:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="text"
+                        placeholder="Rua / Av.:"
+                        value={roadPurchase}
+                        onChange={(event) => setRoadPurchase(event.target.value)}
+                      />
+                    ) : (
+                      <span>{purchaseRequest?.road}</span>
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    Nº:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="text"
+                        placeholder="Número"
+                        value={numberPurchase}
+                        onChange={(event) =>
+                          setNumberPurchase(event.target.value)
                         }
-                      }}
-                    />
-                  ) : (
-                    purchaseRequest?.cep
-                  )}
-                </p>
-                <p>
-                  Rua / Av.:{' '}
-                  {isEditPurchase ? (
-                    <input
-                      type="text"
-                      placeholder="Rua / Av.:"
-                      value={roadPurchase}
-                      onChange={(event) => setRoadPurchase(event.target.value)}
-                    />
-                  ) : (
-                    purchaseRequest?.road
-                  )}
-                </p>
-                <p>
-                  Nº:{' '}
-                  {isEditPurchase ? (
-                    <input
-                      type="text"
-                      placeholder="Número"
-                      value={numberPurchase}
-                      onChange={(event) =>
-                        setNumberPurchase(event.target.value)
-                      }
-                    />
-                  ) : (
-                    purchaseRequest?.number
-                  )}
-                </p>
-                <p>
-                  Complemento:{' '}
-                  {isEditPurchase ? (
-                    <input
-                      type="text"
-                      placeholder="Complemento"
-                      value={complementPurchase}
-                      onChange={(event) =>
-                        setComplementPurchase(event.target.value)
-                      }
-                    />
-                  ) : (
-                    purchaseRequest?.complement
-                  )}
-                </p>
-                <p>
-                  Bairro:{' '}
-                  {isEditPurchase ? (
-                    <input
-                      type="text"
-                      placeholder="Bairro"
-                      value={districtPurchase}
-                      onChange={(event) =>
-                        setDistrictPurchase(event.target.value)
-                      }
-                    />
-                  ) : (
-                    purchaseRequest?.district
-                  )}
-                </p>
+                      />
+                    ) : (
+                      <span>{purchaseRequest?.number}</span>
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    Complemento:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="text"
+                        placeholder="Complemento"
+                        value={complementPurchase}
+                        onChange={(event) =>
+                          setComplementPurchase(event.target.value)
+                        }
+                      />
+                    ) : (
+                      <span>{purchaseRequest?.complement}</span>
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    Bairro:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="text"
+                        placeholder="Bairro"
+                        value={districtPurchase}
+                        onChange={(event) =>
+                          setDistrictPurchase(event.target.value)
+                        }
+                      />
+                    ) : (
+                      <span>{purchaseRequest?.district}</span>
+                    )}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p>
-                  Pedido:{' '}
-                  {isEditPurchase ? (
-                    <textarea
-                      rows={3}
-                      placeholder="Pedido"
-                      value={purchasePurchase}
-                      onChange={(event) =>
-                        setPurchasePurchase(event.target.value)
-                      }
-                    />
-                  ) : (
-                    purchaseRequest?.purchase
-                  )}
-                </p>
-                <p>
-                  Obs.:{' '}
-                  {isEditPurchase ? (
-                    <input
-                      type="text"
-                      placeholder="Observação"
-                      value={observationPurchase}
-                      onChange={(event) =>
-                        setObservationPurchase(event.target.value)
-                      }
-                    />
-                  ) : (
-                    purchaseRequest?.observation
-                  )}
-                </p>
+              <div className="purchase-request-p-span">
+                <div>
+                  <p>
+                    Pedido:{' '}
+                    {isEditPurchase ? (
+                      <textarea
+                        rows={5}
+                        placeholder="Pedido"
+                        value={purchasePurchase}
+                        onChange={(event) =>
+                          setPurchasePurchase(event.target.value)
+                        }
+                      />
+                    ) : (
+                      <span>{purchaseRequest?.purchase}</span>
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    Obs.:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="text"
+                        placeholder="Observação"
+                        value={observationPurchase}
+                        onChange={(event) =>
+                          setObservationPurchase(event.target.value)
+                        }
+                      />
+                    ) : (
+                      <span>{purchaseRequest?.observation}</span>
+                    )}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p>
-                  Pagamento:{' '}
-                  {isEditPurchase ? (
-                    <input
-                      type="text"
-                      placeholder="Pagamento"
-                      value={paymentPurchase}
-                      onChange={(event) =>
-                        setPaymentPurchase(event.target.value)
-                      }
-                    />
-                  ) : (
-                    purchaseRequest?.payment
-                  )}
-                </p>
-                <p>
-                  Troco:{' '}
-                  {isEditPurchase ? (
-                    <input
-                      type="number"
-                      placeholder="Troco"
-                      value={trocoPurchase}
-                      onChange={(event) => setTrocoPurchase(event.target.value)}
-                    />
-                  ) : (
-                    purchaseRequest?.troco
-                  )}
-                </p>
-                <p>
-                  Total:{' '}
-                  {isEditPurchase ? (
-                    <input
-                      type="text"
-                      placeholder="Total"
-                      value={totalPurchase}
-                      onChange={(event) => setTotalPurchase(event.target.value)}
-                    />
-                  ) : (
-                    parseFloat(purchaseRequest?.total.toString()).toFixed(2)
-                  )}
-                </p>
+              <div className="purchase-request-p-span">
+                <div>
+                  <p>
+                    Pagamento:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="text"
+                        placeholder="Pagamento"
+                        value={paymentPurchase}
+                        onChange={(event) =>
+                          setPaymentPurchase(event.target.value)
+                        }
+                      />
+                    ) : (
+                    <span>{purchaseRequest?.payment}</span>
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    Troco:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="number"
+                        placeholder="Troco"
+                        value={trocoPurchase}
+                        onChange={(event) => setTrocoPurchase(event.target.value)}
+                      />
+                    ) : (
+                      <span>{purchaseRequest?.troco}</span>
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    Total:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="number"
+                        placeholder="Total"
+                        value={totalPurchase}
+                        onChange={(event) => setTotalPurchase(event.target.value)}
+                      />
+                    ) : (
+                      <span>{parseFloat(purchaseRequest?.total.toString()).toFixed(2)}</span>
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
             <div>
