@@ -1434,15 +1434,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   };
 
   const handleFinalizeOrder = () => {
-    const cartSummaryElement = document.querySelector('.cart-summary') as HTMLInputElement | null;
-    const cartSummaryText = cartSummaryElement?.innerText || ''; // Separa o texto em linhas
-    const lines = cartSummaryText.split('\n'); // Reorganiza as linhas para criar o formato desejado
-    const formattedLines = [];
-    for (let i = 0; i < lines.length; i += 3) {
-      const item = lines[i];
-      const price = lines[i + 1];
-      formattedLines.push(`${item} ${price}`); // Junta as linhas usando "-------"
-    }
+    const cartSummaryElements = document.querySelectorAll('.cart-summary');
+    const formattedLines: string[] = [];
+    cartSummaryElements.forEach((element) => {
+      const textLines = (element as HTMLElement).innerText.split('\n'); // Use type assertion aqui
+      if (textLines.length >= 2) {
+        const itemLine = textLines[0];
+        const priceLine = textLines[1];
+        formattedLines.push(`${itemLine} ${priceLine}`);
+      }
+    });
     const formattedText = formattedLines.join('\n-------\n');
     setMessageItens(formattedText);
     setIsBuy(true);

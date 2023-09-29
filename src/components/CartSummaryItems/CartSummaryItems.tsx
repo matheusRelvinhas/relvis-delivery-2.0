@@ -38,9 +38,9 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
             const totalPrice = card ? card.price * quantity : 0;
             if (quantity > 0) {
               return (
-                <li key={title}>
+                <li key={title} className="cart-summary">
                   <div className="cart-summary-items-span">
-                    <span >
+                    <span>
                       {quantity}x {title}
                     </span>
                     <span>
@@ -66,7 +66,7 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
       </div>
       <div className="cart-summary-items" style={{ backgroundColor: dataCss.colorSecundary }}>
         <div className="cart-summary-items-total" style={{ backgroundColor: dataCss.colorPrimary, borderColor: dataCss.colorSecundary }}>
-          <span style={{ color: dataCss.summaryFont }}>Total: R$ {cartTotal.toFixed(2)}</span>
+          <span style={{ color: dataCss.summaryFont }}>Total:R$ {cartTotal.toFixed(2)}</span>
           <figure>
           <picture>
             <source src={dataCss.moneyImage} type="image/png" />
