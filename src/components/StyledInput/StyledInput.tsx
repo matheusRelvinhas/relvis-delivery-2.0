@@ -22,11 +22,10 @@ export default function StyledInput(props: StyledInputProps) {
       <input
         className="input"
         style={{ 
-          background: dataCss.colorInput,
-          borderColor: props.value === '' ? '#8c8c8c' : `${dataCss.colorSecundary}`,
+          background: props.value === '' ? `${dataCss.colorPrimary}` : `${dataCss.colorFourth}`,
+          borderColor: props.value === '' ? `${dataCss.colorSecundary}` : `${dataCss.colorPrimary}`,
         }}
-        type={props.type}  
-        autoComplete="off"
+        type={props.type}
         value={props.value}
         onChange={props.onChange}
         minLength={props.minLength}
@@ -36,8 +35,9 @@ export default function StyledInput(props: StyledInputProps) {
       <label 
         className="label"
         style={{ 
-          background: props.value === '' ? '#8c8c8c' : `${dataCss.colorSecundary}`,
+          background: props.value === '' ? `${dataCss.colorSecundary}` : `${dataCss.colorPrimary}`,
           color: props.value === '' ? `${dataCss.fontColor}` : `${dataCss.summaryFont}`,//dataCss.fontColor
+          borderColor: props.value === '' ?  `${dataCss.colorPrimary}` : `${dataCss.colorSecundary}`,
         }}
       >
         {props.label}

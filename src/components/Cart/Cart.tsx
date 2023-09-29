@@ -5,34 +5,39 @@ import CartSummary from '../CartSummary/CartSummary';
 import './Cart.css';
 
 export default function Cart() {
-  const {
-    dataCss,
-    isTilted,
-    handleCartClick,
-    totalItems,
-  } = useGlobalContext();
+  const { dataCss, isTilted, handleCartClick, totalItems } = useGlobalContext();
 
   return (
     <>
-      <figure className={`cart-container ${isTilted ? 'tilted' : ''}`}>
-        <picture>
-          <source src={dataCss.cartImage} type="image/png" />
-          <img
-            className={`cart-img ${isTilted ? 'tilted' : ''}`}
-            src={dataCss.cartImage}
-            alt="logo-img"
-            onClick={handleCartClick}
-          />
-        </picture>
-      </figure>
+      <div className="cart-img-container">
+        <figure>
+          <picture>
+            <source src={dataCss.cartImage} type="image/png" />
+            <img
+              className={`cart-img ${isTilted ? 'tilted' : ''}`}
+              src={dataCss.cartImage}
+              alt="logo-img"
+              onClick={handleCartClick}
+            />
+          </picture>
+        </figure>
+      </div>
       {isTilted && (
-        <div style={{backgroundColor: dataCss.colorPrimary}} className="tab-content-cart">
-          <div className="tab-itens-cart">
-            <CartSummary />
-          </div>
+        <div
+          style={{ backgroundColor: dataCss.colorPrimary }}
+          className="tab-content-cart"
+        >
+          <CartSummary />
         </div>
       )}
-      <div style={{backgroundColor: dataCss.colorSecundary}} className="cart-message">
+      <div
+        style={{
+          backgroundColor: dataCss.colorPrimary,
+          color: dataCss.summaryFont,
+          borderColor: dataCss.colorSecundary,
+        }}
+        className="cart-message"
+      >
         <strong>
           {totalItems === 0
             ? 'vazio :('

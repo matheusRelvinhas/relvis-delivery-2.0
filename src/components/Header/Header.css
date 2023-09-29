@@ -12,6 +12,8 @@
 }
 
 .logo-img img {
-  height: 20vh;
+  height: 18vh;
   border-radius: 100%;
+  border: 4px solid;
+  box-shadow: 0 0 8px 0 #555;
 }

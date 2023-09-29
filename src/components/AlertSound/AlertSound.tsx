@@ -19,8 +19,7 @@ const AlertSound: React.FC = () => {
       audio.pause();
       audio.currentTime = 0;
     }
-  }, [playSound, audio]);
-
+  }, [playSound, audio, purchaseRequests]);
   return null; // O componente não renderiza nada visível na interface
 };
 

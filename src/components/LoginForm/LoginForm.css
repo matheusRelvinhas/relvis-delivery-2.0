@@ -20,6 +20,7 @@
   flex-direction: column;
   justify-content: space-around;
   padding: 20px;
+  box-shadow: 0 0 8px 0 #555;
 }
 
 .login-form h1{

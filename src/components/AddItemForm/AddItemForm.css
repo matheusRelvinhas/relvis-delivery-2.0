@@ -11,6 +11,7 @@
   flex-direction: column;
   position: fixed;
   z-index: 997;
+  box-shadow: 0 0 6px 0 #555;
 }
 
 .add-item-form-title {

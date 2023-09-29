@@ -6,6 +6,7 @@ interface ButtonProps {
   hoverColor?: string;
   hoverBackgroundColor?: string;
   activeBackgroundColor?: string;
+  disabledBackgroundColor?: string;
 }
 
 const StyledButton = styled.button<ButtonProps>`
@@ -17,6 +18,9 @@ const StyledButton = styled.button<ButtonProps>`
   }
   &:active {
     background-color: ${props => props.activeBackgroundColor};
+  }
+  &:disabled {
+    background-color: ${props => props.disabledBackgroundColor};
   }
 `;
 

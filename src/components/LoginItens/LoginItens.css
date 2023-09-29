@@ -23,6 +23,7 @@
   justify-content: space-around;
   position: fixed;
   z-index: 998;
+  box-shadow: 0 0 6px 0 #555;
 }
 
 .login-items-title span {

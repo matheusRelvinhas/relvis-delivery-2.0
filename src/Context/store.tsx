@@ -487,6 +487,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     deleteIconImage:'img/delete-icon.png',
     printIconImage:'img/print.png',
     saveIconImage:'img/save.png',
+    moneyImage: 'img/money.png',
     iconAbout: {
       local: '/img/local.png',
       payment: '/img/payment.png',
@@ -494,15 +495,17 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       operation: '/img/operation.png',
     },
     whatsImage: '/img/whatsapp.png',
-    colorPrimary: '#226154',
-    colorSecundary: '#e74c3c',
-    colorThird: '#ebc49d',
+    colorPrimary: '#f04134',
+    colorSecundary: '#f0f0f0',
+    colorThird: '#fff',
+    colorFourth: '#ffbfb3',
     backgroundColorCard: '#f5f5f5',
-    backgroundColorHeader: 'linear-gradient(to bottom, #226154 0%, #226154 15vh, transparent 50%, transparent 100%)',
+    backgroundColorHeader: 'linear-gradient(to bottom, #f04134 0%, #f04134 15vh, transparent 50%, transparent 100%)',
     fontColor: '#141414',
-    summaryFont: '#ecddcd',
-    buttonColor: '#fafafa',
-    activeButtonColor: '#c0392b',
+    summaryFont: '#fff',
+    buttonColor: '#fff',
+    activeButtonColor: '#df2e22',
+    disabledButtonColor: '#bfbfbf',
     colorInput: '#1c554a',
     colorBorder: '#14463c',
   };
@@ -1163,8 +1166,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     const collectionRef = firestore.collection('purchaseRequests');
     try {
+      setSelectedPurchaseRequest('');
       await collectionRef.doc(purchaseRequest.id).delete();
-      setSelectedPurchaseRequest('')
     } catch (error) {
       console.error('Erro ao excluir pedido:', error);
       setAlertLogin(true)

@@ -10,7 +10,7 @@ export default function Header() {
 
   return (
     <header 
-      style={{background: dataCss.backgroundColorHeader, color: dataCss.fontColor}}
+      style={{background: dataCss.backgroundColorHeader, color: dataCss.fontColor, borderColor: dataCss.colorThird}}
       className='header'
     > 
       <div>
@@ -18,12 +18,12 @@ export default function Header() {
         <span>{isOpenStore ? 'Aberto' : 'Fechado'}</span>
       </div>
       <figure>
-        <picture className='logo-img'>
+        <picture className='logo-img' >
           <source src={dataCss.logoImage[3]} type="image/webp" />
           <source src={dataCss.logoImage[2]} type="image/png" />
           <source src={dataCss.logoImage[1]} type="image/webp" />
           <source src={dataCss.logoImage[0]} type="image/png" />
-          <img src={dataCss.logoImage[0]} alt="logo-img" />
+          <img src={dataCss.logoImage[0]} alt="logo-img" style={{ borderColor: dataCss.colorSecundary}}/>
         </picture>
       </figure>
       <Cart/>

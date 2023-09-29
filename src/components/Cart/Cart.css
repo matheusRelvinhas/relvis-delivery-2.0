@@ -1,6 +1,10 @@
+.cart-img-container {
+  margin: 1vh 1vw 0 0;
+}
+
 .cart-img {
-  height: 15vh;
   transition: transform 0.3s ease;
+  height: 11vh;
 }
 
 .cart-img.tilted {
@@ -9,27 +13,17 @@
 
 .tab-content-cart {
   position: absolute;
-  top: 21vh;
-  right: 0;
-  min-width: 230px;
-  width: 50vw;
-  height: 70vh;
-  border-top-left-radius: 6.5px;
-  border-bottom-left-radius: 6.5px;
-  padding-top: 8px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-
-.tab-itens-cart {
-  display: grid;
-  flex-direction: row;
-  justify-content: space-around;
-  text-align: center;
-  align-items: center;
+  top: 20vh;
+  right: 4px;
+  min-width: 270px;
+  max-width: 540px;
+  width: 55vw;
   height: 100%;
+  min-height: 78vh;
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 0 8px 0 #555;
 }
 
 .cart-message {
@@ -42,4 +36,6 @@
   border-radius: 10px;
   border-top-right-radius: 0;
   text-align: center;
+  border: 2px solid;
+  box-shadow: 0 0 5px 0 #555;
 }
