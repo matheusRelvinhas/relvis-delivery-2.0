@@ -495,16 +495,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       operation: '/img/operation.png',
     },
     whatsImage: '/img/whatsapp.png',
-    colorPrimary: '#f04134',
+    colorPrimary: '#a8071a',
     colorSecundary: '#f0f0f0',
-    colorThird: '#fff',
-    colorFourth: '#ffbfb3',
+    colorThird: '#f0f0f0',
+    colorFourth: '#ffccc7',
     backgroundColorCard: '#f5f5f5',
-    backgroundColorHeader: 'linear-gradient(to bottom, #f04134 0%, #f04134 15vh, transparent 50%, transparent 100%)',
-    fontColor: '#141414',
-    summaryFont: '#fff',
-    buttonColor: '#fff',
-    activeButtonColor: '#df2e22',
+    backgroundColorHeader: 'linear-gradient(to bottom, #a8071a 0%, #a8071a 15vh, transparent 50%, transparent 100%)',
+    fontColor: '#262626',
+    summaryFont: '#f0f0f0',
+    buttonColor: '#f0f0f0',
+    activeButtonColor: '#820014',
     disabledButtonColor: '#bfbfbf',
     colorInput: '#1c554a',
     colorBorder: '#14463c',
@@ -1434,6 +1434,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   };
 
   const handleFinalizeOrder = () => {
+    setIsBuy(true);
     const cartSummaryElements = document.querySelectorAll('.cart-summary');
     const formattedLines: string[] = [];
     cartSummaryElements.forEach((element) => {
@@ -1446,7 +1447,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     });
     const formattedText = formattedLines.join('\n-------\n');
     setMessageItens(formattedText);
-    setIsBuy(true);
   };
 
   const handleFinalize = async (event: FormEvent) => {

@@ -62,29 +62,19 @@
   left: 5px;
 }
 
-.tab-content {
+.tab-content-hamburguer {
   position: absolute;
-  top: 21vh;
+  top: 20vh;
   left: 0;
-  display: grid;
-  flex-direction: row;
-  justify-content: space-around;
-  text-align: center;
-  align-items: center;
+  min-width: 250px;
+  max-width: 500px;
+  width: 45vw;
   height: 100%;
-  padding: 0;
-  border-top-right-radius: 6.5px;
-  border-bottom-right-radius: 6.5px;
+  min-height: 78vh;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 0 8px 0 #555;
 }
 
-.tab-itens {
-  min-width: 220px;
-  width: 45vw;
-  height: 70.8vh;
-  border-top-right-radius: 6.5px;
-  border-bottom-right-radius: 6.5px;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-}
 

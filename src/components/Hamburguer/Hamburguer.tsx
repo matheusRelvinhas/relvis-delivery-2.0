@@ -17,19 +17,17 @@ export default function Hamburger() {
             checked={isOpen}
             onChange={handleCheckboxChange}
           />
-          <span style={{background: dataCss.colorThird}}></span>
-          <span style={{background: dataCss.colorThird}}></span>
-          <span style={{background: dataCss.colorThird}}></span>
+          <span style={{ background: dataCss.colorThird }}></span>
+          <span style={{ background: dataCss.colorThird }}></span>
+          <span style={{ background: dataCss.colorThird }}></span>
         </label>
       </div>
       {isOpen && (
-        <div className="tab-content">
-          <div
-            style={{background: dataCss.colorPrimary}}
-            className="tab-itens"
-          >
-            <About />
-          </div>
+        <div
+          className="tab-content-hamburguer"
+          style={{ background: dataCss.colorPrimary }}
+        >
+          <About />
         </div>
       )}
     </>

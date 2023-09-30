@@ -38,13 +38,13 @@ export default function Cart() {
         }}
         className="cart-message"
       >
-        <strong>
+        <span>
           {totalItems === 0
             ? 'vazio :('
             : totalItems === 1
             ? `${totalItems} item`
             : `${totalItems} itens`}
-        </strong>
+        </span>
       </div>
     </>
   );

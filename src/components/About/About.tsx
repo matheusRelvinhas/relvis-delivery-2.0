@@ -7,97 +7,92 @@ const About: React.FC = () => {
   const { dataCss } = useGlobalContext();
 
   return (
-    <div className="about-container" style={{ color: dataCss.summaryFont }}>
-      <div className="about-div">
-        <div className='about-title'>
-          <h4>Funcionamento</h4>
+    <div className="about-container">
+      <div className="about-item">
+        <div className="about-title" style={{ color: dataCss.summaryFont }}>
+          <span>Funcionamento</span>
           <figure>
             <picture>
               <source src={dataCss.iconAbout.operation} type="image/png" />
               <img
                 src={dataCss.iconAbout.operation}
-                width="28.5px"
                 alt="whats-icon"
               />
             </picture>
-        </figure>
+          </figure>
         </div>
-        <div>
-          <p>Segunda a sexta-feira: 10:00 - 18:00</p>
-          <p>Sábado: 10:00 - 14:00</p>
+        <div style={{ background: dataCss.colorThird, color: dataCss.fontColor }} className="about-info">
+          <span>Segunda a sexta-feira: 10:00 - 18:00</span>
+          <span>Sábado: 10:00 - 14:00</span>
         </div>
       </div>
-      <div className="about-div">
-      <div className='about-title'>
-        <h4>Endereço</h4>
-        <figure>
+      <div className="about-item">
+        <div className="about-title" style={{ color: dataCss.summaryFont }}>
+          <h4>Endereço</h4>
+          <figure>
             <picture>
               <source src={dataCss.iconAbout.local} type="image/png" />
               <img
                 src={dataCss.iconAbout.local}
-                width="28.5px"
                 alt="whats-icon"
               />
             </picture>
-        </figure>
-      </div>
-        <div>
-        <p>Rua: Itororó, 889 - Padre Eustáquio</p>
-        <p>Belo Horizonte - MG</p>
+          </figure>
+        </div>
+        <div style={{ background: dataCss.colorThird, color: dataCss.fontColor }} className="about-info">
+          <span>Rua: Itororó, 889 - Padre Eustáquio</span>
+          <span>Belo Horizonte - MG</span>
         </div>
       </div>
-      <div className="about-div">
-        <div className='about-title'>
-          <h4>Pagamento</h4>
+      <div className="about-item">
+        <div className="about-title" style={{ color: dataCss.summaryFont }}>
+          <span>Pagamento</span>
           <figure>
             <picture>
               <source src={dataCss.iconAbout.payment} type="image/png" />
               <img
                 src={dataCss.iconAbout.payment}
-                width="28.5px"
                 alt="whats-icon"
               />
             </picture>
-        </figure>
+          </figure>
         </div>
-        <div>
-        <p>Dinheiro</p>
-        <p>Pix</p>
-        <p>Crédito</p>
-        <p>Débito</p>
-        <p>Refeição</p>
+        <div style={{ background: dataCss.colorThird, color: dataCss.fontColor }} className="about-info">
+          <span>Dinheiro</span>
+          <span>Pix</span>
+          <span>Crédito</span>
+          <span>Débito</span>
+          <span>Refeição</span>
         </div>
       </div>
-      <div className="about-div">
-        <div className='about-title'>
-          <h4>Contato</h4>
+      <div className="about-item">
+        <div className="about-title" style={{ color: dataCss.summaryFont }}>
+          <span>Contato</span>
           <figure>
             <picture>
               <source src={dataCss.iconAbout.contact} type="image/png" />
               <img
                 src={dataCss.iconAbout.contact}
-                width="28.5px"
                 alt="whats-icon"
               />
             </picture>
-        </figure>
+          </figure>
         </div>
-        <div>
-        <p>Cel.: 31 99999-9999</p>
-        <p>E-mail: seuemail@dominio.com</p>
-        <figure>
-          <a href="https://api.whatsapp.com/send?phone=+5531971451910">
-            <picture>
-              <source src={dataCss.whatsImage} type="image/png" />
-              <img className='whats'
-                src={dataCss.whatsImage}
-                width="30px"
-                height="30px"
-                alt="whats-icon"
-              />
-            </picture>
-          </a>
-        </figure>
+        <div style={{ background: dataCss.colorThird, color: dataCss.fontColor }} className="about-info">
+          <span>Cel.: 31 99999-9999</span>
+          <span>E-mail: seuemail@dominio.com</span>
+          <figure>
+            <a href="https://api.whatsapp.com/send?phone=+5531971451910">
+              <picture>
+                <source src={dataCss.whatsImage} type="image/png" />
+                <img
+                  className="whats"
+                  src={dataCss.whatsImage}
+                  alt="whats-icon"
+                />
+              </picture>
+            </a>
+          </figure>
         </div>
       </div>
     </div>

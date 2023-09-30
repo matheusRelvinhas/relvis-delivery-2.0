@@ -56,19 +56,19 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                         style={{ backgroundColor: dataCss.backgroundColorCard }}
                         className="card-div"
                       >
-                        <div className='card-img'>
+                        <div className='card-img' style={{ borderColor: dataCss.colorPrimary }}>
                           <figure>
                             <picture>
                               <source src={card.image} type="image/png" />
                               <img
                                 src={card.image}
-                                alt={card.title}
+                                alt="image-item"
                               />
                             </picture>
                           </figure>
                         </div>
                         <div className='card-info'>
-                          <h3>{card.title}</h3>
+                          <h3 style={{ borderColor: dataCss.colorPrimary }}>{card.title}</h3>
                           <p style={{ color: dataCss.fontColor }} className="description">
                             {card.description}
                           </p>
@@ -83,8 +83,9 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                       <div className="item-controls">
                         <StyledButton
                           style={{ color: dataCss.buttonColor }}
-                          normalBackgroundColor={dataCss.colorSecundary}
-                          hoverBackgroundColor={dataCss.colorPrimary}
+                          normalBackgroundColor={dataCss.colorPrimary}
+                          hoverBackgroundColor={dataCss.activeButtonColor}
+                          className="card-carousel-remove-button"
                           onClick={() => handleRemoveItem(card)}
                         >
                           -
@@ -97,9 +98,10 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                         />
                         <StyledButton
                           style={{ color: dataCss.buttonColor }}
-                          normalBackgroundColor={dataCss.colorSecundary}
-                          hoverBackgroundColor={dataCss.colorPrimary}
+                          normalBackgroundColor={dataCss.colorPrimary}
+                          hoverBackgroundColor={dataCss.activeButtonColor}
                           onClick={() => handleAddItem(card)}
+                          className="card-carousel-add-button"
                         >
                           +
                         </StyledButton>
@@ -113,7 +115,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
           </div>
           <StyledButton
             normalColor="#333"
-            hoverColor={dataCss.colorSecundary}
+            hoverColor={dataCss.colorPrimary}
             className="scroll-button right"
             onClick={scrollRight}
           >

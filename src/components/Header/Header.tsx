@@ -13,9 +13,18 @@ export default function Header() {
       style={{background: dataCss.backgroundColorHeader, color: dataCss.fontColor, borderColor: dataCss.colorThird}}
       className='header'
     > 
+      <div 
+        className="header-open-store"
+        style={{
+          backgroundColor: dataCss.colorPrimary,
+          color: dataCss.summaryFont,
+          borderColor: dataCss.colorSecundary,
+        }}
+      >
+        <span>{isOpenStore ? 'Aberto' : 'Fechado'}</span>
+      </div>
       <div>
         <Hamburger/>
-        <span>{isOpenStore ? 'Aberto' : 'Fechado'}</span>
       </div>
       <figure>
         <picture className='logo-img' >

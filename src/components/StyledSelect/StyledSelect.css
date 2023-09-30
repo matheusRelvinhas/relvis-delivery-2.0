@@ -1,10 +1,10 @@
-.input-group {
+.styled-select-group {
   position: relative;
   width: 100%;
   text-align: center;
 }
 
-.input {
+.styled-select {
   border: solid 2px;
   border-radius: 1rem;
   font-size: 1rem;
@@ -17,7 +17,7 @@
   transition: color 0.3s;
 }
 
-.label {
+.label-select {
   position: absolute;
   width: 30%;
   min-height: 1.25rem ;
@@ -35,11 +35,11 @@
   transition: color 0.3s;
 }
 
-.input-group:active {
+.styled-select-group:active {
   transform: scale(1.02); /* Aumenta o tamanho em 5% no clique */
 }
 
-.input-group:focus {
+.styled-select-group:focus {
   transform: scale(1.02); /* Aumenta o tamanho em 5% no clique */
 }
 

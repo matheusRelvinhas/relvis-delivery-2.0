@@ -1,30 +1,44 @@
 .about-container {
-  width: 45vw;
-  min-width: 220px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  align-items: center;
+  overflow: auto;
 }
 
-.about-div {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+.about-item {
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 40vw;
-  min-width: 200px;
-  justify-content: flex-start;
-  padding: 4px 0;
 }
 
 .about-title{
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
-  padding: 2px 0;
+  padding: 1vh 3vw;
+  align-items: center;
+  font-size: large;
 }
 
-.whats {
-  padding-top: 8px;
+.about-title figure img{
+  height: 25.5px;
+  width: 27.5px;
+}
+
+.about-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  border-top: rgba(0, 0, 0, 0.1) solid 2.5px;
+  border-bottom: rgba(0, 0, 0, 0.1) solid 2.5px;
+  font-size: smaller;
+  align-items: center;
+}
+
+.about-info figure img{
+  height: 30px;
+  width: 30px;
 }

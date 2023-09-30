@@ -10,7 +10,7 @@
 
 .cart-summary-items-title picture img {
   height: 30px;
-  width: 30px;
+  width: 36px;
 }
 
 .cart-summary-items-container {
@@ -100,12 +100,25 @@
   width: 85%;
 }
 
-.cart-summary-items-button  {
+.cart-summary-items-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
   width: 100%;
   padding: 1vh 0;
   height: 15vh;
   max-height: 55px;
   min-height: 30px;
+  transition: background-color 0.3s;
+}
+
+.cart-summary-items-button span {
   font-size: large;
   transition: background-color 0.3s;
+}
+
+.cart-summary-items-button figure img {
+  height: 30px;
+  width: 30px;
 }

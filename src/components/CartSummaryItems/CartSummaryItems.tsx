@@ -22,7 +22,10 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
 
   return (
     <>
-      <div className="cart-summary-items-title" style={{ backgroundColor: dataCss.colorPrimary }}>
+      <div
+        className="cart-summary-items-title"
+        style={{ backgroundColor: dataCss.colorPrimary }}
+      >
         <span style={{ color: dataCss.summaryFont }}>Carrinho</span>
         <figure>
           <picture>
@@ -31,7 +34,13 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
           </picture>
         </figure>
       </div>
-      <div className="cart-summary-items-container" style={{ backgroundColor: dataCss.colorSecundary, color: dataCss.fontColor }}>
+      <div
+        className="cart-summary-items-container"
+        style={{
+          backgroundColor: dataCss.colorSecundary,
+          color: dataCss.fontColor,
+        }}
+      >
         <ul>
           {Object.entries(cartItems).map(([title, quantity]) => {
             const card = items?.find((card) => card.title === title);
@@ -43,9 +52,7 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
                     <span>
                       {quantity}x {title}
                     </span>
-                    <span>
-                      R$ {totalPrice.toFixed(2)}
-                    </span>
+                    <span>R$ {totalPrice.toFixed(2)}</span>
                   </div>
                   <button
                     style={{
@@ -64,15 +71,26 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
           })}
         </ul>
       </div>
-      <div className="cart-summary-items" style={{ backgroundColor: dataCss.colorSecundary }}>
-        <div className="cart-summary-items-total" style={{ backgroundColor: dataCss.colorPrimary, borderColor: dataCss.colorSecundary }}>
-          <span style={{ color: dataCss.summaryFont }}>Total:R$ {cartTotal.toFixed(2)}</span>
+      <div
+        className="cart-summary-items"
+        style={{ backgroundColor: dataCss.colorSecundary }}
+      >
+        <div
+          className="cart-summary-items-total"
+          style={{
+            backgroundColor: dataCss.colorPrimary,
+            borderColor: dataCss.colorSecundary,
+          }}
+        >
+          <span style={{ color: dataCss.summaryFont }}>
+            Total:R$ {cartTotal.toFixed(2)}
+          </span>
           <figure>
-          <picture>
-            <source src={dataCss.moneyImage} type="image/png" />
-            <img src={dataCss.moneyImage} alt="icon-img" />
-          </picture>
-        </figure>
+            <picture>
+              <source src={dataCss.moneyImage} type="image/png" />
+              <img src={dataCss.moneyImage} alt="icon-img" />
+            </picture>
+          </figure>
         </div>
         <StyledInput
           label="Observação"
@@ -89,11 +107,19 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
         normalBackgroundColor={dataCss.colorPrimary}
         activeBackgroundColor={dataCss.activeButtonColor}
         disabledBackgroundColor={dataCss.disabledButtonColor}
-        className={`cart-summary-items-button ${totalItems === 0 ? 'disabled' : ''}`}
+        className={`cart-summary-items-button ${
+          totalItems === 0 ? 'disabled' : ''
+        }`}
         onClick={handleFinalizeOrder}
         disabled={totalItems === 0}
       >
-        <h1>Finalizar pedido</h1>
+        <span>Finalizar pedido</span>
+        <figure>
+          <picture>
+            <source src={dataCss.purchaseRequestsImage} type="image/png" />
+            <img src={dataCss.purchaseRequestsImage} alt="icon-img" />
+          </picture>
+        </figure>
       </StyledButton>
     </>
   );
