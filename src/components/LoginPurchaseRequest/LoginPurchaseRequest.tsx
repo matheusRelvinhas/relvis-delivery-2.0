@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, RefObject } from 'react';
 import { useGlobalContext } from '@/Context/store';
 import './LoginPurchaseRequest.css';
