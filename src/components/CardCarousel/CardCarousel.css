@@ -32,7 +32,7 @@
   margin: 10px;
   box-shadow: 0 0 8px 0 #555; /* Adiciona sombra nas quatro bordas */
   transition: transform 0.2s ease-in-out;
-  border-radius: 10px;
+  border-radius: 16px;
 }
 
 .card:hover {
@@ -48,7 +48,7 @@
 
 .card-img {
   width: 115px;
-  border-radius: 8px;
+  border-radius: 10px;
   border-top-right-radius: 0;
   border-bottom-left-radius: 0;
   border: 3px solid;
@@ -62,16 +62,15 @@
   width: 100%;
   padding: 0 4px 0 4px;
   overflow: hidden; /* Limita a altura e oculta o conteúdo que transborda */
-
 }
 
 .description {
-  font-size: smaller;
+  font-size: x-small;
   white-space: pre-line; /* Mantém quebras de linha no texto */
   overflow: hidden; /* Oculta qualquer texto que ultrapasse o contêiner */
   text-overflow: ellipsis; /* Mostra "..." quando o texto for cortado */
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Define o número de linhas que você deseja mostrar */
+  -webkit-line-clamp: 4; /* Define o número de linhas que você deseja mostrar */
   -webkit-box-orient: vertical;
 }
 
@@ -92,6 +91,9 @@
 .price {
   font-weight: bold;
   margin-bottom: 2px;
+  border-bottom: 3px solid;
+  align-items: center;
+  text-align: center;
 }
 
 .scroll-button {

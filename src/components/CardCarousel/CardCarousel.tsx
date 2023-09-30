@@ -40,7 +40,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
         <div className="card-carousel">
           <StyledButton
             normalColor="#333"
-            hoverColor={dataCss.colorSecundary}
+            hoverColor={dataCss.colorPrimary}
             className="scroll-button left"
             onClick={scrollLeft}
           >
@@ -73,10 +73,10 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                             {card.description}
                           </p>
                           <p
-                            style={{ color: dataCss.colorSecundary }}
+                            style={{ color: dataCss.fontColor, borderColor: dataCss.colorPrimary }}
                             className="price"
                           >
-                            R${card.price.toFixed(2)} 
+                            R${card.price.toFixed(2)}
                           </p>
                         </div>
                       </div>
