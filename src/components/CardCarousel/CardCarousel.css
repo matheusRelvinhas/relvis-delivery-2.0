@@ -71,7 +71,7 @@
   overflow: hidden; /* Oculta qualquer texto que ultrapasse o contêiner */
   text-overflow: ellipsis; /* Mostra "..." quando o texto for cortado */
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Define o número de linhas que você deseja mostrar */
+  -webkit-line-clamp: 3; /* Define o número de linhas que você deseja mostrar */
   -webkit-box-orient: vertical;
 }
 
@@ -82,7 +82,7 @@
 }
 
 .card-info h3 {
-  font-size: larger;
+  font-size: medium;
   align-items: center;
   text-align: center;
   width: 100%;
