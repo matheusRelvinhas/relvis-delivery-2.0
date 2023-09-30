@@ -466,8 +466,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     logoImage: [
       './img/logo.png',
       './img/logo.webp',
-      'https://i.postimg.cc/gkryRqsX/easy-ia-logo.png',
-      'https://i.postimg.cc/pVsYp1fM/easy-ia-logo.webp',
     ],
     cartImage: './img/cart.png',
     backImage: '/img/back.png',

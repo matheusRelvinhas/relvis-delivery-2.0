@@ -28,8 +28,6 @@ export default function Header() {
       </div>
       <figure>
         <picture className='logo-img' >
-          <source src={dataCss.logoImage[3]} type="image/webp" />
-          <source src={dataCss.logoImage[2]} type="image/png" />
           <source src={dataCss.logoImage[1]} type="image/webp" />
           <source src={dataCss.logoImage[0]} type="image/png" />
           <img src={dataCss.logoImage[0]} alt="logo-img" style={{ borderColor: dataCss.colorSecundary}}/>
