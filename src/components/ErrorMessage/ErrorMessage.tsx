@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import './ErrorMessage.css';
 import { useGlobalContext } from '@/Context/store';

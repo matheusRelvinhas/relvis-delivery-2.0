@@ -1,5 +1,3 @@
-'use client';
-
 import { useGlobalContext } from '@/Context/store';
 import CartSummary from '../CartSummary/CartSummary';
 import './Cart.css';

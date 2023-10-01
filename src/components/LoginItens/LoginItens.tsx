@@ -1,9 +1,6 @@
-'use client';
-
 import React from 'react';
 import AddItemForm from '@/components/AddItemForm/AddItemForm';
 import { useGlobalContext } from '@/Context/store';
-import { firestore } from '@/firebase';
 import './LoginItens.css';
 
 const LoginItens: React.FC = () => {

@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useRef } from 'react';
 import { useGlobalContext } from '@/Context/store';
 import './AddItemForm.css';
