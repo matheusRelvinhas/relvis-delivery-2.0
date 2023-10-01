@@ -2,7 +2,7 @@ import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 import './LoginProfile.css';
 import LoginMessage from '../LoginMessage/LoginMessage';
-import { firestore } from '@/firebase';
+import { firestore } from '@/assets/firebase';
 
 const LoginProfile: React.FC = () => {
   const { dataCss, isLogin, handleLogout, isOpenStore, setIsLoading } = useGlobalContext();

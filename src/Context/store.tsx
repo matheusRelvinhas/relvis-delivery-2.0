@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode, FormEvent, useEffect } from 'react';
 import axios from 'axios';
 import { DateTime } from 'luxon'; 
-import { firestore, storage, auth } from '@/firebase';
+import { firestore, storage, auth } from '@/assets/firebase';
 
 type PurchaseRequest = {
   id: string;

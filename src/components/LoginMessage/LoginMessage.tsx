@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
-import { firestore } from '@/firebase';
+import { firestore } from '@/assets/firebase';
 import './LoginMessage.css';
 
 const LoginMessage: React.FC = () => {
