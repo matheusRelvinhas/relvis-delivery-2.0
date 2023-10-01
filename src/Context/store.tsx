@@ -1433,18 +1433,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const handleFinalizeOrder = () => {
     setIsBuy(true);
-    const cartSummaryElements = document.querySelectorAll('.cart-summary');
-    const formattedLines: string[] = [];
-    cartSummaryElements.forEach((element) => {
-      const textLines = (element as HTMLElement).innerText.split('\n'); // Use type assertion aqui
-      if (textLines.length >= 2) {
-        const itemLine = textLines[0];
-        const priceLine = textLines[1];
-        formattedLines.push(`${itemLine} ${priceLine}`);
-      }
-    });
-    const formattedText = formattedLines.join('\n-------\n');
-    setMessageItens(formattedText);
+
+    setMessageItens('oi');
   };
 
   const handleFinalize = async (event: FormEvent) => {
