@@ -18,7 +18,7 @@ Dependências:
 -Axios
 -Styled Components
 -Next.js
--Context(gernciamneto global de estado)
+-Context(gerenciamento global de estado)
 
 <p aling="center">
   <img src="public/assets/client-relvis-delivery.png">
