@@ -14,7 +14,7 @@ const About: React.FC = () => {
               <source src={dataCss.iconAbout.operation} type="image/png" />
               <img
                 src={dataCss.iconAbout.operation}
-                alt="whats-icon"
+                alt="local-icon"
               />
             </picture>
           </figure>
@@ -50,7 +50,7 @@ const About: React.FC = () => {
               <source src={dataCss.iconAbout.payment} type="image/png" />
               <img
                 src={dataCss.iconAbout.payment}
-                alt="whats-icon"
+                alt="payment-icon"
               />
             </picture>
           </figure>
@@ -71,7 +71,7 @@ const About: React.FC = () => {
               <source src={dataCss.iconAbout.contact} type="image/png" />
               <img
                 src={dataCss.iconAbout.contact}
-                alt="whats-icon"
+                alt="about-icon"
               />
             </picture>
           </figure>
@@ -83,10 +83,10 @@ const About: React.FC = () => {
           <figure>
             <a href="https://api.whatsapp.com/send?phone=+5531988664307">
               <picture>
-                <source src={dataCss.whatsImage} type="image/png" />
+                <source src={dataCss.iconAbout.whats} type="image/png" />
                 <img
                   className="whats"
-                  src={dataCss.whatsImage}
+                  src={dataCss.iconAbout.whats}
                   alt="whats-icon"
                 />
               </picture>

@@ -462,7 +462,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 }) => {
 
   const dataCss = {
-    profileName: "Piolho's Restaurante e Distribuidora",
+    profileName: "Relvis Delivery",
     logoImage: [
       './img/logo.png',
       './img/logo.webp',
@@ -491,21 +491,20 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       payment: '/img/payment.png',
       contact: '/img/contact.png',
       operation: '/img/operation.png',
+      whats: '/img/whatsapp-icon.png',
     },
     whatsImage: '/img/whatsapp.png',
-    colorPrimary: '#a8071a',
+    colorPrimary: '#bd482d',
     colorSecundary: '#f0f0f0',
     colorThird: '#f0f0f0',
-    colorFourth: '#ffccc7',
+    colorFourth: '#f0dcd3',
     backgroundColorCard: '#f5f5f5',
-    backgroundColorHeader: 'linear-gradient(to bottom, #a8071a 0%, #a8071a 15vh, transparent 50%, transparent 100%)',
+    backgroundColorHeader: 'linear-gradient(to bottom, #bd482d 0%, #bd482d 15vh, transparent 50%, transparent 100%)',
     fontColor: '#262626',
     summaryFont: '#f0f0f0',
     buttonColor: '#f0f0f0',
-    activeButtonColor: '#820014',
+    activeButtonColor: '#1c554a',
     disabledButtonColor: '#bfbfbf',
-    colorInput: '#1c554a',
-    colorBorder: '#14463c',
   };
 
   //LOGIN PAGE
