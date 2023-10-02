@@ -1,7 +1,7 @@
 
 Link Project : 
-    ITERFACE CLIENTE https://relvis-delivery-2-0.vercel.app/
-    ITERFACE LOJA https://relvis-delivery-2-0.vercel.app/login
+    INTERFACE CLIENTE https://relvis-delivery-2-0.vercel.app/
+    INTERFACE LOJA https://relvis-delivery-2-0.vercel.app/login
 
 <p aling="center">
   <img src="public/assets/relvis-delivery-gif.gif">
