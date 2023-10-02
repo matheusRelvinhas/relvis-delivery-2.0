@@ -20,8 +20,8 @@ const About: React.FC = () => {
           </figure>
         </div>
         <div style={{ background: dataCss.colorThird, color: dataCss.fontColor }} className="about-info">
-          <span>Segunda a sexta-feira: 10:00 - 18:00</span>
-          <span>Sábado: 10:00 - 14:00</span>
+          <span>Segunda a sábado: 08:00 - 19:00 horas</span>
+          <span>Almoço: 11:00 - 14 horas</span>
         </div>
       </div>
       <div className="about-item">
@@ -38,7 +38,7 @@ const About: React.FC = () => {
           </figure>
         </div>
         <div style={{ background: dataCss.colorThird, color: dataCss.fontColor }} className="about-info">
-          <span>Rua: Itororó, 889 - Padre Eustáquio</span>
+          <span>Rua Itororó 801 - Padre Eustáquio</span>
           <span>Belo Horizonte - MG</span>
         </div>
       </div>
@@ -77,10 +77,11 @@ const About: React.FC = () => {
           </figure>
         </div>
         <div style={{ background: dataCss.colorThird, color: dataCss.fontColor }} className="about-info">
-          <span>Cel.: 31 99999-9999</span>
-          <span>E-mail: seuemail@dominio.com</span>
+          <span>Cel.: 31 98866-4307</span>
+          <span>Fixo: 31 2515-4857</span>
+          <span>E-mail: distribuidoradopiolho@gmail.com</span>
           <figure>
-            <a href="https://api.whatsapp.com/send?phone=+5531971451910">
+            <a href="https://api.whatsapp.com/send?phone=+5531988664307">
               <picture>
                 <source src={dataCss.whatsImage} type="image/png" />
                 <img

@@ -462,7 +462,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 }) => {
 
   const dataCss = {
-    profileName: 'Relvis Delivery',
+    profileName: "Piolho's Restaurante e Distribuidora",
     logoImage: [
       './img/logo.png',
       './img/logo.webp',
@@ -1433,8 +1433,18 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const handleFinalizeOrder = () => {
     setIsBuy(true);
-
-    setMessageItens('oi');
+    const cartSummaryElements = document.querySelectorAll('.cart-summary');
+    const formattedLines: string[] = [];
+    cartSummaryElements.forEach((element) => {
+      const textLines = (element as HTMLElement).innerText.split('\n'); // Use type assertion aqui
+      if (textLines.length >= 2) {
+        const itemLine = textLines[0];
+        const priceLine = textLines[1];
+        formattedLines.push(`${itemLine} ${priceLine}`);
+      }
+    });
+    const formattedText = formattedLines.join('\n-------\n');
+    setMessageItens(formattedText);
   };
 
   const handleFinalize = async (event: FormEvent) => {
@@ -1509,7 +1519,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
       message += `Troco: R$${trocoMessage.toFixed(2)}`;
     }
-    const whatsappLink = `https://api.whatsapp.com/send?phone=+5531971451910&text=${encodeURIComponent(message)}`;
+    const whatsappLink = `https://api.whatsapp.com/send?phone=+5531988664307&text=${encodeURIComponent(message)}`;
     window.open(whatsappLink, '_blank');
     setCartItems({});
     setPaymentMethod('');

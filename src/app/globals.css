@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;500&display=swap');
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #fafafa;
+}
+
+html, body {
+  width: 100%;
+  height: 100vh;
+}
+
+a, Link {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  font-family: 'Montserrat';
+  font-size: x-large;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilos para navegadores WebKit (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 1px;
+  height: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #f0f0f0; /* Cor do polegar da scrollbar */
+  border-radius: 6px; /* Borda arredondada para o polegar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Cor de fundo da trilha da scrollbar */
+}
+
+/* Estilize o botão de seleção de arquivo */
+.add-items-form input[type='file']::-webkit-file-upload-button {
+  background-color: transparent;
+  color: #1f1f1f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* Estilize o botão de seleção de arquivo para navegadores não baseados no WebKit (Firefox, Edge) */
+.add-items-form input[type='file']::file-selector-button {
+  background-color: transparent;
+  color: #1f1f1f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* Estilize o botão de seleção de arquivo para IE */
+.add-items-form input[type='file']::-ms-browse {
+  background-color: transparent;
+  color: #1f1f1f;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 4px;
+}

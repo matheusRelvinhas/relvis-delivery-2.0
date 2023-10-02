@@ -147,7 +147,7 @@ const LoginNavigation: React.FC = () => {
           )}
           {activeItem === 'Pedidos' && (
             <div className="rest-content">
-              oi
+              <LoginPurchaseRequest />
             </div>
           )}
         </div>
