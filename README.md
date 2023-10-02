@@ -1,43 +1,29 @@
 
-Link Project : https://relvis-delivery-2.vercel.app/
+Link Project : 
+    ITERFACE CLIENTE https://relvis-delivery-2-0.vercel.app/
+    ITERFACE LOJA https://relvis-delivery-2-0.vercel.app/login
 
 <p aling="center">
-  <img src="public/assets/relvis-delivery-2.0-tela-app.png">
+  <img src="public/assets/relvis-delivery-gif.gif">
 </p>
 
-Aplicação de um e-comerce simples aonde usuário faz o pedido e é direcionado para whats da empresa para finalizar o pedido, a ideia é ser simples e prático, ultilizei HTML, CSS, TypeScript e Next.js, foi um grande desáfio.
+Relvis Delivery é um e-comerce simples para restaurantes, distribuidoras que fazem a gestão e o logística de suas próprias entregas e precisam de um sistema para gerenciar esse contato com cliente entre a loja.
+Ele oferece soluções para recebimento de pedidos e gestão deles, podendo cancelar, aceitar e finalizar, além de imprimir em formato de cupom fiscal. O cliente tem uma rápida interção com site e ao finalizar sue pedido é enviado uma mensagem no whats da loja com pedido e também é recebido pelo sistema em sua interface da loja.
 
-Ultilizei Context para gerenciamento global de estados,  primeira vez que uso context em uma aplicação next.js e tem sua particularidades ultilizar context em next.js compardo ao react.js.
-https://legacy.reactjs.org/docs/context.html
+Aplicação é feita em Next.js com TypeScript, ele usa uma integração com firebase(banco de dados da Google) para salvar as informações, como clientes, pedidos, produtos e categorias entre outras informações, tendo acesso a um banco de dados por parte da loja para gerenciar e facilitar o dia dia do empreendedor. Layout responsivo e intuitivo.
 
-Instruções
-O desafio consiste em criar uma loja virtual simples.
-Sua aplicação deve possuir:
-● Página inicial:
-● Listagem de categorias de produtos
-● Listagem produtos
-● Página de produto:
-● Carousel de imagens
-● Detalhes do produto
-● Carrinho de compras
-● Atualizar a quantidade de um produto no carrinho;
-● Excluir um item do carrinho;
-● Mensagem de carrinho vazio;
-● Valor total, somando os preços de todos os itens no carrinho;
-● Botão para a finalização do pedido;
-● Você pode utilizar a FakeStoreAPI para consultar os produtos e as
-categorias;
-Tecnologias a serem utilizadas
-Devem ser utilizadas as seguintes tecnologias:
-● HTML
-● CSS
-● TypeScript
-● Next.js
-Entrega
-● Para iniciar o teste, siga atentamente as instruções do teste;
-● Crie um repositório público na sua conta do GitHub;
-● Faça o arquivo readme.md com as informações necessárias para
-executar o seu teste;
-● Depois de finalizado, envie-nos um e-mail com o link do seu teste;
-Bônus
-● Layout Responsivo
+Dependências:
+-Firebase
+-Luxon
+-Axios
+-Styled Components
+-Next.js
+-Context(gernciamneto global de estado)
+
+<p aling="center">
+  <img src="public/assets/client-relvis-delivery.png">
+</p>
+
+<p aling="center">
+  <img src="public/assets/store-relvis-delivery.png">
+</p>

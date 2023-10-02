@@ -1518,7 +1518,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
       message += `Troco: R$${trocoMessage.toFixed(2)}`;
     }
-    const whatsappLink = `https://api.whatsapp.com/send?phone=+5531988664307&text=${encodeURIComponent(message)}`;
+    const whatsappLink = `https://api.whatsapp.com/send?phone=+5531971451910&text=${encodeURIComponent(message)}`;
     window.open(whatsappLink, '_blank');
     setCartItems({});
     setPaymentMethod('');
