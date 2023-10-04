@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import StyledInput from '../StyledInput/StyledInput';
 import { useGlobalContext } from '@/Context/store';

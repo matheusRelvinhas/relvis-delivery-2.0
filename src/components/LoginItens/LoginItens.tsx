@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import AddItemForm from '@/components/AddItemForm/AddItemForm';
 import { useGlobalContext } from '@/Context/store';

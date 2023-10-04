@@ -1,3 +1,5 @@
+'use client'
+
 import { useGlobalContext } from '@/Context/store';
 import React, { ChangeEvent } from 'react';
 import './StyledInput.css';

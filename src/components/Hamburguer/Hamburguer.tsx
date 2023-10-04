@@ -1,3 +1,5 @@
+'use client'
+
 import './Hamburger.css';
 import { useGlobalContext } from '@/Context/store';
 import About from '../About/About';

@@ -1,8 +1,10 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { useGlobalContext } from '@/Context/store';
 
 const AlertSound: React.FC = () => {
-  const { dataCss, purchaseRequests } = useGlobalContext();
+  const { purchaseRequests } = useGlobalContext();
 
   const [audio] = useState(new Audio('/sounds/alert-sound.mp3'));
   const playSound = purchaseRequests?.some(
