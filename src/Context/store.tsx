@@ -1389,15 +1389,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     if (startDate && endDate) {
       const filteredPurchaseRequest = purchaseRequests?.filter((purchaseRequest) => {
         const requestDate = parse(purchaseRequest.date, 'dd-MM-yyyy', new Date());
-  
         if (isValid(requestDate)) {
           const formattedRequestDate = format(requestDate, 'yyyy-MM-dd');
           return formattedRequestDate >= startDate && formattedRequestDate <= endDate;
         }
-  
         return false; // A data não é válida
       });
-  
       setFilteredPurchaseRequests(filteredPurchaseRequest);
     }
   }, [startDate, endDate, purchaseRequests]);
