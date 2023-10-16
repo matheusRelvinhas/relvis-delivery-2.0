@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode, FormEvent, useEffect } from 'react';
 import axios from 'axios';
-
+import { parse, format, addHours, isValid } from 'date-fns';
 import { firestore, storage, auth } from '@/assets/firebase';
 
 type PurchaseRequest = {
@@ -1364,7 +1364,43 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (selectedOption === 'Hoje') {
+      const now = addHours(new Date(), -3);
+      const formattedDate = format(now, 'dd/MM/yyyy'); // Formato da data: "dia/mês/ano"
+      const todayPurchaseRequests = purchaseRequests?.filter((purchaseRequest) => {
+        return purchaseRequest.date === formattedDate;
+      });
+      setFilteredPurchaseRequests(todayPurchaseRequests);
+      setStartDate('')
+      setEndDate('')
+    } else if (selectedOption === 'Todos') {
+      setFilteredPurchaseRequests(purchaseRequests);
+      setStartDate('')
+      setEndDate('')
+    } else if (selectedOption === 'Período') {
+      setFilteredPurchaseRequests([]);
+    } else {
+      setFilteredPurchaseRequests(purchaseRequests);
+    }
+  }, [selectedOption, purchaseRequests]);
 
+  useEffect(() => {
+    if (startDate && endDate) {
+      const filteredPurchaseRequest = purchaseRequests?.filter((purchaseRequest) => {
+        const requestDate = parse(purchaseRequest.date, 'dd-MM-yyyy', new Date());
+  
+        if (isValid(requestDate)) {
+          const formattedRequestDate = format(requestDate, 'yyyy-MM-dd');
+          return formattedRequestDate >= startDate && formattedRequestDate <= endDate;
+        }
+  
+        return false; // A data não é válida
+      });
+  
+      setFilteredPurchaseRequests(filteredPurchaseRequest);
+    }
+  }, [startDate, endDate, purchaseRequests]);
 
   //CLIENT PAGE
   const [isOpen, setIsOpen] = useState(false);
@@ -1488,7 +1524,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     } catch (error) {
       console.error('Erro ao determinar o próximo número de ordem:', error);
     }
-
+    const now = addHours(new Date(), -3);
+    const formattedDate = format(now, 'dd/MM/yyyy'); // Formato da data: "dia/mês/ano"
+    const formattedTime = format(now, 'HH:mm:ss');  // Formato da hora: "hora:minuto:segundo"
     const data = {
       name: name,
       cellphone: cellphone,
@@ -1511,8 +1549,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       order: nextOrder,
       payment: paymentMethod,
       troco: troco,
-      date: '',
-      time: '',
+      date: formattedDate,
+      time: formattedTime,
       status: 'new',
       observation: observation,
     };
@@ -1533,7 +1571,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       console.error('Erro ao enviar novo pedido', error);
     }
     const orderPurchase = `000${nextOrder}`
-    let message = `${'formattedDate'} / ${'formattedTime'}\nPedido Novo !!\nID: ${orderPurchase}\n--------------\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}  Compl.: ${complement}\nBairro: ${district}\n--------------\nCarrinho\n${messageItens}\n--------------\nObs.: ${observation}\n--------------\nTotal: ${cartTotal.toFixed(2)}\nForma de Pagamento: ${paymentMethod}\n`;
+    let message = `${formattedDate} / ${formattedTime}\nPedido Novo !!\nID: ${orderPurchase}\n--------------\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}  Compl.: ${complement}\nBairro: ${district}\n--------------\nCarrinho\n${messageItens}\n--------------\nObs.: ${observation}\n--------------\nTotal: ${cartTotal.toFixed(2)}\nForma de Pagamento: ${paymentMethod}\n`;
     if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
       message += `Troco: R$${trocoMessage.toFixed(2)}`;
     }
