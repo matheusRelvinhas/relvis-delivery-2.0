@@ -15,22 +15,8 @@ const LoginMessage: React.FC = () => {
     setIsLoading,
     isContentMessageOpen,
     setIsContentMessageOpen,
+    handleEditMessage,
   } = useGlobalContext();
-
-  const handleEditMessage = async (message: string) => {
-    setIsLoading(true);
-    const collectionRef = firestore.collection('message');
-    const messageRef = collectionRef.doc('messageID');
-    try {
-      const updatedMessageData = {
-        message: message,
-      };
-      await messageRef.update(updatedMessageData);
-    } catch (error) {
-      console.error('Erro ao editar mensagem:', error);
-    }
-    setIsLoading(false);
-  };
 
   const handleIsEditMessage = () => {
     if (isEditMessage) {

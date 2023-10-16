@@ -1,19 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useGlobalContext } from '@/Context/store';
 import LoginItens from '@/components/LoginItens/LoginItens';
 import LoginCategory from '@/components/LoginCategory/LoginCategory';
 import LoginPurchaseRequest from '@/components/LoginPurchaseRequest/LoginPurchaseRequest';
 import LoginClient from '../LoginClient/LoginClient';
-import { useGlobalContext } from '@/Context/store';
-import './LoginNavigation.css';
 import LoginProfile from '../LoginProfile/LoginProfile';
+import './LoginNavigation.css';
 
 const LoginNavigation: React.FC = () => {
-  const { dataCss } = useGlobalContext();
-
-  const [activeItem, setActiveItem] = useState<string>('Perfil');
-  const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
+  const { dataCss, activeItem, setActiveItem, isNavOpen, setIsNavOpen } = useGlobalContext();
 
   const handleItemClick = (item: string) => {
     setActiveItem(item);

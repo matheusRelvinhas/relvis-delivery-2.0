@@ -142,6 +142,8 @@ interface ContextProps {
   cellphone: string;
   setCellphone: React.Dispatch<React.SetStateAction<string>>;
   categories: { id: string; category: string; order: number }[];
+  handleEditOpenStore: (openStore: boolean) => void;
+  handleEditMessage: (message: string) => void;
   handleDeleteCategory: (categoryId: string, category: string) => void;
   handleMoveCategoryUp: (categoryId: string, order: number) => void;
   handleMoveCategoryDown: (categoryId: string, order: number) => void;
@@ -278,6 +280,12 @@ interface ContextProps {
   setTotalPurchase: React.Dispatch<React.SetStateAction<string>>;
   isContentMessageOpen: boolean;
   setIsContentMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  activeItem: string;
+  setActiveItem: React.Dispatch<React.SetStateAction<string>>;
+  isNavOpen: boolean;
+  setIsNavOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -315,6 +323,8 @@ const GlobalContext = createContext<ContextProps>({
   cellphone: '',
   setCellphone: () => {},
   categories: [],
+  handleEditOpenStore: () => {},
+  handleEditMessage: () => {},
   handleDeleteCategory: () => {},
   handleEditCategory: () => {},
   handleMoveCategoryUp: () => {},
@@ -451,6 +461,12 @@ const GlobalContext = createContext<ContextProps>({
   setTotalPurchase: () => {},
   isContentMessageOpen: false,
   setIsContentMessageOpen: () => {},
+  activeItem: 'Perfil',
+  setActiveItem: () => {},
+  isNavOpen: false,
+  setIsNavOpen: () => {},
+  searchQuery: '',
+  setSearchQuery: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -565,6 +581,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [trocoPurchase, setTrocoPurchase] = useState('');
   const [totalPurchase, setTotalPurchase] = useState('');
   const [isContentMessageOpen, setIsContentMessageOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState<string>('Perfil');
+  const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -599,6 +617,37 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setAlertLogin(false);
         setErrorMessage('')
       }, 3000);
+    }
+    setIsLoading(false);
+  };
+
+  const handleEditOpenStore = async (openStore: boolean) => {
+    setIsLoading(true);
+    const collectionRef = firestore.collection('openStore');
+    const openStoreRef = collectionRef.doc('openStoreID');
+    const isOpen = !openStore;
+    try {
+      const updatedOpenStoreData = {
+        openStore: isOpen,
+      };
+      await openStoreRef.update(updatedOpenStoreData);
+    } catch (error) {
+      console.error('Erro ao editar status da loja:', error);
+    }
+    setIsLoading(false);
+  };
+
+  const handleEditMessage = async (message: string) => {
+    setIsLoading(true);
+    const collectionRef = firestore.collection('message');
+    const messageRef = collectionRef.doc('messageID');
+    try {
+      const updatedMessageData = {
+        message: message,
+      };
+      await messageRef.update(updatedMessageData);
+    } catch (error) {
+      console.error('Erro ao editar mensagem:', error);
     }
     setIsLoading(false);
   };
@@ -1364,6 +1413,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [troco, setTroco] = useState('');
   const [observation, setObservation] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleCheckboxChange = () => {
     setIsOpen(!isOpen);
@@ -1553,6 +1603,24 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }));
   };
 
+  useEffect(() => { // Função para atualizar os resultados com base na consulta de pesquisa
+    const updateResults = () => {
+      if (searchQuery === '') {
+        setSearchResults(items); // Se a consulta de pesquisa estiver vazia, exiba todos os itens
+      } else {
+        const filteredItems = items?.filter((item) => { // Caso contrário, filtre os itens com base na consulta
+          return (
+            item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.price.toString().includes(searchQuery)
+          );
+        });
+        setSearchResults(filteredItems);
+      }
+    }; // Chame a função de atualização dos resultados sempre que a consulta de pesquisa ou os itens mudarem
+    updateResults();
+  }, [searchQuery, items, setSearchResults]);
+
   useEffect(() => {
     const isValid =
       isOpenStore !== false &&
@@ -1563,7 +1631,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       district !== '' &&
       paymentMethod !== '' &&
       (paymentMethod !== 'dinheiro' || troco !== '');
-
     setIsFormValid(isValid);
   }, [name, cellphone, road, number, district, paymentMethod, troco, isOpenStore]);
 
@@ -1575,7 +1642,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     const storedNumber = localStorage.getItem('number') || '';
     const storedComplement = localStorage.getItem('complement') || '';
     const storedDistrict = localStorage.getItem('district') || '';
-   
     setName(storedName);
     setCellphone(storedCellphone);
     setCep(storedCep);
@@ -1758,6 +1824,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         handleEditPurchase,
         isContentMessageOpen,
         setIsContentMessageOpen,
+        handleEditMessage,
+        activeItem, 
+        setActiveItem,
+        isNavOpen, 
+        setIsNavOpen,
+        handleEditOpenStore,
+        searchQuery,
+        setSearchQuery,
       }}
     >
       {children}

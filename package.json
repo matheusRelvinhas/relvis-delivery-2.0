@@ -31,6 +31,8 @@
   "devDependencies": {
     "@types/luxon": "^3.3.2",
     "@types/react-slick": "^0.23.10",
-    "encoding": "^0.1.13"
+    "encoding": "^0.1.13",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
   }
 }

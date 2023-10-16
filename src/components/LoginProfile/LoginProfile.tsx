@@ -4,32 +4,15 @@ import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 import './LoginProfile.css';
 import LoginMessage from '../LoginMessage/LoginMessage';
-import { firestore } from '@/assets/firebase';
 
 const LoginProfile: React.FC = () => {
-  const { dataCss, isLogin, handleLogout, isOpenStore, setIsLoading } = useGlobalContext();
-
-  const handleEditOpenStore = async (openStore: boolean) => {
-    setIsLoading(true);
-    const collectionRef = firestore.collection('openStore');
-    const openStoreRef = collectionRef.doc('openStoreID');
-    const isOpen = !openStore;
-    try {
-      const updatedOpenStoreData = {
-        openStore: isOpen,
-      };
-      await openStoreRef.update(updatedOpenStoreData);
-    } catch (error) {
-      console.error('Erro ao editar status da loja:', error);
-    }
-    setIsLoading(false);
-  };
+  const { dataCss, isLogin, handleLogout, isOpenStore, setIsLoading, handleEditOpenStore } = useGlobalContext();
 
   return (
     <div className="login-profile-container">
       <div className="login-profile-title">
         <span>Perfil</span>
-        <figure >
+        <figure>
             <picture>
               <source src={dataCss.storeImage} type="image/png" />
               <img
