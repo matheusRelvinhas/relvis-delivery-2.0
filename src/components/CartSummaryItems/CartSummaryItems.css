@@ -1,0 +1,124 @@
+.cart-summary-items-title {
+  text-align: center;
+  font-size: larger;
+  padding: 1vh 1vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.cart-summary-items-title picture img {
+  height: 30px;
+  width: 36px;
+}
+
+.cart-summary-items-container {
+  display: flex;
+  flex-direction: column;
+  height: 99%;
+  padding: 2vh 2vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-top: rgba(0, 0, 0, 0.1) solid 2.5px;
+  border-bottom: rgba(0, 0, 0, 0.1) solid 2.5px;
+}
+
+.cart-summary-items-container ul li {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0 6px 1vh 0;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 1vh;
+}
+
+.cart-summary-items-span {
+  font-size: small;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-right: 2vw;
+}
+
+.cart-summary-items-container ul li button{
+  border-radius: 100px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.cart-summary-items-container ul li button span{
+ margin-right: 0.5px;
+ margin-bottom: 2.5px;
+}
+
+.cart-summary-items {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  border-bottom: rgba(0, 0, 0, 0.1) solid 2.5px;
+  padding-bottom: 1vh;
+}
+
+.cart-summary-items-total {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 50%;
+  min-width: 200px;
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  align-items: center;
+  box-shadow: 0 0 6px 0 #555;
+  border: 2px solid;
+  margin-top: 1vh;
+}
+
+.cart-summary-items-total span {
+  font-size: large;
+}
+
+.cart-summary-items-total picture img{
+  height: 20px;
+  width: 25px;
+  margin-top: 3px;
+}
+
+.cart-summary-items label {  
+  margin-top: 18px;
+}
+
+.cart-summary-items input {  
+  margin-top: 18px;
+  width: 85%;
+}
+
+.cart-summary-items-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  padding: 1vh 0;
+  height: 15vh;
+  max-height: 55px;
+  min-height: 30px;
+  transition: background-color 0.3s;
+}
+
+.cart-summary-items-button span {
+  font-size: large;
+  transition: background-color 0.3s;
+}
+
+.cart-summary-items-button figure img {
+  height: 30px;
+  width: 30px;
+}

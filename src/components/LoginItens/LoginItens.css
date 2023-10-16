@@ -1,0 +1,220 @@
+.login-items-container {
+  width: 100%;
+  height: calc(100vh);
+  display: flex;
+  flex-direction: column;
+}
+
+.login-items-title {
+  width: 30%;
+  min-width: 200px;
+  background-color: #f04134;
+  border-radius: 10px;
+  border-bottom-left-radius: 0;
+  height: 5vh;
+  max-height: 40px;
+  min-height: 30px;
+  color: #fff;
+  font-size: larger;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: space-around;
+  position: fixed;
+  z-index: 998;
+  box-shadow: 0 0 6px 0 #555;
+}
+
+.login-items-title span {
+  text-align: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-items-title figure img {
+  height: 25px;
+  width: 35px;
+  margin-top: 3px;
+}
+
+.login-items-list {
+  margin-top: 90px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.login-items {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  border: #f04134 solid 2px;
+  background-color: #f04134;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  margin: 1vh 1vw;
+  width: 30%;
+  min-width: 210px;
+  max-width: 300px;
+}
+
+.login-items-div-title {
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around ;
+  align-items: center;
+}
+
+.login-items-div-title figure img{
+  height: 20px;
+  width: 20px;
+  margin-top: 2px;
+}
+
+.login-items-div {
+  background-color: #fef0ef;
+  border-bottom-left-radius: 9px;
+  border-bottom-right-radius: 9px;
+  padding: 4px;
+}
+
+.login-items-img-toogle {
+  display: flex;
+  flex-direction: row;
+}
+
+.login-items-img-toogle div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.login-items-img-toogle figure {
+  height: 90px;
+  width: 90px;
+  border: #f04134 solid 2px;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+}
+
+.login-items-img-toogle figure img {
+  height: 90px;
+  width: 90px;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+}
+
+.login-items-move {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.login-items-move button {
+  font-size: larger;
+  background-color: #f04134;
+  color: #fff;
+  border-radius: 5px;
+  min-width: 36px;
+  height: 4vh;
+  min-height: 25px;
+  max-height: 35px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-around;
+  margin: 5px 10px;
+}
+
+.login-items-buttons-price {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-items-buttons-price span {
+  font-size: larger;
+  color: #439b46;
+}
+
+.login-items-buttons-price button {
+  font-size: larger;
+  background-color: #f04134;
+  color: #fff;
+  border-radius: 5px;
+  min-width: 36px;
+  height: 4vh;
+  min-height: 25px;
+  max-height: 35px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-around;
+}
+
+.login-items-buttons-price button:focus {
+  background-color: #df2e22;
+}
+
+.login-items-buttons-price button:active {
+  background-color: #df2e22;
+}
+
+.login-items-buttons-price figure img{
+  height: 20px;
+  width: 20px;
+  margin-top: 2px;
+}
+
+.login-items-move span {
+  align-items: center;
+  text-align: center;
+}
+
+.login-items-move button:focus {
+  background-color: #df2e22;
+}
+
+.login-items-move button:active {
+  background-color: #df2e22;
+}
+
+.login-items-img-toogle div div {
+  display: flex;
+  flex-direction: row;
+}
+
+.login-items-info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: space-around;
+}
+
+.login-items-info h3 {
+  font-size:large;
+  overflow: hidden;
+  padding-left: 4px;
+}
+
+.login-items-info p {
+  font-size: smaller;
+  word-wrap: break-word;
+  border: #f04134 solid 2px;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  height: 6em; /* Define a altura máxima em 3 linhas de texto */
+  white-space: pre-line; /* Mantém quebras de linha dentro do texto */
+  margin: 4px;
+  padding: 2px;
+}
