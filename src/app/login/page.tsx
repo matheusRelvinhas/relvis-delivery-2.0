@@ -4,7 +4,7 @@ import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 
 const LoginPage: React.FC = () => {
-  const {  } = useGlobalContext();
+  const { dataCss } = useGlobalContext();
   
   return (
     <div>
