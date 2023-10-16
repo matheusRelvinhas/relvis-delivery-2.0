@@ -1366,7 +1366,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   useEffect(() => {
     if (selectedOption === 'Hoje') {
-      const now = addHours(new Date(), -3);
+      const now = addHours(new Date(), 0);
       const formattedDate = format(now, 'dd/MM/yyyy'); // Formato da data: "dia/mês/ano"
       const todayPurchaseRequests = purchaseRequests?.filter((purchaseRequest) => {
         return purchaseRequest.date === formattedDate;
@@ -1521,7 +1521,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     } catch (error) {
       console.error('Erro ao determinar o próximo número de ordem:', error);
     }
-    const now = addHours(new Date(), -3);
+    const now = addHours(new Date(), 0);
     const formattedDate = format(now, 'dd/MM/yyyy'); // Formato da data: "dia/mês/ano"
     const formattedTime = format(now, 'HH:mm:ss');  // Formato da hora: "hora:minuto:segundo"
     const data = {
