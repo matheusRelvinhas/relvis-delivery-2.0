@@ -1,5 +1,3 @@
-'use client';
-
 import React, { createContext, useContext, useState, ReactNode, FormEvent, useEffect } from 'react';
 import axios from 'axios';
 import { DateTime } from 'luxon'; 

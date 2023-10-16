@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import LoginForm from '@/components/LoginForm/LoginForm';
 import React from 'react';

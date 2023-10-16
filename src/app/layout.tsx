@@ -1,3 +1,5 @@
+'use client'
+
 import './reset.css';
 import './globals.css';
 import { GlobalContextProvider } from '@/Context/store';
@@ -9,6 +11,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-br">
+    <title>Relvis Delivery</title>
       {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
