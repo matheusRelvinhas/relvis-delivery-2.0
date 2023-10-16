@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
         </>
       )}
       */}
-      oi
+      TESTE LOGIN
     </div>
   );
 };
