@@ -4,10 +4,11 @@ import { useGlobalContext } from '@/Context/store';
 import './About.css';
 
 const About: React.FC = () => {
-  const { dataCss } = useGlobalContext();
+  //const { dataCss } = useGlobalContext();
 
   return (
     <div className="about-container">
+      {/*
       <div className="about-item">
         <div className="about-title" style={{ color: dataCss.summaryFont }}>
           <span>Funcionamento</span>
@@ -95,7 +96,7 @@ const About: React.FC = () => {
             </a>
           </figure>
         </div>
-      </div>
+      </div>*/}
     </div>
   );
 };
