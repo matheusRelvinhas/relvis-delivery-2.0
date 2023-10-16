@@ -12,6 +12,7 @@ const LoginPage: React.FC = () => {
   
   return (
     <div>
+      {/*
       {isLoading && <Loading/>}
       {alertLogin && <ErrorMessage errorMessage={errorMessage}/>}
       {isLogin ? (
@@ -23,6 +24,8 @@ const LoginPage: React.FC = () => {
           <LoginForm />
         </>
       )}
+      */}
+      oi
     </div>
   );
 };
