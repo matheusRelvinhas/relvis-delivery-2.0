@@ -8,7 +8,7 @@ import Loading from '@/components/Loading/Loading';
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage';
 
 const LoginPage: React.FC = () => {
-  const { isLogin, isLoading, alertLogin, errorMessage } = useGlobalContext();
+  //const { isLogin, isLoading, alertLogin, errorMessage } = useGlobalContext();
   
   return (
     <div>
