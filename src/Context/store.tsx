@@ -1700,14 +1700,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
       message += `Troco: R$${trocoMessage.toFixed(2)}`;
     }
-    const whatsappLink = `https://api.whatsapp.com/send?phone=${5531971451910}&text=${'teste'}`;
-    window.open(whatsappLink, '_blank');
     setCartItems({});
     setPaymentMethod('');
     setTroco('');
     setObservation('');
     setIsBuy(false);
     setIsTilted(false);
+    const whatsappNumber = '5531971451910'; // Substitua pelo número de telefone correto
+    const whatsappMessage = encodeURIComponent(message);
+    const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`;
+    window.open(whatsappLink, '_blank');
   };
 
   const cartTotal = Object.entries(cartItems).reduce(
