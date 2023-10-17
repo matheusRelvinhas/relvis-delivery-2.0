@@ -1529,7 +1529,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [isFormValid, setIsFormValid] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Item[] | undefined>(items);
-  const [whatsappMessage, setWhatsappMessage] = useState('');
 
   const handleCheckboxChange = () => {
     setIsOpen(!isOpen);
@@ -1616,7 +1615,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       }
     });
     const formattedText = formattedLines.join('\n-------\n');
-    setMessageItens(formattedText);
   };
 
   const handleFinalize = async (event: FormEvent) => {
@@ -1702,7 +1700,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
       message += `Troco: R$${trocoMessage.toFixed(2)}`;
     }
-    setWhatsappMessage(message);
+    const whatsappLink = `https://api.whatsapp.com/send?phone=${5531971451910}&text=${'teste'}`;
+    window.open(whatsappLink, '_blank');
     setCartItems({});
     setPaymentMethod('');
     setTroco('');
@@ -1796,15 +1795,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setComplement(storedComplement);
     setDistrict(storedDistrict);
   }, []);
-
-  useEffect(() => {
-    if (whatsappMessage) {
-      const whatsappNumber = '5531971451910'; // Substitua pelo número de telefone correto
-      const encodedMessage = encodeURIComponent(whatsappMessage);
-      const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`;
-      window.open(whatsappLink, '_blank');
-    }
-  }, [whatsappMessage]);
 
   return (
     <GlobalContext.Provider
