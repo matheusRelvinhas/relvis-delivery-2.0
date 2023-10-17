@@ -289,6 +289,7 @@ interface ContextProps {
   searchQueryLogin: string;
   setSearchQueryLogin: React.Dispatch<React.SetStateAction<string>>;
   searchResultsLogin: Item[] | undefined;
+  sendOrder: () => void;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -473,6 +474,7 @@ const GlobalContext = createContext<ContextProps>({
   searchQueryLogin: '',
   setSearchQueryLogin: () => {},
   searchResultsLogin: [],
+  sendOrder: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -1451,6 +1453,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [isFormValid, setIsFormValid] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Item[] | undefined>(items);
+  const [whatsappMessage, setWhatsappMessage] = useState('');
+  const [isFinalizeOrder, setIsFinalizeOrder] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsOpen(!isOpen);
@@ -1531,8 +1535,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     });
     const formattedText = formattedLines.join('\n-------\n');
     setMessageItens(formattedText);
-    const whatsappLink = `https://api.whatsapp.com/send?phone=+5531971451910&text=${encodeURIComponent('teste')}`;
-    window.open(whatsappLink, '_blank');
   };
 
   const handleFinalize = async (event: FormEvent) => {
@@ -1607,15 +1609,21 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
       message += `Troco: R$${trocoMessage.toFixed(2)}`;
     }
-    const whatsappLink = `https://api.whatsapp.com/send?phone=+5531971451910&text=${encodeURIComponent(message)}`;
-    window.open(whatsappLink, '_blank');
+    setWhatsappMessage(encodeURIComponent(message));
     setCartItems({});
     setPaymentMethod('');
     setTroco('');
     setObservation('')
     setIsBuy(false);
     setIsTilted(false);
+    setIsFinalizeOrder(true);
   };
+
+  const sendOrder = () => {
+    const whatsappLink = `https://api.whatsapp.com/send?phone=+5531971451910&text=${whatsappMessage}`;
+    window.open(whatsappLink, '_blank');
+    setIsFinalizeOrder(false);
+  }
 
   const cartTotal = Object.entries(cartItems).reduce(
     (total, [title, quantity]) => {
@@ -1874,6 +1882,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         searchQueryLogin,
         setSearchQueryLogin,
         searchResultsLogin,
+        sendOrder,
       }}
     >
       {children}
