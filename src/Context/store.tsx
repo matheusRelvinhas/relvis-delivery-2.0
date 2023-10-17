@@ -1616,6 +1616,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     });
     const formattedText = formattedLines.join('\n-------\n');
     setMessageItens(formattedText);
+    const whatsappLink = `https://api.whatsapp.com/send?phone=${5531971451910}&text=${'teste'}`;
+    window.open(whatsappLink, '_blank');
   };
 
   const handleFinalize = async (event: FormEvent) => {
@@ -1643,9 +1645,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     } catch (error) {
       console.error('Erro ao determinar o próximo número de ordem:', error);
     }
-    //const now = addHours(new Date(), 0);
-    const formattedDate = 5 // Formato da data: "dia/mês/ano"
-    const formattedTime = 55 // Formato da hora: "hora:minuto:segundo"
+    const now = addHours(new Date(), 0);
+    const formattedDate = format(now, 'dd/MM/yyyy'); // Formato da data: "dia/mês/ano"
+    const formattedTime = format(now, 'HH:mm:ss'); // Formato da hora: "hora:minuto:segundo"
     const data = {
       name: name,
       cellphone: cellphone,
