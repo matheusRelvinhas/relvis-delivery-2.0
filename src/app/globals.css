@@ -17,6 +17,11 @@ a, Link {
   text-decoration: none;
 }
 
+select {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 * {
   font-family: 'Montserrat';
   font-size: x-large;
