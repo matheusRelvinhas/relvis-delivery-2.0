@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
 import React, { useRef, RefObject, useEffect } from 'react';
 import { useGlobalContext } from '@/Context/store';
 import './LoginPurchaseRequest.css';
-import { DateTime } from 'luxon'; 
+import { DateTime } from 'luxon';
 import AlertSound from '../AlertSound/AlertSound';
 
 const LoginPurchaseRequest: React.FC = () => {
@@ -86,7 +86,8 @@ const LoginPurchaseRequest: React.FC = () => {
     }
     const total = purchaseRequests.reduce(
       (acc: number, purchaseRequest: any) => {
-        if (purchaseRequest.status === 'finish') { // Usa reduce para somar os valores 'total' de todos os itens com status 'finish'
+        if (purchaseRequest.status === 'finish') {
+          // Usa reduce para somar os valores 'total' de todos os itens com status 'finish'
           const itemTotal = parseFloat(purchaseRequest.total); // Converte para número
           if (!isNaN(itemTotal)) {
             return acc + itemTotal;
@@ -137,7 +138,11 @@ const LoginPurchaseRequest: React.FC = () => {
 
   function formatPurchaseString(purchaseString: string) {
     const lines = purchaseString.split('-------');
-    return lines.map((line, index) => <div key={index} className="purchase-request-p">{line}</div>);
+    return lines.map((line, index) => (
+      <div key={index} className="purchase-request-p">
+        {line}
+      </div>
+    ));
   }
 
   return (
@@ -162,6 +167,17 @@ const LoginPurchaseRequest: React.FC = () => {
             <option value="Período">Período</option>
             <option value="Todos">Todos</option>
           </select>
+          <figure>
+            <picture>
+              <source src={dataCss.arrowImage.down} type="image/png" />
+              <img
+                src={dataCss.arrowImage.down}
+                alt="icon-img"
+                height={'10px'}
+                width={'17.5px'}
+              />
+            </picture>
+          </figure>
         </div>
         <div className="login-purchase-requests-date">
           <input
@@ -256,7 +272,12 @@ const LoginPurchaseRequest: React.FC = () => {
               <div className="purchase-request-p-span">
                 <div>
                   <p>
-                    Status: <h4 className={`${getStatusClassName(purchaseRequest.status)}`}>{`${purchaseRequest?.status}`}</h4>
+                    Status:{' '}
+                    <h4
+                      className={`${getStatusClassName(
+                        purchaseRequest.status
+                      )}`}
+                    >{`${purchaseRequest?.status}`}</h4>
                   </p>
                 </div>
                 <div>
@@ -420,7 +441,9 @@ const LoginPurchaseRequest: React.FC = () => {
                         }
                       />
                     ) : (
-                      <span>{formatPurchaseString(purchaseRequest?.purchase)}</span>
+                      <span>
+                        {formatPurchaseString(purchaseRequest?.purchase)}
+                      </span>
                     )}
                   </p>
                 </div>
@@ -491,7 +514,10 @@ const LoginPurchaseRequest: React.FC = () => {
                       />
                     ) : (
                       <span>
-                        R$ {parseFloat(purchaseRequest?.total.toString()).toFixed(2)}
+                        R${' '}
+                        {parseFloat(purchaseRequest?.total.toString()).toFixed(
+                          2
+                        )}
                       </span>
                     )}
                   </p>
@@ -507,7 +533,11 @@ const LoginPurchaseRequest: React.FC = () => {
                   isEditPurchase
                 }
               >
-                <span>{purchaseRequest?.status === 'canceled' ? 'Reabrir' : 'Aceitar'}</span>
+                <span>
+                  {purchaseRequest?.status === 'canceled'
+                    ? 'Reabrir'
+                    : 'Aceitar'}
+                </span>
               </button>
               <button
                 onClick={() => handleFinishPurchase(purchaseRequest)}

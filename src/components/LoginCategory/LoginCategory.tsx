@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
@@ -72,14 +72,34 @@ const LoginCategory: React.FC = () => {
                     handleMoveCategoryUp(category.id, category.order)
                   }
                 >
-                  <span>▲</span>
+                  <figure>
+                    <picture>
+                      <source src={dataCss.arrowImage.up} type="image/png" />
+                      <img
+                        src={dataCss.arrowImage.up}
+                        alt="icon-img"
+                        height={'10px'}
+                        width={'17.5px'}
+                      />
+                    </picture>
+                  </figure>
                 </button>
                 <button
                   onClick={() =>
                     handleMoveCategoryDown(category.id, category.order)
                   }
                 >
-                  <span>▼</span>
+                  <figure>
+                    <picture>
+                      <source src={dataCss.arrowImage.down} type="image/png" />
+                      <img
+                        src={dataCss.arrowImage.down}
+                        alt="icon-img"
+                        height={'10px'}
+                        width={'17.5px'}
+                      />
+                    </picture>
+                  </figure>
                 </button>
               </div>
               <button

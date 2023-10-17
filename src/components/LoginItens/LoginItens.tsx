@@ -1,9 +1,10 @@
-'use client'
+'use client';
 
 import React from 'react';
 import AddItemForm from '@/components/AddItemForm/AddItemForm';
 import { useGlobalContext } from '@/Context/store';
 import './LoginItens.css';
+import LoginSearch from '../LoginSearch/LoginSearch';
 
 const LoginItens: React.FC = () => {
   const {
@@ -22,6 +23,7 @@ const LoginItens: React.FC = () => {
     handleMoveItemDown,
     setIsContentItemOpen,
     toggleActiveItem,
+    searchResultsLogin,
   } = useGlobalContext();
 
   const handleIsEditItem = (item: any) => {
@@ -49,7 +51,8 @@ const LoginItens: React.FC = () => {
       </div>
       <AddItemForm />
       <div className="login-items-list">
-        {items?.map((item) => (
+        <LoginSearch/>
+        {searchResultsLogin?.map((item) => (
           <div key={item.id} className="login-items">
             <div className="login-items-div-title">
               <span>{item.category}</span>
@@ -62,19 +65,18 @@ const LoginItens: React.FC = () => {
             </div>
             <div className="login-items-div">
               <div className="login-items-img-toogle">
-                <figure>
+                <figure className="login-items-img-toogle-img">
                   <picture>
                     <source src={item.image} type="image/webp" />
                     <source src={item.image} type="image/png" />
                     <source src={item.image} type="image/jpeg" />
-                    <img
-                      src={item.image}
-                      alt='img-item'
-                    />
+                    <img src={item.image} alt="img-item" />
                   </picture>
                 </figure>
                 <div>
-                  <button onClick={() => toggleActiveItem(item.id, item.active)}>
+                  <button
+                    onClick={() => toggleActiveItem(item.id, item.active)}
+                  >
                     <div className="toggle-switch">
                       <input
                         className="toggle-input"
@@ -92,12 +94,38 @@ const LoginItens: React.FC = () => {
                     <button
                       onClick={() => handleMoveItemUp(item.id, item.order)}
                     >
-                      <span>◀</span>
+                      <figure>
+                        <picture>
+                          <source
+                            src={dataCss.arrowImage.left}
+                            type="image/png"
+                          />
+                          <img
+                            src={dataCss.arrowImage.left}
+                            alt="icon-img"
+                            height={'17.5px'}
+                            width={'10px'}
+                          />
+                        </picture>
+                      </figure>
                     </button>
                     <button
                       onClick={() => handleMoveItemDown(item.id, item.order)}
                     >
-                      <span>▶</span>
+                      <figure>
+                        <picture>
+                          <source
+                            src={dataCss.arrowImage.right}
+                            type="image/png"
+                          />
+                          <img
+                            src={dataCss.arrowImage.right}
+                            alt="icon-img"
+                            height={'17.5px'}
+                            width={'10px'}
+                          />
+                        </picture>
+                      </figure>
                     </button>
                   </div>
                 </div>

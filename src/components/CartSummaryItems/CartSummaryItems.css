@@ -64,8 +64,6 @@
   align-items: center;
   border-bottom: rgba(0, 0, 0, 0.1) solid 2.5px;
   padding-bottom: 1vh;
-  height: 30vh;
-  overflow: auto;
   justify-content: space-around;
 }
 
@@ -75,9 +73,9 @@
   justify-content: space-around;
   width: 50%;
   min-width: 200px;
-  height: 5vh;
-  min-height: 20px;
-  max-height: 30px;
+  height: 4vh;
+  min-height: 15px;
+  max-height: 25px;
   border-radius: 10px;
   border-top-right-radius: 0;
   align-items: center;

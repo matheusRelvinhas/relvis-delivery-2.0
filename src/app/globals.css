@@ -22,6 +22,11 @@ select {
   appearance: none;
 }
 
+input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 * {
   font-family: 'Montserrat';
   font-size: x-large;
@@ -32,12 +37,12 @@ select {
 
 /* Estilos para navegadores WebKit (Chrome, Safari) */
 ::-webkit-scrollbar {
-  width: 1px;
-  height: 2px;
+  width: 3px;
+  height: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #f0f0f0; /* Cor do polegar da scrollbar */
+  background-color: #8c8c8c; /* Cor do polegar da scrollbar */
   border-radius: 6px; /* Borda arredondada para o polegar */
 }
 

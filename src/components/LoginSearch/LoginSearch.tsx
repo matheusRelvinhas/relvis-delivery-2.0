@@ -2,10 +2,10 @@
 
 import { useGlobalContext } from '@/Context/store';
 import React from 'react';
-import './Search.css';
+import './LoginSearch.css';
 
-export default function Search() {
-  const { dataCss, searchQuery, setSearchQuery } = useGlobalContext();
+export default function LoginSearch() {
+  const { dataCss, searchQueryLogin, setSearchQueryLogin } = useGlobalContext();
 
   return (
     <div className="search">
@@ -15,8 +15,8 @@ export default function Search() {
             type="text"
             className="search-input"
             placeholder="Buscar"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)} // Atualize a consulta de pesquisa
+            value={searchQueryLogin}
+            onChange={(e) => setSearchQueryLogin(e.target.value)} // Atualize a consulta de pesquisa
           />
         </>
         <>
