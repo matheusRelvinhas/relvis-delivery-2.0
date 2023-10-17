@@ -1703,7 +1703,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
     const whatsappNumber = '5531971451910'; // Substitua pelo número de telefone correto
     const whatsappMessage = encodeURIComponent(message);
-    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+    const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`;
     window.open(whatsappLink, '_blank');
     setCartItems({});
     setPaymentMethod('');
