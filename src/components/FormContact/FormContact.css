@@ -27,6 +27,8 @@
   text-align: center;
   align-items: center;
   border-top: rgba(0, 0, 0, 0.1) solid 2.5px;
+  height: 35%;
+  justify-content: space-around;
 }
 
 .form-contact-payment-method .styled-select {
