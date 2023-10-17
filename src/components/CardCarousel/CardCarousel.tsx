@@ -44,7 +44,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
             className="scroll-button left"
             onClick={scrollLeft}
           >
-            <span className='arrow'>◀</span>
+            <span className='arrow'>◄</span>
           </StyledButton>
           <div className="card-list" ref={carouselRef}>
             {searchResults?.map((card) => {
@@ -119,7 +119,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
             className="scroll-button right"
             onClick={scrollRight}
           >
-            <span className='arrow'>▶</span>
+            <span className='arrow'>►</span>
           </StyledButton>
         </div>
       </div>
