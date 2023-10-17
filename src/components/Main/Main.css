@@ -11,3 +11,52 @@ body {
   overflow-x: hidden;
   max-width: 100%;
 }
+
+.tab-content-finalize-order {
+  position: fixed;  
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  z-index: 996;
+}
+
+.tab-content-finalize-order-massage-container {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  box-shadow: 0 0 8px 0 #555;
+  height: 20vh;
+  width: 30vw;
+  min-width: 250px;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.tab-content-finalize-order-massage {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  padding: 2.5px 5px;
+}
+
+.button-tab-content-finalize-order {
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.button-tab-content-finalize-order picture img {
+  height: 30px;
+  width: 30px;
+}

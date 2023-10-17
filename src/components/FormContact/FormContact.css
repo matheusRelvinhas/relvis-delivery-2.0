@@ -27,8 +27,8 @@
   text-align: center;
   align-items: center;
   border-top: rgba(0, 0, 0, 0.1) solid 2.5px;
-  height: 35%;
-  justify-content: space-around;
+  height: 40%;
+  justify-content: space-between;
 }
 
 .form-contact-payment-method .styled-select {
@@ -89,7 +89,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding-top: 9vh;
+  padding-top: 10vh;
   overflow: auto;
   border-top: rgba(0, 0, 0, 0.1) solid 2.5px;
   border-bottom: rgba(0, 0, 0, 0.1) solid 2.5px;

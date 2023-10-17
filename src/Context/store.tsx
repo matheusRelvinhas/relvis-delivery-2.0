@@ -290,6 +290,8 @@ interface ContextProps {
   setSearchQueryLogin: React.Dispatch<React.SetStateAction<string>>;
   searchResultsLogin: Item[] | undefined;
   sendOrder: () => void;
+  isFinalizeOrder: boolean;
+  orderMessage: string;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -475,6 +477,8 @@ const GlobalContext = createContext<ContextProps>({
   setSearchQueryLogin: () => {},
   searchResultsLogin: [],
   sendOrder: () => {},
+  isFinalizeOrder: false,
+  orderMessage: '',
 });
 
 type GlobalContextProviderProps = {
@@ -1455,15 +1459,19 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [searchResults, setSearchResults] = useState<Item[] | undefined>(items);
   const [whatsappMessage, setWhatsappMessage] = useState('');
   const [isFinalizeOrder, setIsFinalizeOrder] = useState(false);
+  const [orderMessage, setOrderMessage] = useState('');
 
   const handleCheckboxChange = () => {
     setIsOpen(!isOpen);
     setIsTilted(false)
+    setIsFinalizeOrder(false);
+
   };
   const handleCartClick = () => {
     setIsTilted(!isTilted);
-    setIsOpen(false)
-    setIsBuy(false)
+    setIsOpen(false);
+    setIsBuy(false);
+    setIsFinalizeOrder(false);
   };
 
   const handleAddItem = (card: Card) => {
@@ -1604,11 +1612,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     } catch (error) {
       console.error('Erro ao enviar novo pedido', error);
     }
-    const orderPurchase = `000${nextOrder}`
+    const orderPurchase = `00${nextOrder}`
     let message = `${formattedDate} / ${formattedTime}\nPedido Novo !!\nID: ${orderPurchase}\n--------------\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}  Compl.: ${complement}\nBairro: ${district}\n--------------\nCarrinho\n${messageItens}\n--------------\nObs.: ${observation}\n--------------\nTotal: ${cartTotal.toFixed(2)}\nForma de Pagamento: ${paymentMethod}\n`;
     if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
       message += `Troco: R$${trocoMessage.toFixed(2)}`;
     }
+    setOrderMessage(`#00${nextOrder}`)
     setWhatsappMessage(encodeURIComponent(message));
     setCartItems({});
     setPaymentMethod('');
@@ -1883,6 +1892,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setSearchQueryLogin,
         searchResultsLogin,
         sendOrder,
+        isFinalizeOrder,
+        orderMessage,
       }}
     >
       {children}
