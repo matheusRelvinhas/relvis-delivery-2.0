@@ -7,16 +7,18 @@ import Search from '../Search/Search';
 import StyledButton from '../StyledButton/StyledButton';
 
 export default function Main() {
-  const { dataCss, categories, sendOrder, isFinalizeOrder, name, orderMessage } =
+  const { dataCss, categories, sendOrder, isFinalizeOrder, name, orderMessage, items } =
     useGlobalContext();
 
   return (
     <main style={{ color: dataCss.fontColor }} className="main">
       <Search />
       {categories.map((category) => (
-        <div key={category.id}>
+        (category.active && items && items.some(item => item.category === category.category && item.active) && (
+          <div key={category.id}>
           <CardCarousel category={category.category} />
         </div>
+        ))
       ))}
       {isFinalizeOrder && (
         <div className="tab-content-finalize-order">

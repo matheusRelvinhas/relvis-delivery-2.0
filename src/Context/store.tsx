@@ -141,13 +141,14 @@ interface ContextProps {
   setTroco: React.Dispatch<React.SetStateAction<string>>;
   cellphone: string;
   setCellphone: React.Dispatch<React.SetStateAction<string>>;
-  categories: { id: string; category: string; order: number }[];
+  categories: { id: string; category: string; order: number; active:boolean }[];
   handleEditOpenStore: (openStore: boolean) => void;
   handleEditMessage: (message: string) => void;
   handleDeleteCategory: (categoryId: string, category: string) => void;
   handleMoveCategoryUp: (categoryId: string, order: number) => void;
   handleMoveCategoryDown: (categoryId: string, order: number) => void;
   handleEditCategory: (categoryId: string, category: string) => void;
+  toggleActiveCategory:(categoryId: string, categoryActive: boolean) => void;
   handleDeleteItem: (categoryId: string) => void;
   category: string;
   setCategory:React.Dispatch<React.SetStateAction<string>>;
@@ -335,7 +336,8 @@ const GlobalContext = createContext<ContextProps>({
   handleEditCategory: () => {},
   handleMoveCategoryUp: () => {},
   handleMoveCategoryDown: () => {},
-  toggleActiveItem:() => {},
+  toggleActiveItem: () => {},
+  toggleActiveCategory: () => {},
   handleDeleteItem: () => {},
   category: '',
   setCategory: () => {},
@@ -543,7 +545,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   //LOGIN PAGE
   const [isLogin, setIsLogin] = useState(false);
-  const [categories, setCategories] = useState<{ id: string; category: string; order:number }[]>([]);
+  const [categories, setCategories] = useState<{ id: string; category: string; order:number; active: boolean }[]>([]);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -681,8 +683,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const order = totalCategories + 1; // Determine a ordem para a nova categoria
         const existingCategory = await collectionRef.where('category', '==', category.toLowerCase()).get(); // Verifique se a categoria já existe
         if (existingCategory.size === 0) { // A categoria ainda não existe, pode adicioná-la com a ordem calculada
-          
-          await collectionRef.add({ category, order });
+          await collectionRef.add({ 
+            category, 
+            order,
+            active: false,
+          });
           setCategory('');
           setIsContentCategoryOpen(false);
         } else { // A categoria já existe, defina o alertLogin como true por 3 segundos
@@ -741,6 +746,24 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       console.log('Categoria editada com sucesso e itens atualizados!');
     } catch (error) {
       console.error('Erro ao editar categoria: ', error);
+      setErrorMessage('Erro ao editar categoria');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
+    }
+    setIsLoading(false);
+  };
+
+  const toggleActiveCategory = async (categoryId:string, categoryActive:boolean) => {
+    setIsLoading(true);
+    try {
+      const categoryRef = firestore.collection('categories').doc(categoryId); // Substitua 'seu_nome_de_colecao' pelo nome real da sua coleção Firestore
+      const newValueActive = !categoryActive; // Alterna a propriedade 'active'
+      await categoryRef.update({ active: newValueActive }); // Atualiza o Firestore
+    } catch (error) {
+      console.error('Erro ao editar categoria:', error);
       setErrorMessage('Erro ao editar categoria');
       setAlertLogin(true);
       setTimeout(() => {
@@ -1289,10 +1312,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   useEffect(() => {
     const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
     const unsubscribe = collectionRef.onSnapshot((snapshot) => { // Cria o listener para mudanças na coleção
-      const categoriesData: { id: string; category: string; order: number }[] = snapshot.docs.map((doc) => ({
+      const categoriesData: { id: string; category: string; order: number; active: boolean }[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         category: doc.data().category,
         order: doc.data().order,
+        active: doc.data().active,
       }));
       categoriesData.sort((a, b) => a.order - b.order);
       setCategories(categoriesData);
@@ -1894,6 +1918,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         sendOrder,
         isFinalizeOrder,
         orderMessage,
+        toggleActiveCategory,
       }}
     >
       {children}

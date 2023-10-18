@@ -17,6 +17,7 @@ const LoginCategory: React.FC = () => {
     setIsContentCategoryOpen,
     handleMoveCategoryUp,
     handleMoveCategoryDown,
+    toggleActiveCategory,
   } = useGlobalContext();
 
   const handleIsEditCategory = (categoryId: string, category: string) => {
@@ -51,6 +52,26 @@ const LoginCategory: React.FC = () => {
                   </picture>
                 </figure>
                 <span>{category.category}</span>
+              </div>
+              <div className="login-category-items-title-active">
+                <button
+                  onClick={() =>
+                    toggleActiveCategory(category.id, category.active)
+                  }
+                >
+                  <div className="toggle-switch">
+                    <input
+                      className="toggle-input"
+                      id="toggle"
+                      type="checkbox"
+                      checked={category.active}
+                    />
+                    <label className="toggle-label"></label>
+                  </div>
+                </button>
+                <div className="login-category-items-title-span">
+                  <span>{category.active ? 'Ligado' : 'Desligado'}</span>
+                </div>
               </div>
             </div>
             <div className="login-category-buttons">

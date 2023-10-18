@@ -55,8 +55,20 @@
   max-height: 40px;
   min-height: 25px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.login-category-items-title-active {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+}
+
+.login-category-items-title-span {
+  width: 30vw;
 }
 
 .login-category-items-name {
