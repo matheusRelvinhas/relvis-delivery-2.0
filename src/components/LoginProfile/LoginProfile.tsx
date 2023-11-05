@@ -4,6 +4,7 @@ import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 import './LoginProfile.css';
 import LoginMessage from '../LoginMessage/LoginMessage';
+import AddressDistance from '../AddressDistance/AddressDistance';
 
 const LoginProfile: React.FC = () => {
   const { dataCss, isLogin, handleLogout, isOpenStore, setIsLoading, handleEditOpenStore } = useGlobalContext();
@@ -57,6 +58,7 @@ const LoginProfile: React.FC = () => {
       <div className='login-margin'></div>
       <LoginMessage />
       <div className='login-margin'></div>
+      <AddressDistance/>
     </div>
   );
 };
