@@ -66,6 +66,9 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+  height: 4vh;
+  min-height: 25px;
+  max-height: 35px;
 }
 
 .form-contact-client-registration-title picture img {
@@ -80,15 +83,48 @@
   margin: 1vh 1vw;
 }
 
-.form-contact-total {
+.form-contact-client-registration-span {
+  color: #595959;
+  font-size: small;
+}
+
+.form-contact-delivery {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   width: 50%;
   min-width: 200px;
-  height: 3vh;
-  min-height: 20px;
-  max-height: 30px;
+  height: 4vh;
+  min-height: 25px;
+  max-height: 35px;
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  align-items: center;
+  box-shadow: 0 0 6px 0 #555;
+  border: 2px solid;
+  margin-top: 1vh;
+  margin-bottom: 6px;
+}
+
+.form-contact-delivery span {
+  font-size: medium;
+}
+
+.form-contact-delivery picture img{
+  height: 25px;
+  width: 30px;
+  margin-top: 2.5px;
+}
+
+.form-contact-total {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 60%;
+  min-width: 220px;
+  height: 5vh;
+  min-height: 35px;
+  max-height: 40px;
   border-radius: 10px;
   border-top-right-radius: 0;
   align-items: center;
@@ -99,12 +135,12 @@
 }
 
 .form-contact-total span {
-  font-size: medium;
+  font-size: large;
 }
 
 .form-contact-total picture img{
-  height: 12.5px;
-  width: 20px;
+  height: 20px;
+  width: 25px;
   margin-top: 2px;
 }
 

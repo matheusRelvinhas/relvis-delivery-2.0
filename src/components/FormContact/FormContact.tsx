@@ -47,6 +47,8 @@ const FormContact: React.FC<FormContactProps> = () => {
     setTroco(input);
   };
 
+  const totalSumDelivery = (distance ?? 0) + cartTotal;
+
   return (
     <form
       className="form-contact"
@@ -112,14 +114,23 @@ const FormContact: React.FC<FormContactProps> = () => {
             </figure>
           </div>
           <div className="form-contact-client-registration-info">
-            {name || road || number || cellphone || district ? (
+            {name && road && number && cellphone && district ? (
               <>
-                <span>Nome: {name}</span>
-                <span>Celular: {cellphone}</span>
-                <span>
-                  Endereço: {road}, {number}, {complement}, {district}
-                </span>
-                <span>{distance}</span>
+                <div>
+                  <span className='form-contact-client-registration-span'>Nome: </span>
+                  <span>{name}</span>
+                </div>
+                <div>
+                  <span className='form-contact-client-registration-span'>Celular: </span>
+                  <span>{cellphone}</span>
+                </div>
+                <div>
+                  <span className='form-contact-client-registration-span'>Endereço: </span>
+                  <span>
+                    {road}, {number}, {complement}, {district}
+                  </span>
+                </div>
+                <span>{distance?.toFixed(2)}</span>
               </>
             ) : (
               <div>
@@ -129,6 +140,23 @@ const FormContact: React.FC<FormContactProps> = () => {
           </div>
         </div>
         <div
+          className="form-contact-delivery"
+          style={{
+            backgroundColor: dataCss.colorPrimary,
+            borderColor: dataCss.colorSecundary,
+          }}
+        >
+          <span style={{ color: dataCss.summaryFont }}>
+            Entrega R$ {distance?.toFixed(2)}
+          </span>
+          <figure>
+            <picture>
+              <source src={dataCss.cartImage} type="image/png" />
+              <img src={dataCss.cartImage} alt="icon-img" />
+            </picture>
+          </figure>
+        </div>
+        <div
           className="form-contact-total"
           style={{
             backgroundColor: dataCss.colorPrimary,
@@ -136,7 +164,7 @@ const FormContact: React.FC<FormContactProps> = () => {
           }}
         >
           <span style={{ color: dataCss.summaryFont }}>
-            Total:R$ {cartTotal.toFixed(2)}
+            Total R$ {totalSumDelivery.toFixed(2)}
           </span>
           <figure>
             <picture>
