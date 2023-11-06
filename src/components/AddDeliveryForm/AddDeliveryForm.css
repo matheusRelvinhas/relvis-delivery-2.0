@@ -1,0 +1,35 @@
+.add-delivery-form-container {
+  margin-top: 46px;
+  width: 30%;
+  min-width: 260px;
+  max-width: 600px;
+  border: #f04134 solid 2px;
+  background-color: #f04134;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  box-shadow: 0 0 6px 0 #555;
+  z-index: 998;
+}
+
+.add-delivery-form-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: larger;
+  color: #fff;
+  width: 90%;
+  align-items: center;
+}
+
+.add-delivery-form-title span {
+  margin: 0 20px 0 4px;
+}
+
+.add-delivery-form-title figure img {
+  height: 25px;
+  width: 30px;
+  margin-top: 2px;
+}

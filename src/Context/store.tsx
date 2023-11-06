@@ -296,6 +296,8 @@ interface ContextProps {
   isClientRegistration: boolean; 
   setIsClientRegistration: React.Dispatch<React.SetStateAction<boolean>>;
   distance: number | null;
+  isContentDeliveryOpen: boolean;
+  setIsContentDeliveryOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -487,6 +489,8 @@ const GlobalContext = createContext<ContextProps>({
   isClientRegistration: false,
   setIsClientRegistration: () => {},
   distance: null,
+  isContentDeliveryOpen: false,
+  setIsContentDeliveryOpen: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -610,6 +614,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
   const [searchQueryLogin, setSearchQueryLogin] = useState('');
   const [searchResultsLogin, setSearchResultsLogin] = useState<Item[] | undefined>(items);
+  const [isContentDeliveryOpen, setIsContentDeliveryOpen] = useState(false);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -1981,6 +1986,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         isClientRegistration,
         setIsClientRegistration,
         distance,
+        isContentDeliveryOpen,
+        setIsContentDeliveryOpen,
       }}
     >
       {children}

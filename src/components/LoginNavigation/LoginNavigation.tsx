@@ -8,9 +8,11 @@ import LoginPurchaseRequest from '@/components/LoginPurchaseRequest/LoginPurchas
 import LoginClient from '../LoginClient/LoginClient';
 import LoginProfile from '../LoginProfile/LoginProfile';
 import './LoginNavigation.css';
+import LoginDelivery from '../LoginDelivery/LoginDelivery';
 
 const LoginNavigation: React.FC = () => {
-  const { dataCss, activeItem, setActiveItem, isNavOpen, setIsNavOpen } = useGlobalContext();
+  const { dataCss, activeItem, setActiveItem, isNavOpen, setIsNavOpen } =
+    useGlobalContext();
 
   const handleItemClick = (item: string) => {
     setActiveItem(item);
@@ -59,10 +61,7 @@ const LoginNavigation: React.FC = () => {
                 <figure>
                   <picture>
                     <source src={dataCss.clientsImage} type="image/png" />
-                    <img
-                      src={dataCss.clientsImage}
-                      alt="icon-img"
-                    />
+                    <img src={dataCss.clientsImage} alt="icon-img" />
                   </picture>
                 </figure>
                 <span>Clientes</span>
@@ -76,10 +75,7 @@ const LoginNavigation: React.FC = () => {
                 <figure>
                   <picture>
                     <source src={dataCss.categoryImage} type="image/png" />
-                    <img
-                      src={dataCss.categoryImage}
-                      alt="icon-img"
-                    />
+                    <img src={dataCss.categoryImage} alt="icon-img" />
                   </picture>
                 </figure>
                 <span>Categorias</span>
@@ -93,27 +89,38 @@ const LoginNavigation: React.FC = () => {
                 <figure>
                   <picture>
                     <source src={dataCss.itemsImage} type="image/png" />
-                    <img
-                      src={dataCss.itemsImage}
-                      alt="icon-img"
-                    />
+                    <img src={dataCss.itemsImage} alt="icon-img" />
                   </picture>
                 </figure>
                 <span>Produtos</span>
               </div>
             </li>
             <li
+              onClick={() => handleItemClick('Entrega')}
+              className={activeItem === 'Entrega' ? 'active' : ''}
+            >
+              <div className="login-navigation-li">
+                <figure>
+                  <picture>
+                    <source src={dataCss.cartImage} type="image/png" />
+                    <img src={dataCss.cartImage} alt="icon-img" />
+                  </picture>
+                </figure>
+                <span>Entrega</span>
+              </div>
+            </li>
+            <li
               onClick={() => handleItemClick('Pedidos')}
               className={activeItem === 'Pedidos' ? 'active' : ''}
             >
-                            <div className="login-navigation-li">
+              <div className="login-navigation-li">
                 <figure>
                   <picture>
-                    <source src={dataCss.purchaseRequestsImage} type="image/png" />
-                    <img
+                    <source
                       src={dataCss.purchaseRequestsImage}
-                      alt="icon-img"
+                      type="image/png"
                     />
+                    <img src={dataCss.purchaseRequestsImage} alt="icon-img" />
                   </picture>
                 </figure>
                 <span>Pedidos</span>
@@ -140,6 +147,11 @@ const LoginNavigation: React.FC = () => {
           {activeItem === 'Produtos' && (
             <div className="rest-content">
               <LoginItens />
+            </div>
+          )}
+          {activeItem === 'Entrega' && (
+            <div className="rest-content">
+              <LoginDelivery />
             </div>
           )}
           {activeItem === 'Pedidos' && (
