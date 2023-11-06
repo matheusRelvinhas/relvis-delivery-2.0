@@ -293,6 +293,8 @@ interface ContextProps {
   sendOrder: () => void;
   isFinalizeOrder: boolean;
   orderMessage: string;
+  isClientRegistration: boolean; 
+  setIsClientRegistration: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -481,6 +483,8 @@ const GlobalContext = createContext<ContextProps>({
   sendOrder: () => {},
   isFinalizeOrder: false,
   orderMessage: '',
+  isClientRegistration: false,
+  setIsClientRegistration: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -1484,6 +1488,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [whatsappMessage, setWhatsappMessage] = useState('');
   const [isFinalizeOrder, setIsFinalizeOrder] = useState(false);
   const [orderMessage, setOrderMessage] = useState('');
+  const [distance, setDistance] = useState<number | null>(null);
+  const [isClientRegistration, setIsClientRegistration] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsOpen(!isOpen);
@@ -1569,6 +1575,41 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setMessageItens(formattedText);
   };
 
+  const getCoordinates = async (address: string) => {
+    try {
+      const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+        params: {
+          address,
+          key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY, // Substitua pelo sua chave de API do Google Maps
+        },
+      });
+      const { results } = response.data;
+      if (results.length > 0) {
+        const { location } = results[0].geometry;
+        const { lat, lng } = location;
+        return { lat, lng };
+      }
+    } catch (error) {
+      console.error('Erro ao obter coordenadas:', error);
+    }
+    return null;
+  };
+  
+  // Função para calcular a distância entre dois pontos (latitude e longitude) usando a fórmula de Haversine
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Raio da Terra em quilômetros
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distância em quilômetros
+    return distance;
+  };
+
   const handleFinalize = async (event: FormEvent) => {
     event.preventDefault();
     localStorage.setItem('name', name);
@@ -1619,6 +1660,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       time: formattedTime,
       status: 'new',
       observation: observation,
+      distance: distance,
     };
     try { // Verifique se já existe um cliente com o mesmo número de celular
       const snapshot = await clientRef.where('cellphone', '==', cellphone).get();
@@ -1646,7 +1688,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setCartItems({});
     setPaymentMethod('');
     setTroco('');
-    setObservation('')
+    setObservation('');
+    setDistance(null);
     setIsBuy(false);
     setIsTilted(false);
     setIsFinalizeOrder(true);
@@ -1730,6 +1773,20 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setComplement(storedComplement);
     setDistrict(storedDistrict);
   }, []);
+
+  useEffect(() => {
+    const address1 = 'Rua Vereador Geraldo Pereira, 232, A, Padre Eustáquio';
+    const address2 = `${road}, ${number}, ${complement}, ${district}`
+    Promise.all([getCoordinates(address1), getCoordinates(address2)]) // Obter coordenadas dos endereços
+      .then(([coords1, coords2]) => {
+        if (coords1 && coords2) { // Calcular a distância
+          const dist = calculateDistance(coords1.lat, coords1.lng, coords2.lat, coords2.lng);
+          if (dist !== null) {
+            setDistance(dist);
+          }
+        }
+      });
+  }, [road, number,complement, district]);
 
   return (
     <GlobalContext.Provider
@@ -1919,6 +1976,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         isFinalizeOrder,
         orderMessage,
         toggleActiveCategory,
+        isClientRegistration,
+        setIsClientRegistration,
       }}
     >
       {children}

@@ -11,6 +11,7 @@
   flex-direction: column;
   position: fixed;
   box-shadow: 0 0 6px 0 #555;
+  z-index: 998;
 }
 
 .add-category-form-title {

@@ -34,6 +34,7 @@ const FormContact: React.FC<FormContactProps> = () => {
     cartTotal,
     setIsBuy,
     isFormValid,
+    setIsClientRegistration,
   } = useGlobalContext();
 
   const handlePriceTroco = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,6 +91,16 @@ const FormContact: React.FC<FormContactProps> = () => {
             minLength={1}
           />
         )}
+        <div 
+          onClick={() => setIsClientRegistration(true)} 
+          className='form-contact-client-registration'
+          style={{
+            backgroundColor: dataCss.colorPrimary,
+            color: dataCss.summaryFont,
+          }}
+        >
+          Cliente
+        </div>
         <div
           className="form-contact-total"
           style={{
@@ -106,72 +117,6 @@ const FormContact: React.FC<FormContactProps> = () => {
               <img src={dataCss.moneyImage} alt="icon-img" />
             </picture>
           </figure>
-        </div>
-      </div>
-      <div className="form-contact-info" style={{ background: `${dataCss.colorThird}` }}>
-       <div className="input-top">
-        <StyledInput
-          label="Nome"
-          placeholder="ex.: João / Maria"
-          type="text"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          minLength={1}
-          maxLength={100}
-        />
-        </div>
-        <StyledInput
-          label="Celular"
-          placeholder="ex.: (31) 9 9999-9999"
-          type="number"
-          value={cellphone}
-          onChange={(event) => {
-            const formattedInput = event.target.value.replace(/[^0-9]/g, '');
-            if (formattedInput.length <= 11) {
-              setCellphone(formattedInput);
-            }
-          }}
-          maxLength={11}
-          minLength={8}
-        />
-        <AddressLookup />
-        <StyledInput
-          label="Rua / Av"
-          placeholder="ex.: Rua Itororó"
-          type="text"
-          value={road}
-          onChange={(event) => setRoad(event.target.value)}
-          maxLength={100}
-          minLength={1}
-        />
-        <StyledInput
-          label="Número"
-          placeholder="ex.: 123"
-          type="text"
-          value={number}
-          onChange={(event) => setNumber(event.target.value)}
-          maxLength={30}
-          minLength={1}
-        />
-        <StyledInput
-          label="Complemento"
-          placeholder="ex.: ap 101 / casa A"
-          type="text"
-          value={complement}
-          onChange={(event) => setComplement(event.target.value)}
-          maxLength={50}
-          minLength={0}
-        />
-        <div className="input-bottom">
-        <StyledInput
-          label="Bairro"
-          placeholder="ex.: Padre Eustáquio"
-          type="text"
-          value={district}
-          onChange={(event) => setDistrict(event.target.value)}
-          maxLength={100}
-          minLength={1}
-        />
         </div>
       </div>
       <StyledButton

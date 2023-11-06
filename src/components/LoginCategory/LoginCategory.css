@@ -77,12 +77,12 @@
   align-items: center;
 }
 
-.login-category-items-name figure img{
+.login-category-items-name figure img {
   height: 15px;
   width: 15px;
 }
 
-.login-category-items-title span{
+.login-category-items-title span {
   font-size: large;
   margin-left: 2vw;
 }
@@ -97,7 +97,7 @@
   display: flex;
 }
 
-.login-category-buttons div button{
+.login-category-buttons div button {
   margin-right: 10px;
 }
 
@@ -129,4 +129,3 @@
   height: 22px;
   width: 22px;
 }
-

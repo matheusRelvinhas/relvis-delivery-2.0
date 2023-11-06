@@ -7,12 +7,10 @@ const getCoordinates = async (address: string) => {
     const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
       params: {
         address,
-        key: 'AIzaSyD_-_ZoV0cpKG7MlumB5g1x1iHbcbHqTt0', // Substitua pelo sua chave de API do Google Maps
+        key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY, // Substitua pelo sua chave de API do Google Maps
       },
     });
-
     const { results } = response.data;
-
     if (results.length > 0) {
       const { location } = results[0].geometry;
       const { lat, lng } = location;
@@ -21,7 +19,6 @@ const getCoordinates = async (address: string) => {
   } catch (error) {
     console.error('Erro ao obter coordenadas:', error);
   }
-
   return null;
 };
 
