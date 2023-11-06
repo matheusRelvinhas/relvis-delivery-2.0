@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
@@ -35,6 +35,7 @@ const FormContact: React.FC<FormContactProps> = () => {
     setIsBuy,
     isFormValid,
     setIsClientRegistration,
+    distance,
   } = useGlobalContext();
 
   const handlePriceTroco = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,15 +92,41 @@ const FormContact: React.FC<FormContactProps> = () => {
             minLength={1}
           />
         )}
-        <div 
-          onClick={() => setIsClientRegistration(true)} 
-          className='form-contact-client-registration'
-          style={{
-            backgroundColor: dataCss.colorPrimary,
-            color: dataCss.summaryFont,
-          }}
+        <div
+          onClick={() => setIsClientRegistration(true)}
+          className="form-contact-client-registration"
         >
-          Cliente
+          <div
+            className="form-contact-client-registration-title"
+            style={{
+              backgroundColor: dataCss.colorPrimary,
+              color: dataCss.summaryFont,
+            }}
+          >
+            <span>Cliente</span>
+            <figure>
+              <picture>
+                <source src={dataCss.clientsImage} type="image/png" />
+                <img src={dataCss.clientsImage} alt="icon-img" />
+              </picture>
+            </figure>
+          </div>
+          <div className="form-contact-client-registration-info">
+            {name || road || number || cellphone || district ? (
+              <>
+                <span>Nome: {name}</span>
+                <span>Celular: {cellphone}</span>
+                <span>
+                  Endereço: {road}, {number}, {complement}, {district}
+                </span>
+                <span>{distance}</span>
+              </>
+            ) : (
+              <div>
+                <span>Cliente não cadastrado, clique aqui</span>
+              </div>
+            )}
+          </div>
         </div>
         <div
           className="form-contact-total"

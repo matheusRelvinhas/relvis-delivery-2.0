@@ -295,6 +295,7 @@ interface ContextProps {
   orderMessage: string;
   isClientRegistration: boolean; 
   setIsClientRegistration: React.Dispatch<React.SetStateAction<boolean>>;
+  distance: number | null;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -485,6 +486,7 @@ const GlobalContext = createContext<ContextProps>({
   orderMessage: '',
   isClientRegistration: false,
   setIsClientRegistration: () => {},
+  distance: null,
 });
 
 type GlobalContextProviderProps = {
@@ -1978,6 +1980,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         toggleActiveCategory,
         isClientRegistration,
         setIsClientRegistration,
+        distance,
       }}
     >
       {children}
