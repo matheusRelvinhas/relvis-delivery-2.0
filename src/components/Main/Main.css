@@ -70,7 +70,6 @@ body {
   background: #fafafa;
   z-index: 999;
   align-items: center;
-  justify-content: center;
   box-shadow: 0 0 8px 0 #555;
 }
 
@@ -142,6 +141,7 @@ body {
   max-height: 55px;
   min-height: 30px;
   box-shadow: 0 0 8px 0 #555;
+  margin-top: 2.5vh;
 }
 
 .client-registration-title figure img {
