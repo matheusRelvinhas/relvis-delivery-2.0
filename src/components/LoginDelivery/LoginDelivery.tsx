@@ -7,7 +7,7 @@ import AddDeliveryForm from '../AddDeliveryForm/AddDeliveryForm';
 
 
 const LoginDelivery: React.FC = () => {
-  const { dataCss } = useGlobalContext();
+  const { dataCss, deliveryArea } = useGlobalContext();
 
   return (
     <div className="login-delivery-container">
@@ -24,6 +24,12 @@ const LoginDelivery: React.FC = () => {
         </figure>
       </div>
       <AddDeliveryForm/>
+      {deliveryArea.map((area) => (
+          <div key={area.id} className="login-delivery-area">
+            <span>{area.order}</span>
+            <span>{area.price}</span>
+          </div>
+        ))}
     </div>
   );
 };

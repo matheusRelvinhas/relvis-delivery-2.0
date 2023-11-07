@@ -29,7 +29,29 @@
 }
 
 .add-delivery-form-title figure img {
-  height: 25px;
-  width: 30px;
+  height: 27.5px;
+  width: 40px;
   margin-top: 2px;
+}
+
+.add-delivery-form {
+  display: flex;
+  flex-direction: column;
+  background-color: #fef0ef;
+  height: 100%;
+  width: 100%;
+  border-bottom-left-radius: 9px;
+  border-bottom-right-radius: 9px;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.add-delivery-form-radius {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-delivery-form-radius form{
+  display: flex;
+  flex-direction: row;
 }
