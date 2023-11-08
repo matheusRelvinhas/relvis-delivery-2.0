@@ -32,6 +32,7 @@ const FormContact: React.FC<FormContactProps> = () => {
     distance,
     deliveryPrice,
     totalSumDelivery,
+    foundMessage,
   } = useGlobalContext();
 
   const handlePriceTroco = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +80,7 @@ const FormContact: React.FC<FormContactProps> = () => {
         />
         {paymentMethod === 'Dinheiro' && (
           <StyledInput
-            label="Troco?"
+            label="Troco para:"
             placeholder="ex.: R$10.00"
             type="number"
             value={troco}
@@ -88,10 +89,7 @@ const FormContact: React.FC<FormContactProps> = () => {
             minLength={1}
           />
         )}
-        <div
-          onClick={() => setIsClientRegistration(true)}
-          className="form-contact-client-registration"
-        >
+        <div className="form-contact-client-registration">
           <div
             className="form-contact-client-registration-title"
             style={{
@@ -109,26 +107,50 @@ const FormContact: React.FC<FormContactProps> = () => {
           </div>
           <div className="form-contact-client-registration-info">
             {name && road && number && cellphone && district ? (
-              <>
+              <div
+                className="form-contact-client-registration-info-div"
+                onClick={() => setIsClientRegistration(true)}
+              >
                 <div>
-                  <span className='form-contact-client-registration-span'>Nome: </span>
-                  <span>{name}</span>
+                  <span className="form-contact-client-registration-span">
+                    Nome:{' '}
+                  </span>
+                  <span className="form-contact-client-registration-span-data">{name}</span>
                 </div>
                 <div>
-                  <span className='form-contact-client-registration-span'>Celular: </span>
-                  <span>{cellphone}</span>
+                  <span className="form-contact-client-registration-span">
+                    Celular:{' '}
+                  </span>
+                  <span className="form-contact-client-registration-span-data">{cellphone}</span>
                 </div>
                 <div>
-                  <span className='form-contact-client-registration-span'>Endereço: </span>
-                  <span>
+                  <span className="form-contact-client-registration-span">
+                    Endereço:{' '}
+                  </span>
+                  <span className="form-contact-client-registration-span-data">
                     {road}, {number}, {complement}, {district}
                   </span>
                 </div>
-                <span>{distance?.toFixed(2)}</span>
-              </>
+                <div>
+                  <span className="form-contact-client-registration-span">
+                    Distância:{' '}
+                  </span>
+                  <span className="form-contact-client-registration-span-data">{distance?.toFixed(2)} Km</span>
+                </div>
+              </div>
             ) : (
-              <div>
-                <span>Cliente não cadastrado, clique aqui</span>
+              <div className="form-contact-client-registration-div-button">
+                <span>Cliente não cadastrado</span>
+                <StyledButton
+                  className="form-contact-client-registration-button"
+                  normalColor={dataCss.summaryFont}
+                  normalBackgroundColor={dataCss.colorPrimary}
+                  activeBackgroundColor={dataCss.activeButtonColor}
+                  disabledBackgroundColor={dataCss.disabledButtonColor}
+                  onClick={() => setIsClientRegistration(true)}
+                >
+                  <span>clique aqui</span>
+                </StyledButton>
               </div>
             )}
           </div>
@@ -140,9 +162,25 @@ const FormContact: React.FC<FormContactProps> = () => {
             borderColor: dataCss.colorSecundary,
           }}
         >
-          <span style={{ color: dataCss.summaryFont }}>
-            Entrega R$ {deliveryPrice?.toFixed(2)}
-          </span>
+          {foundMessage ? (
+            <div className="form-contact-client-registration-delivery-area">
+              <span style={{ color: dataCss.summaryFont }}>
+                Fora da área de entrega
+              </span>
+            </div>
+          ) : (
+            <div>
+              {deliveryPrice == 0 ? (
+                <span style={{ color: dataCss.summaryFont }}>
+                  Entrega GRÁTIS
+                </span>
+              ) : (
+                <span style={{ color: dataCss.summaryFont }}>
+                  Entrega R$ {deliveryPrice?.toFixed(2)}
+                </span>
+              )}
+            </div>
+          )}
           <figure>
             <picture>
               <source src={dataCss.cartImage} type="image/png" />

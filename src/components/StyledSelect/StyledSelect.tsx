@@ -47,6 +47,7 @@ export default function StyledSelect(props: StyledSelectProps) {
           <option value="Pix">Pix</option>
           <option value="Dinheiro">Dinheiro</option>
           <option value="Dinheiro trocado">Dinheiro trocado</option>
+          <option value="Refeicao">Refeição</option>
         </select>
         {paymentMethod === '' && (
           <figure>
@@ -67,7 +68,7 @@ export default function StyledSelect(props: StyledSelectProps) {
         style={{
           background:
             paymentMethod === ''
-              ? `${dataCss.colorSecundary}`
+              ? `${dataCss.colorFourth}`
               : `${dataCss.colorPrimary}`,
           color:
             paymentMethod === ''

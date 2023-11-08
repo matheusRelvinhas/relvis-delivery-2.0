@@ -330,6 +330,7 @@ interface ContextProps {
   foundDistance: boolean;
   setFoundDistance: React.Dispatch<React.SetStateAction<boolean>>;
   totalSumDelivery: number;
+  foundMessage: boolean;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -542,6 +543,7 @@ const GlobalContext = createContext<ContextProps>({
   foundDistance: true,
   setFoundDistance: () => {},
   totalSumDelivery: 0,
+  foundMessage: false,
 });
 
 type GlobalContextProviderProps = {
@@ -671,6 +673,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [isEditDelivery, setIsEditDelivery] = useState(false);
   const [deliveryPrice, setDeliveryPrice] = useState(0);
   const [foundDistance, setFoundDistance] = useState(true);
+  const [foundMessage, setFoundMessage] = useState(false);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -1911,17 +1914,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       observation: observation,
       delivery: deliveryPrice,
     };
-    try {
-      // Verifique se já existe um cliente com o mesmo número de celular
+    try { // Verifique se já existe um cliente com o mesmo número de celular
       const snapshot = await clientRef
         .where('cellphone', '==', cellphone)
         .get();
-      if (!snapshot.empty) {
-        // Já existe um cliente com o mesmo número de celular, exiba uma mensagem de erro
+      if (!snapshot.empty) {  // Já existe um cliente com o mesmo número de celular, exiba uma mensagem de erro
         const docId = snapshot.docs[0].id; // Obtenha o ID do documento existente
         await clientRef.doc(docId).update(data); // Atualize o documento existente com os novos dados
-      } else {
-        // Não há cliente com o mesmo número de celular, salve o novo cliente
+      } else { // Não há cliente com o mesmo número de celular, salve o novo cliente
         await clientRef.add(data);
       }
     } catch (error) {
@@ -1943,7 +1943,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setPaymentMethod('');
     setTroco('');
     setObservation('');
-    setDistance(null);
     setIsBuy(false);
     setIsTilted(false);
     setIsFinalizeOrder(true);
@@ -1982,8 +1981,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }));
   };
 
-  useEffect(() => {
-    // Função para atualizar os resultados com base na consulta de pesquisa
+  useEffect(() => {  // Função para atualizar os resultados com base na consulta de pesquisa
     const updateResults = () => {
       if (searchQuery === '') {
         setSearchResults(items); // Se a consulta de pesquisa estiver vazia, exiba todos os itens
@@ -2073,9 +2071,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         if (distance <= area.distance) {
           setDeliveryPrice(area.price);
           setFoundDistance(true);
+          setFoundMessage(false);
           break; // Saia do loop assim que encontrar uma correspondência
         } else {
           setFoundDistance(false);
+          setFoundMessage(true);
+          setDeliveryPrice(0);
         }
       }
     }
@@ -2290,6 +2291,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         foundDistance,
         setFoundDistance,
         totalSumDelivery,
+        foundMessage,
       }}
     >
       {children}

@@ -35,7 +35,7 @@ export default function StyledInput(props: StyledInputProps) {
       <label 
         className="label"
         style={{ 
-          background: props.value === '' ? `${dataCss.colorSecundary}` : `${dataCss.colorPrimary}`,
+          background: props.value === '' ? `${dataCss.colorFourth}` : `${dataCss.colorPrimary}`,
           color: props.value === '' ? `${dataCss.fontColor}` : `${dataCss.summaryFont}`,//dataCss.fontColor
           borderColor: props.value === '' ?  `${dataCss.colorPrimary}` : `${dataCss.colorSecundary}`,
         }}
