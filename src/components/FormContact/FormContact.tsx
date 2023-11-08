@@ -17,25 +17,21 @@ const FormContact: React.FC<FormContactProps> = () => {
     number,
     complement,
     district,
-    setRoad,
-    setNumber,
-    setComplement,
-    setDistrict,
     handleFinalize,
-    setName,
     paymentMethod,
     setPaymentMethod,
     troco,
     setTroco,
     name,
     cellphone,
-    setCellphone,
     totalItems,
     cartTotal,
     setIsBuy,
     isFormValid,
     setIsClientRegistration,
     distance,
+    deliveryPrice,
+    totalSumDelivery,
   } = useGlobalContext();
 
   const handlePriceTroco = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,8 +42,6 @@ const FormContact: React.FC<FormContactProps> = () => {
     }
     setTroco(input);
   };
-
-  const totalSumDelivery = (distance ?? 0) + cartTotal;
 
   return (
     <form
@@ -147,7 +141,7 @@ const FormContact: React.FC<FormContactProps> = () => {
           }}
         >
           <span style={{ color: dataCss.summaryFont }}>
-            Entrega R$ {distance?.toFixed(2)}
+            Entrega R$ {deliveryPrice?.toFixed(2)}
           </span>
           <figure>
             <picture>

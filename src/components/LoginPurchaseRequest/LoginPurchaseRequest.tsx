@@ -50,6 +50,8 @@ const LoginPurchaseRequest: React.FC = () => {
     totalPurchase,
     setTotalPurchase,
     handleEditPurchase,
+    deliveryPurchase,
+    setDeliveryPurchase,
   } = useGlobalContext();
 
   const purchaseRequest: any = purchaseRequests?.find(
@@ -117,6 +119,7 @@ const LoginPurchaseRequest: React.FC = () => {
       setPaymentPurchase(purchaseRequest.payment);
       setTrocoPurchase(purchaseRequest.troco);
       setTotalPurchase(purchaseRequest.total);
+      setDeliveryPurchase(purchaseRequest.delivery);
       setIsEditPurchase(true);
     }
   };
@@ -497,6 +500,28 @@ const LoginPurchaseRequest: React.FC = () => {
                       />
                     ) : (
                       <span>{purchaseRequest?.troco}</span>
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    Entrega:{' '}
+                    {isEditPurchase ? (
+                      <input
+                        type="number"
+                        placeholder="Total"
+                        value={deliveryPurchase}
+                        onChange={(event) =>
+                          setDeliveryPurchase(event.target.value)
+                        }
+                      />
+                    ) : (
+                      <span>
+                        R${' '}
+                        {parseFloat(
+                          purchaseRequest?.delivery.toString()
+                        ).toFixed(2)}
+                      </span>
                     )}
                   </p>
                 </div>

@@ -30,6 +30,7 @@ type PurchaseRequest = {
   time: string;
   status: string;
   observation: string;
+  delivery: number;
 };
 
 type Card = {
@@ -295,6 +296,8 @@ interface ContextProps {
   setTrocoPurchase: React.Dispatch<React.SetStateAction<string>>;
   totalPurchase: string;
   setTotalPurchase: React.Dispatch<React.SetStateAction<string>>;
+  deliveryPurchase: string;
+  setDeliveryPurchase: React.Dispatch<React.SetStateAction<string>>;
   isContentMessageOpen: boolean;
   setIsContentMessageOpen: React.Dispatch<React.SetStateAction<boolean>>;
   activeItem: string;
@@ -316,13 +319,17 @@ interface ContextProps {
   setIsContentDeliveryOpen: React.Dispatch<React.SetStateAction<boolean>>;
   deliveryRadius: number;
   setDeliveryRadius: React.Dispatch<React.SetStateAction<number>>;
-  inputDeliveryRadius:number;
+  inputDeliveryRadius: number;
   setInputDeliveryRadius: React.Dispatch<React.SetStateAction<number>>;
   addDeliveryRadius: (deliveryRadius: number) => void;
   deliveryArea: { id: string; order: number; price: number, distance:number }[];
   addDeliveryArea: () => void;
   isEditDelivery: boolean;
   setIsEditDelivery: React.Dispatch<React.SetStateAction<boolean>>;
+  deliveryPrice: number;
+  foundDistance: boolean;
+  setFoundDistance: React.Dispatch<React.SetStateAction<boolean>>;
+  totalSumDelivery: number;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -501,6 +508,8 @@ const GlobalContext = createContext<ContextProps>({
   setTrocoPurchase: () => {},
   totalPurchase: '',
   setTotalPurchase: () => {},
+  deliveryPurchase: '',
+  setDeliveryPurchase: () => {},
   isContentMessageOpen: false,
   setIsContentMessageOpen: () => {},
   activeItem: 'Perfil',
@@ -529,6 +538,10 @@ const GlobalContext = createContext<ContextProps>({
   addDeliveryArea: () => {},
   isEditDelivery: false,
   setIsEditDelivery: () => {},
+  deliveryPrice: 0,
+  foundDistance: true,
+  setFoundDistance: () => {},
+  totalSumDelivery: 0,
 });
 
 type GlobalContextProviderProps = {
@@ -645,6 +658,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [paymentPurchase, setPaymentPurchase] = useState('');
   const [trocoPurchase, setTrocoPurchase] = useState('');
   const [totalPurchase, setTotalPurchase] = useState('');
+  const [deliveryPurchase, setDeliveryPurchase] = useState('');
   const [isContentMessageOpen, setIsContentMessageOpen] = useState(false);
   const [activeItem, setActiveItem] = useState<string>('Perfil');
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
@@ -655,7 +669,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [inputDeliveryRadius, setInputDeliveryRadius] = useState(0);
   const [deliveryArea, setDeliveryArea] = useState<{ id: string; order: number; price: number; distance:number }[]>([]);
   const [isEditDelivery, setIsEditDelivery] = useState(false);
-
+  const [deliveryPrice, setDeliveryPrice] = useState(0);
+  const [foundDistance, setFoundDistance] = useState(true);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -1353,6 +1368,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         payment: paymentPurchase,
         troco: trocoPurchase,
         total: totalPurchase,
+        delivery: deliveryPurchase,
       };
       await purchaseRequestRef.update(updatedPurchaseRequestData);
     } catch (error) {
@@ -1567,6 +1583,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
             time: data.time,
             status: data.status,
             observation: data.observation,
+            delivery: data.delivery,
           };
         }
       );
@@ -1624,14 +1641,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
   }, [startDate, endDate, purchaseRequests]);
 
-  useEffect(() => {
-    // Função para atualizar os resultados com base na consulta de pesquisa
+  useEffect(() => { // Função para atualizar os resultados com base na consulta de pesquisa
     const updateResults = () => {
       if (searchQueryLogin === '') {
         setSearchResultsLogin(items); // Se a consulta de pesquisa estiver vazia, exiba todos os itens
       } else {
-        const filteredItems = items?.filter((item) => {
-          // Caso contrário, filtre os itens com base na consulta
+        const filteredItems = items?.filter((item) => { // Caso contrário, filtre os itens com base na consulta
           return (
             item.title.toLowerCase().includes(searchQueryLogin.toLowerCase()) ||
             item.description
@@ -1886,7 +1901,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       complement: complement,
       district: district,
       purchase: messageItens,
-      total: cartTotal,
+      total: totalSumDelivery,
       order: nextOrder,
       payment: paymentMethod,
       troco: troco,
@@ -1894,7 +1909,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       time: formattedTime,
       status: 'new',
       observation: observation,
-      distance: distance,
+      delivery: deliveryPrice,
     };
     try {
       // Verifique se já existe um cliente com o mesmo número de celular
@@ -1918,12 +1933,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       console.error('Erro ao enviar novo pedido', error);
     }
     const orderPurchase = `00${nextOrder}`;
-    let message = `${formattedDate} / ${formattedTime}\nPedido Novo !!\nID: ${orderPurchase}\n--------------\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}  Compl.: ${complement}\nBairro: ${district}\n--------------\nCarrinho\n${messageItens}\n--------------\nObs.: ${observation}\n--------------\nTotal: ${cartTotal.toFixed(
-      2
-    )}\nForma de Pagamento: ${paymentMethod}\n`;
-    if (trocoMessage == Math.abs(cartTotal - parseFloat(troco))) {
-      message += `Troco: R$${trocoMessage.toFixed(2)}`;
-    }
+    let message = `${formattedDate} / ${formattedTime}\nPedido Novo !!\nID: ${orderPurchase}\n--------------\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}  Compl.: ${complement}\nBairro: ${district}\n--------------\nCarrinho\n${messageItens}\n--------------\nObs.: ${observation}\n--------------\nTotal carrinho: ${cartTotal.toFixed(2)}\nEntrega: ${deliveryPrice.toFixed(2)}\nTotal: ${totalSumDelivery.toFixed(2)}\nForma de Pagamento: ${paymentMethod}\n`;
+      if (trocoMessage == Math.abs(totalSumDelivery - parseFloat(troco))) {
+        message += `Troco: R$${trocoMessage.toFixed(2)}`;
+      }
     setOrderMessage(`#00${nextOrder}`);
     setWhatsappMessage(encodeURIComponent(message));
     setCartItems({});
@@ -1953,7 +1966,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     0
   );
 
-  const trocoMessage = Math.abs(cartTotal - parseFloat(troco));
+  const totalSumDelivery = (deliveryPrice ?? 0) + cartTotal;
+
+  const trocoMessage = Math.abs(totalSumDelivery - parseFloat(troco));
 
   const totalItems = Object.values(cartItems).reduce(
     (total, quantity) => total + quantity,
@@ -1990,6 +2005,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   }, [searchQuery, items, setSearchResults]);
 
   useEffect(() => {
+    const lastDeliveryArea = deliveryArea[deliveryArea.length - 1];
     const isValid =
       isOpenStore !== false &&
       name !== '' &&
@@ -1998,6 +2014,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       number !== '' &&
       district !== '' &&
       paymentMethod !== '' &&
+      distance !== null &&
+      distance < lastDeliveryArea.distance &&
       (paymentMethod !== 'dinheiro' || troco !== '');
     setIsFormValid(isValid);
   }, [
@@ -2009,6 +2027,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     paymentMethod,
     troco,
     isOpenStore,
+    deliveryArea,
+    distance,
   ]);
 
   useEffect(() => {
@@ -2029,12 +2049,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   }, []);
 
   useEffect(() => {
-    const address1 = 'Rua Vereador Geraldo Pereira, 232, A, Padre Eustáquio';
+    const address1 = 'Rua Vereador Geraldo Pereira, 232, A, Padre Eustáquio - 30720400';
     const address2 = `${road}, ${number}, ${complement}, ${district}`;
     Promise.all([getCoordinates(address1), getCoordinates(address2)]) // Obter coordenadas dos endereços
       .then(([coords1, coords2]) => {
-        if (coords1 && coords2) {
-          // Calcular a distância
+        if (coords1 && coords2) { // Calcular a distância
           const dist = calculateDistance(
             coords1.lat,
             coords1.lng,
@@ -2047,6 +2066,20 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         }
       });
   }, [road, number, complement, district]);
+
+  useEffect(() => {
+    if (distance !== null) { // Iterar sobre os objetos em deliveryArea e verificar a condição
+      for (const area of deliveryArea) {
+        if (distance <= area.distance) {
+          setDeliveryPrice(area.price);
+          setFoundDistance(true);
+          break; // Saia do loop assim que encontrar uma correspondência
+        } else {
+          setFoundDistance(false);
+        }
+      }
+    }
+  }, [distance, deliveryArea]);
 
   return (
     <GlobalContext.Provider
@@ -2218,6 +2251,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setTrocoPurchase,
         totalPurchase,
         setTotalPurchase,
+        deliveryPurchase,
+        setDeliveryPurchase,
         handleEditPurchase,
         isContentMessageOpen,
         setIsContentMessageOpen,
@@ -2251,6 +2286,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         inputDeliveryRadius,
         setInputDeliveryRadius,
         handleDeleteDeliveryArea,
+        deliveryPrice,
+        foundDistance,
+        setFoundDistance,
+        totalSumDelivery,
       }}
     >
       {children}

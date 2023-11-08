@@ -149,3 +149,72 @@ body {
   width: 40px;
   margin: 0 20px;
 }
+
+.tab-content-client-found-distance {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  align-items: center;
+  width: 100%;
+}
+
+.tab-content-client-found-distance-div {
+  width: 30%;
+  min-width: 270px;
+  max-width: 300px;
+  height: 27.5vh;
+  min-height: 200px;
+  max-height: 300px;
+  margin-top: 10px;
+  box-shadow: 0 0 10px 0 #555;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 9px;
+}
+
+.tab-content-client-found-tiltle {
+  height: 9vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: large;
+  text-align: center;
+  border-top-right-radius: 9px;
+}
+
+.tab-content-client-found-distance-info {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 7.5px 5px;
+  align-items: center;
+  text-align: center;
+}
+
+.tab-content-client-found-distance-button {
+  height: 6vh;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+  font-size: large;
+  text-align: center;
+  align-items: center;
+  border-bottom-right-radius: 9px;
+  border-bottom-left-radius: 9px;
+}
+
+.tab-content-client-found-distance-button figure img {
+  height: 25px;
+  width: 25px;
+}
+
+.tab-content-client-found-distance-message {
+  box-shadow: 0 0 5px 0 #555;
+  border-radius: 5px;
+  border-bottom-left-radius: 0;
+  padding: 2.5px;
+}

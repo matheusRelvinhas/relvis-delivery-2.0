@@ -30,6 +30,8 @@ export default function Main() {
     setName,
     cellphone,
     setCellphone,
+    foundDistance,
+    setFoundDistance,
   } = useGlobalContext();
 
   return (
@@ -80,16 +82,16 @@ export default function Main() {
             style={{ backgroundColor: dataCss.colorPrimary }}
           >
             <figure>
-              <button
-                onClick={() => setIsClientRegistration(false)}
-              >
+              <button onClick={() => setIsClientRegistration(false)}>
                 <picture>
                   <source src={dataCss.backImage} type="image/png" />
                   <img src={dataCss.backImage} alt="back-img" />
                 </picture>
               </button>
             </figure>
-            <span style={{ color: dataCss.summaryFont }}>Cadastro do Cliente</span>
+            <span style={{ color: dataCss.summaryFont }}>
+              Cadastro do Cliente
+            </span>
             <figure>
               <picture>
                 <source src={dataCss.clientsImage} type="image/png" />
@@ -187,6 +189,68 @@ export default function Main() {
               </picture>
             </figure>
           </StyledButton>
+        </div>
+      )}
+      {!foundDistance && (
+        <div className="tab-content-client-found-distance">
+          <div
+            className="tab-content-client-found-distance-div"
+            style={{ backgroundColor: dataCss.colorSecundary }}
+          >
+            <div
+              className="tab-content-client-found-tiltle"
+              style={{
+                backgroundColor: dataCss.colorPrimary,
+                color: dataCss.summaryFont,
+              }}
+            >
+              <span>Fora da área de entrega</span>
+            </div>
+            <div className="tab-content-client-found-distance-info">
+              <span>Verifique se cadastrou corretamente o endereço</span>
+              <span>OU</span>
+              <div>
+                <span>Envie uma </span>
+                <a href="https://api.whatsapp.com/send?phone=+5531971451910&text=Oi, teria disponíbilidade de entrega?">
+                <StyledButton
+                normalColor={dataCss.summaryFont}
+                normalBackgroundColor={dataCss.colorPrimary}
+                activeBackgroundColor={dataCss.activeButtonColor}
+                disabledBackgroundColor={dataCss.disabledButtonColor}
+                className="tab-content-client-found-distance-message"
+                onClick={() => setFoundDistance(true)}
+              >
+                <span>mensagem</span>
+              </StyledButton>
+              </a>
+                <span> para verificar disponibilidade</span>
+              </div>
+            </div>
+            <div
+              className="tab-content-client-found-distance-button"
+              style={{ backgroundColor: dataCss.colorPrimary }}
+            >
+              <StyledButton
+                normalColor={dataCss.summaryFont}
+                normalBackgroundColor={dataCss.colorPrimary}
+                activeBackgroundColor={dataCss.activeButtonColor}
+                disabledBackgroundColor={dataCss.disabledButtonColor}
+                className="tab-content-client-found-distance-button"
+                onClick={() => setFoundDistance(true)}
+              >
+                <span>OK</span>
+                <figure>
+                  <picture>
+                    <source
+                      src={dataCss.saveIconImage}
+                      type="image/png"
+                    />
+                    <img src={dataCss.saveIconImage} alt="icon-img" />
+                  </picture>
+                </figure>
+              </StyledButton>
+            </div>
+          </div>
         </div>
       )}
     </main>
