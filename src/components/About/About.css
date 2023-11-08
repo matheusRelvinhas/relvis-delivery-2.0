@@ -17,14 +17,14 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 0.5vh 2vw;
+  padding: 0.25vh 2vw;
   align-items: center;
   font-size: large;
 }
 
 .about-title figure img{
-  height: 22.5px;
-  width: 22.5px;
+  height: 21px;
+  width: 21px;
   margin-top: 2.5px;
 }
 
@@ -35,10 +35,9 @@
   height: 100%;
   border-top: rgba(0, 0, 0, 0.1) solid 2.5px;
   border-bottom: rgba(0, 0, 0, 0.1) solid 2.5px;
-  font-size: smaller;
+  font-size: x-small;
   align-items: center;
   text-align: center;
-  font-size: smaller;
 }
 
 .about-info figure img{
