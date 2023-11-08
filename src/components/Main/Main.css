@@ -67,10 +67,8 @@ body {
   height: 80vh;
   display: flex;
   flex-direction: column;
-  background: #fafafa;
   z-index: 999;
   align-items: center;
-  box-shadow: 0 0 8px 0 #555;
 }
 
 .form-contact-info {

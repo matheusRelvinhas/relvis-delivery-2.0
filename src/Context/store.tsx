@@ -121,6 +121,7 @@ interface ContextProps {
   isOpen: boolean;
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
   isTilted: boolean;
+  setIsTilted: React.Dispatch<React.SetStateAction<boolean>>;
   handleCheckboxChange: () => void;
   handleCartClick: () => void;
   cartItems: Record<string, number>;
@@ -339,6 +340,7 @@ const GlobalContext = createContext<ContextProps>({
   isOpen: false,
   setIsLogin: () => {},
   isTilted: false,
+  setIsTilted: () => {},
   handleCheckboxChange: () => {},
   handleCartClick: () => {},
   cartItems: {},
@@ -2145,6 +2147,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setComplement,
         setDistrict,
         setIsBuy,
+        setIsTilted,
         setName,
         setPaymentMethod,
         setTroco,

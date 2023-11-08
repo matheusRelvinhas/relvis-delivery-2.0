@@ -32,7 +32,15 @@ export default function Main() {
     setCellphone,
     foundDistance,
     setFoundDistance,
+    setIsTilted,
+    setIsBuy,
   } = useGlobalContext();
+
+  const handleFormContactMain = () => {
+    setIsBuy(true);
+    setIsTilted(true);
+    setIsClientRegistration(false);
+  };
 
   return (
     <main style={{ color: dataCss.fontColor }} className="main">
@@ -82,7 +90,7 @@ export default function Main() {
             style={{ backgroundColor: dataCss.colorPrimary }}
           >
             <figure>
-              <button onClick={() => setIsClientRegistration(false)}>
+              <button onClick={handleFormContactMain}>
                 <picture>
                   <source src={dataCss.backImage} type="image/png" />
                   <img src={dataCss.backImage} alt="back-img" />
@@ -178,7 +186,7 @@ export default function Main() {
             disabledBackgroundColor={dataCss.disabledButtonColor}
             className="client-registration-button"
             type="button"
-            onClick={() => setIsClientRegistration(false)}
+            onClick={handleFormContactMain}
             disabled={false}
           >
             <span>Cadastrar Cliente</span>

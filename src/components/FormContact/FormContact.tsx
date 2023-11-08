@@ -8,9 +8,9 @@ import StyledInput from '../StyledInput/StyledInput';
 import './FormContact.css';
 import StyledSelect from '../StyledSelect/StyledSelect';
 
-interface FormContactProps {}
 
-const FormContact: React.FC<FormContactProps> = () => {
+
+const FormContact: React.FC = () => {
   const {
     dataCss,
     road,
@@ -33,6 +33,7 @@ const FormContact: React.FC<FormContactProps> = () => {
     deliveryPrice,
     totalSumDelivery,
     foundMessage,
+    setIsTilted,
   } = useGlobalContext();
 
   const handlePriceTroco = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +43,11 @@ const FormContact: React.FC<FormContactProps> = () => {
       input = (parseFloat(input) / 100).toFixed(2);
     }
     setTroco(input);
+  };
+
+  const handleFormContact = () => {
+    setIsTilted(false);
+    setIsClientRegistration(true)
   };
 
   return (
@@ -109,7 +115,7 @@ const FormContact: React.FC<FormContactProps> = () => {
             {name && road && number && cellphone && district ? (
               <div
                 className="form-contact-client-registration-info-div"
-                onClick={() => setIsClientRegistration(true)}
+                onClick={handleFormContact}
               >
                 <div>
                   <span className="form-contact-client-registration-span">
@@ -147,7 +153,8 @@ const FormContact: React.FC<FormContactProps> = () => {
                   normalBackgroundColor={dataCss.colorPrimary}
                   activeBackgroundColor={dataCss.activeButtonColor}
                   disabledBackgroundColor={dataCss.disabledButtonColor}
-                  onClick={() => setIsClientRegistration(true)}
+                  type='button'
+                  onClick={handleFormContact}
                 >
                   <span>clique aqui</span>
                 </StyledButton>
