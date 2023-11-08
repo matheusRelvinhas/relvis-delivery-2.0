@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
@@ -13,15 +13,26 @@ const AddDeliveryForm: React.FC = () => {
     addDeliveryArea,
     isContentDeliveryOpen,
     setIsContentDeliveryOpen,
+    isEditDelivery,
+    setIsEditDelivery,
+    inputDeliveryRadius,
+    setInputDeliveryRadius,
   } = useGlobalContext();
 
   const toggleContentDelivery = () => {
     setIsContentDeliveryOpen(!isContentDeliveryOpen);
+    setIsEditDelivery(false);
   };
 
   const handleSubmitDelivery = (event: React.FormEvent) => {
     event.preventDefault();
-    addDeliveryRadius(deliveryRadius);
+    if (!isEditDelivery) {
+      setIsEditDelivery(true);
+      setInputDeliveryRadius(deliveryRadius);
+    } else {
+      addDeliveryRadius(inputDeliveryRadius);
+      setIsEditDelivery(false);
+    }
   };
 
   return (
@@ -43,19 +54,58 @@ const AddDeliveryForm: React.FC = () => {
           <div className="add-delivery-form-radius">
             <span>Raio de Entrega</span>
             <form onSubmit={handleSubmitDelivery}>
-              <input
-                type="number"
-                value={deliveryRadius}
-                onChange={(event) => setDeliveryRadius(parseFloat(event.target.value))}
-                required
-              />
-              <button type='submit'>Atualizar</button>
+              {isEditDelivery ? (
+                <input
+                  className="add-delivery-form-radius-input"
+                  type="number"
+                  value={inputDeliveryRadius}
+                  onChange={(event) => {
+                    const inputValue = event.target.value;
+                    if (/^-?\d*\.?\d+$/.test(inputValue)) {
+                      setInputDeliveryRadius(parseFloat(inputValue));
+                    }
+                  }}
+                  required
+                />
+              ) : (
+                <div className="add-delivery-form-radius-km">
+                  <span>{deliveryRadius} Km</span>
+                </div>
+              )}
+              <button type="submit">
+                {isEditDelivery ? (
+                  <div className="add-delivery-div-buttons">
+                    <span>Atualizar</span>
+                    <figure>
+                      <picture>
+                        <source src={dataCss.toUpdateImage} type="image/png" />
+                        <img src={dataCss.toUpdateImage} alt="icon-img" />
+                      </picture>
+                    </figure>
+                  </div>
+                ) : (
+                  <div className="add-delivery-div-buttons">
+                    <span>Editar</span>
+                    <figure>
+                      <picture>
+                        <source src={dataCss.editIconImage} type="image/png" />
+                        <img src={dataCss.editIconImage} alt="icon-img" />
+                      </picture>
+                    </figure>
+                  </div>
+                )}
+              </button>
             </form>
           </div>
-          <div>
-            <span>Adicionar área</span>
+          <div className="add-delivery-form-button">
             <button onClick={addDeliveryArea}>
-              <span>ADICIONAR</span>
+              <span>Adicionar Área</span>
+              <figure>
+                <picture>
+                  <source src={dataCss.addIconImage} type="image/png" />
+                  <img src={dataCss.addIconImage} alt="icon-img" />
+                </picture>
+              </figure>
             </button>
           </div>
         </div>

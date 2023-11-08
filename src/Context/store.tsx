@@ -237,6 +237,7 @@ interface ContextProps {
   setClientId: React.Dispatch<React.SetStateAction<string>>;
   handleEditClient: (clientId: string) => void;
   handleDeleteClient: (clientId: string) => void;
+  handleDeleteDeliveryArea: (deliveryAreaId: string) => void;
   observation: string;
   setObservation: React.Dispatch<React.SetStateAction<string>>;
   handlePurchaseRequestClick: (purchaseRequest: PurchaseRequest) => void;
@@ -315,9 +316,13 @@ interface ContextProps {
   setIsContentDeliveryOpen: React.Dispatch<React.SetStateAction<boolean>>;
   deliveryRadius: number;
   setDeliveryRadius: React.Dispatch<React.SetStateAction<number>>;
+  inputDeliveryRadius:number;
+  setInputDeliveryRadius: React.Dispatch<React.SetStateAction<number>>;
   addDeliveryRadius: (deliveryRadius: number) => void;
-  deliveryArea: { id: string; order: number; price: number }[];
+  deliveryArea: { id: string; order: number; price: number, distance:number }[];
   addDeliveryArea: () => void;
+  isEditDelivery: boolean;
+  setIsEditDelivery: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -438,6 +443,7 @@ const GlobalContext = createContext<ContextProps>({
   setClientId: () => {},
   handleEditClient: () => {},
   handleDeleteClient: () => {},
+  handleDeleteDeliveryArea: () => {},
   observation: '',
   setObservation: () => {},
   handlePurchaseRequestClick: () => {},
@@ -516,9 +522,13 @@ const GlobalContext = createContext<ContextProps>({
   setIsContentDeliveryOpen: () => {},
   deliveryRadius: 0,
   setDeliveryRadius: () => {},
+  inputDeliveryRadius: 0,
+  setInputDeliveryRadius: () => {},
   addDeliveryRadius: () => {},
   deliveryArea: [],
   addDeliveryArea: () => {},
+  isEditDelivery: false,
+  setIsEditDelivery: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -550,6 +560,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     printIconImage: 'img/print.png',
     saveIconImage: 'img/save.png',
     moneyImage: 'img/money.png',
+    toUpdateImage: 'img/to-update.png',
     iconAbout: {
       local: '/img/local.png',
       payment: '/img/payment.png',
@@ -580,9 +591,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   //LOGIN PAGE
   const [isLogin, setIsLogin] = useState(false);
-  const [categories, setCategories] = useState<
-    { id: string; category: string; order: number; active: boolean }[]
-  >([]);
+  const [categories, setCategories] = useState<{ id: string; category: string; order: number; active: boolean }[]>([]);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -643,7 +652,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [searchResultsLogin, setSearchResultsLogin] = useState<Item[] | undefined>(items);
   const [isContentDeliveryOpen, setIsContentDeliveryOpen] = useState(false);
   const [deliveryRadius, setDeliveryRadius] = useState(0);
-  const [deliveryArea, setDeliveryArea] = useState<{ id: string; order: number; price: number }[]>([]);
+  const [inputDeliveryRadius, setInputDeliveryRadius] = useState(0);
+  const [deliveryArea, setDeliveryArea] = useState<{ id: string; order: number; price: number; distance:number }[]>([]);
+  const [isEditDelivery, setIsEditDelivery] = useState(false);
+
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -1234,15 +1246,22 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const addDeliveryRadius = async (deliveryRadius: number) => {
     setIsLoading(true);
-    const collectionRef = firestore.collection('deliveryRadius');
-    const deliveryRadiusRef = collectionRef.doc('deliveryRadiusID');
-    try {
+    const collectionRadiusRef = firestore.collection('deliveryRadius');
+    const deliveryRadiusRef = collectionRadiusRef.doc('deliveryRadiusID');
+    const collectionAreaRef = firestore.collection('deliveryArea');
+    try { // Atualize a entrega de raio
       const updatedDeliveryRadiusData = {
         deliveryRadius: deliveryRadius,
       };
-      await deliveryRadiusRef.update(updatedDeliveryRadiusData);
+      await deliveryRadiusRef.update(updatedDeliveryRadiusData); // Atualize a distância em deliveryArea
+      const snapshot = await collectionAreaRef.get();
+      snapshot.forEach((doc) => {
+        const order = doc.data().order;
+        const newDistance = deliveryRadius * order;
+        collectionAreaRef.doc(doc.id).update({ distance: newDistance });
+      });
     } catch (error) {
-      console.error('Erro ao editar área de entrega:', error);
+      console.error('Erro ao editar raio de entrega:', error);
     }
     setIsLoading(false);
   };
@@ -1254,9 +1273,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const querySnapshot = await collectionRef.get();
       const totalDeliveryArea = querySnapshot.size;
       const order = totalDeliveryArea + 1; // Determine a ordem para a nova categoria
+      const distanceCalculation = deliveryRadius * order
       await collectionRef.add({
         order: order,
         price: 0,
+        distance: distanceCalculation,
       });
       setIsContentDeliveryOpen(false);
     } catch (error) {
@@ -1264,6 +1285,23 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setErrorMessage('Erro ao adicioanar Área de Entrega');
       setAlertLogin(true);
       setIsLoading(false);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
+    }
+    setIsLoading(false);
+  };
+
+  const handleDeleteDeliveryArea = async (deliveryAreaId: string) => {
+    setIsLoading(true);
+    try {
+      const collectionRef = firestore.collection('deliveryArea');
+      await collectionRef.doc(deliveryAreaId).delete();
+    } catch (error) {
+      console.error('Erro ao excluir área de entrega', error);
+      setAlertLogin(true);
+      setErrorMessage('Erro ao excluir área de entrega');
       setTimeout(() => {
         setAlertLogin(false);
         setErrorMessage('');
@@ -1627,11 +1665,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   useEffect(() => {
     const collectionRef = firestore.collection('deliveryArea');
     const unsubscribe = collectionRef.onSnapshot((snapshot) => {
-      const deliveryAreaData: { id: string; order: number; price: number }[] =
+      const deliveryAreaData: { id: string; order: number; price: number, distance:number }[] =
         snapshot.docs.map((doc) => ({
           id: doc.id,
           order: doc.data().order,
           price: doc.data().price,
+          distance: doc.data().distance,
         }));
       deliveryAreaData.sort((a, b) => a.order - b.order);
       setDeliveryArea(deliveryAreaData);
@@ -2207,6 +2246,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         addDeliveryRadius,
         deliveryArea,
         addDeliveryArea,
+        isEditDelivery,
+        setIsEditDelivery,
+        inputDeliveryRadius,
+        setInputDeliveryRadius,
+        handleDeleteDeliveryArea,
       }}
     >
       {children}

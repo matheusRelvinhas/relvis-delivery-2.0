@@ -43,3 +43,78 @@
 .login-delivery-area {
   margin-top: 90px;
 }
+
+.login-delivery-area-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #f7e0df;
+  border: #f04134 solid 2px;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  width: 30%;
+  min-width: 220px;
+  max-width: 540px;
+  padding: 0.5vh 0.5vw;
+  margin-bottom: 7.5px;
+  height: 10vh;
+  min-height: 60px;
+  max-height: 90px;
+}
+
+.login-delivery-area-div:hover {
+  background-color: #f3cac7;
+}
+
+.login-delivery-area-div:focus {
+  background-color: #f3cac7;
+}
+
+.login-delivery-area-info {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.login-delivery-area-distance {
+  margin-bottom: 5px;
+}
+
+.login-delivery-area-distance span {
+  border-bottom: #f04134 2.5px solid;
+}
+
+.login-delivery-area-price input {
+  width: 30%;
+  border: #f04134 2.5px solid;
+  border-radius: 8px;
+  border-bottom-left-radius: 0;
+  font-size: large;
+  padding: 3px;
+}
+
+.login-delivery-delete button {
+  font-size: larger;
+  background-color: #f04134;
+  color: #fff;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 4px;
+}
+
+.login-delivery-delete button:focus {
+  background-color: #df2e22;
+}
+
+.login-delivery-delete button:active {
+  background-color: #df2e22;
+}
+
+.login-delivery-delete button figure img {
+  margin-top: 3px;
+  height: 22px;
+  width: 22px;
+}
