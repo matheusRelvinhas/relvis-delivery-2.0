@@ -2088,7 +2088,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   }, []);
 
   useEffect(() => {
-    const address1 = 'Rua Vereador Geraldo Pereira, 232, A, Padre Eustáquio - 30720400';
+    const address1 = 'Rua Vereador Geraldo Pereira, 232, A, Padre Eustáquio, BH, MG';
     const address2 = `${road}, ${number}, ${complement}, ${district}`;
     Promise.all([getCoordinates(address1), getCoordinates(address2)]) // Obter coordenadas dos endereços
       .then(([coords1, coords2]) => {
