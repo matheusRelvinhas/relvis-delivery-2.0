@@ -34,6 +34,7 @@ const FormContact: React.FC = () => {
     totalSumDelivery,
     foundMessage,
     setIsTilted,
+    setActivePromotionCategory,
   } = useGlobalContext();
 
   const handlePriceTroco = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +51,11 @@ const FormContact: React.FC = () => {
     setIsClientRegistration(true)
   };
 
+  const handleBackFormContact = () => {
+    setIsBuy(false);
+    setActivePromotionCategory(false);
+  }
+
   return (
     <form
       className="form-contact"
@@ -61,7 +67,7 @@ const FormContact: React.FC = () => {
         style={{ backgroundColor: dataCss.colorPrimary }}
       >
         <figure>
-          <button className="back-button-form" onClick={() => setIsBuy(false)}>
+          <button className="back-button-form" onClick={handleBackFormContact}>
             <picture>
               <source src={dataCss.backImage} type="image/png" />
               <img src={dataCss.backImage} alt="back-img" />

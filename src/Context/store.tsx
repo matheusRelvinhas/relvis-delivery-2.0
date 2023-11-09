@@ -155,6 +155,7 @@ interface ContextProps {
     category: string;
     order: number;
     active: boolean;
+    deliveryPromotion: boolean;
   }[];
   handleEditOpenStore: (openStore: boolean) => void;
   handleEditMessage: (message: string) => void;
@@ -163,6 +164,7 @@ interface ContextProps {
   handleMoveCategoryDown: (categoryId: string, order: number) => void;
   handleEditCategory: (categoryId: string, category: string) => void;
   toggleActiveCategory: (categoryId: string, categoryActive: boolean) => void;
+  toggleActivePromotionCategory: (categoryId: string, categoryDeliveryPromotion: boolean) => void;
   handleDeleteItem: (categoryId: string) => void;
   category: string;
   setCategory: React.Dispatch<React.SetStateAction<string>>;
@@ -332,6 +334,7 @@ interface ContextProps {
   setFoundDistance: React.Dispatch<React.SetStateAction<boolean>>;
   totalSumDelivery: number;
   foundMessage: boolean;
+  setActivePromotionCategory: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -378,6 +381,7 @@ const GlobalContext = createContext<ContextProps>({
   handleMoveCategoryDown: () => {},
   toggleActiveItem: () => {},
   toggleActiveCategory: () => {},
+  toggleActivePromotionCategory: () => {},
   handleDeleteItem: () => {},
   category: '',
   setCategory: () => {},
@@ -546,6 +550,7 @@ const GlobalContext = createContext<ContextProps>({
   setFoundDistance: () => {},
   totalSumDelivery: 0,
   foundMessage: false,
+  setActivePromotionCategory: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -578,6 +583,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     saveIconImage: 'img/save.png',
     moneyImage: 'img/money.png',
     toUpdateImage: 'img/to-update.png',
+    promotionImage: 'img/promotion.png',
     iconAbout: {
       local: '/img/local.png',
       payment: '/img/payment.png',
@@ -608,7 +614,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   //LOGIN PAGE
   const [isLogin, setIsLogin] = useState(false);
-  const [categories, setCategories] = useState<{ id: string; category: string; order: number; active: boolean }[]>([]);
+  const [categories, setCategories] = useState<{ id: string; category: string; order: number; active: boolean; deliveryPromotion: boolean }[]>([]);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -851,6 +857,27 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     } catch (error) {
       console.error('Erro ao editar categoria:', error);
       setErrorMessage('Erro ao editar categoria');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
+    }
+    setIsLoading(false);
+  };
+
+  const toggleActivePromotionCategory = async (
+    categoryId: string,
+    categoryDeliveryPromotion: boolean
+  ) => {
+    setIsLoading(true);
+    try {
+      const categoryRef = firestore.collection('categories').doc(categoryId); // Substitua 'seu_nome_de_colecao' pelo nome real da sua coleção Firestore
+      const newValueActive = !categoryDeliveryPromotion; // Alterna a propriedade 'active'
+      await categoryRef.update({ deliveryPromotion: newValueActive }); // Atualiza o Firestore
+    } catch (error) {
+      console.error('Erro ao editar promoção de entrga da categoria:', error);
+      setErrorMessage('Erro ao editar promoção de entrga da categoria');
       setAlertLogin(true);
       setTimeout(() => {
         setAlertLogin(false);
@@ -1502,11 +1529,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         category: string;
         order: number;
         active: boolean;
+        deliveryPromotion: boolean;
       }[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         category: doc.data().category,
         order: doc.data().order,
         active: doc.data().active,
+        deliveryPromotion: doc.data().deliveryPromotion,
       }));
       categoriesData.sort((a, b) => a.order - b.order);
       setCategories(categoriesData);
@@ -1725,6 +1754,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [orderMessage, setOrderMessage] = useState('');
   const [distance, setDistance] = useState<number | null>(null);
   const [isClientRegistration, setIsClientRegistration] = useState(false);
+  const [activePromotionCategory, setActivePromotionCategory] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsOpen(!isOpen);
@@ -1802,6 +1832,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const handleFinalizeOrder = () => {
     setIsBuy(true);
+    setActivePromotionCategory(false);
     const cartSummaryElements = document.querySelectorAll('.cart-summary');
     const formattedLines: string[] = [];
     cartSummaryElements.forEach((element) => {
@@ -1814,6 +1845,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     });
     const formattedText = formattedLines.join('\n-------\n');
     setMessageItens(formattedText);
+    const categoriesInPromotion = categories.filter((category) => category.deliveryPromotion);
+    for (const itemName in cartItems) {
+      const item = items?.find((i) => i.title === itemName);
+      if (item && categoriesInPromotion.some((cat) => cat.category === item.category)) {
+        setActivePromotionCategory(true);
+      }
+    }
   };
 
   const getCoordinates = async (address: string) => {
@@ -2074,6 +2112,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           setDeliveryPrice(area.price);
           setFoundDistance(true);
           setFoundMessage(false);
+          if (activePromotionCategory) {
+            setDeliveryPrice(0);
+          }
           break; // Saia do loop assim que encontrar uma correspondência
         } else {
           setFoundDistance(false);
@@ -2082,7 +2123,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         }
       }
     }
-  }, [distance, deliveryArea]);
+  }, [distance, deliveryArea, activePromotionCategory]);
+
+  useEffect(() => {
+    if (activePromotionCategory) {
+      setDeliveryPrice(0);
+    }
+  }, [activePromotionCategory]);
 
   return (
     <GlobalContext.Provider
@@ -2275,6 +2322,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         isFinalizeOrder,
         orderMessage,
         toggleActiveCategory,
+        toggleActivePromotionCategory,
         isClientRegistration,
         setIsClientRegistration,
         distance,
@@ -2295,6 +2343,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setFoundDistance,
         totalSumDelivery,
         foundMessage,
+        setActivePromotionCategory,
       }}
     >
       {children}

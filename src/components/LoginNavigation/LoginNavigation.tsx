@@ -9,6 +9,7 @@ import LoginClient from '../LoginClient/LoginClient';
 import LoginProfile from '../LoginProfile/LoginProfile';
 import './LoginNavigation.css';
 import LoginDelivery from '../LoginDelivery/LoginDelivery';
+import LoginPromotion from '../LoginPromotion/LoginPromotion';
 
 const LoginNavigation: React.FC = () => {
   const { dataCss, activeItem, setActiveItem, isNavOpen, setIsNavOpen } =
@@ -96,6 +97,20 @@ const LoginNavigation: React.FC = () => {
               </div>
             </li>
             <li
+              onClick={() => handleItemClick('Promoções')}
+              className={activeItem === 'Promoções' ? 'active' : ''}
+            >
+              <div className="login-navigation-li">
+                <figure>
+                  <picture>
+                    <source src={dataCss.promotionImage} type="image/png" />
+                    <img src={dataCss.promotionImage} alt="icon-img" />
+                  </picture>
+                </figure>
+                <span>Promoções</span>
+              </div>
+            </li>
+            <li
               onClick={() => handleItemClick('Entrega')}
               className={activeItem === 'Entrega' ? 'active' : ''}
             >
@@ -147,6 +162,11 @@ const LoginNavigation: React.FC = () => {
           {activeItem === 'Produtos' && (
             <div className="rest-content">
               <LoginItens />
+            </div>
+          )}
+          {activeItem === 'Promoções' && (
+            <div className="rest-content">
+              <LoginPromotion />
             </div>
           )}
           {activeItem === 'Entrega' && (
