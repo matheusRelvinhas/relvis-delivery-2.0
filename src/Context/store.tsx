@@ -2125,12 +2125,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
   }, [distance, deliveryArea, activePromotionCategory]);
 
-  useEffect(() => {
-    if (activePromotionCategory) {
-      setDeliveryPrice(0);
-    }
-  }, [activePromotionCategory]);
-
   return (
     <GlobalContext.Provider
       value={{

@@ -24,7 +24,9 @@ const LoginPromotion: React.FC = () => {
         </figure>
       </div>
       <div className='login-promotion-category'>
-        <span>Promoção por categoria</span>
+        <div className='login-promotion-category-title'>
+          <span>Entrega grátis por categoria</span>
+        </div>
         {categories.map((category) => (
           <div key={category.id} className="login-promotion-categories">
             <span>{category.category}</span>
