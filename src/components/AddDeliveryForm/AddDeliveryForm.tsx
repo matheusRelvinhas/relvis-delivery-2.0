@@ -8,7 +8,6 @@ const AddDeliveryForm: React.FC = () => {
   const {
     dataCss,
     deliveryRadius,
-    setDeliveryRadius,
     addDeliveryRadius,
     addDeliveryArea,
     isContentDeliveryOpen,

@@ -2,12 +2,10 @@
 
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
-import AddressLookup from '../AddressLookup/AddressLookup';
 import StyledButton from '../StyledButton/StyledButton';
 import StyledInput from '../StyledInput/StyledInput';
-import './FormContact.css';
 import StyledSelect from '../StyledSelect/StyledSelect';
-
+import './FormContact.css';
 
 
 const FormContact: React.FC = () => {
@@ -25,7 +23,6 @@ const FormContact: React.FC = () => {
     name,
     cellphone,
     totalItems,
-    cartTotal,
     setIsBuy,
     isFormValid,
     setIsClientRegistration,

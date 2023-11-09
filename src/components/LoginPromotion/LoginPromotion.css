@@ -63,6 +63,7 @@
   justify-content: space-around;
   box-shadow: 0 0 4px 0 #555;
   margin-bottom: 1vh;
+  padding: 2.5px 0;
 }
 
 .login-promotion-category-title span {

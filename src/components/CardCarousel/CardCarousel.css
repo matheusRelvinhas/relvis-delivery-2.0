@@ -1,6 +1,18 @@
+.category-title {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items:center;
+}
+
 .category {
   text-align: center;
   font-size: x-large;
+  margin-left: 2vw;
+}
+
+.category-title figure img{
+  width: 80px;
 }
 
 .arrow {

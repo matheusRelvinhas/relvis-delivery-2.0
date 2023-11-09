@@ -7,13 +7,12 @@ import LoginCategory from '@/components/LoginCategory/LoginCategory';
 import LoginPurchaseRequest from '@/components/LoginPurchaseRequest/LoginPurchaseRequest';
 import LoginClient from '../LoginClient/LoginClient';
 import LoginProfile from '../LoginProfile/LoginProfile';
-import './LoginNavigation.css';
 import LoginDelivery from '../LoginDelivery/LoginDelivery';
 import LoginPromotion from '../LoginPromotion/LoginPromotion';
+import './LoginNavigation.css';
 
 const LoginNavigation: React.FC = () => {
-  const { dataCss, activeItem, setActiveItem, isNavOpen, setIsNavOpen } =
-    useGlobalContext();
+  const { dataCss, activeItem, setActiveItem, isNavOpen, setIsNavOpen } = useGlobalContext();
 
   const handleItemClick = (item: string) => {
     setActiveItem(item);

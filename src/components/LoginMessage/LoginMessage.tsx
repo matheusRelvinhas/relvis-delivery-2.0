@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useGlobalContext } from '@/Context/store';
-import { firestore } from '@/assets/firebase';
 import './LoginMessage.css';
 
 const LoginMessage: React.FC = () => {
@@ -12,7 +11,6 @@ const LoginMessage: React.FC = () => {
     setMessage,
     isEditMessage,
     setIsEditMessage,
-    setIsLoading,
     isContentMessageOpen,
     setIsContentMessageOpen,
     handleEditMessage,

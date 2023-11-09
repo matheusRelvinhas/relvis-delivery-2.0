@@ -1,12 +1,12 @@
 'use client';
 
 import CardCarousel from '../CardCarousel/CardCarousel';
-import './Main.css';
 import { useGlobalContext } from '@/Context/store';
 import Search from '../Search/Search';
 import StyledButton from '../StyledButton/StyledButton';
 import StyledInput from '../StyledInput/StyledInput';
 import AddressLookup from '../AddressLookup/AddressLookup';
+import './Main.css';
 
 export default function Main() {
   const {
@@ -53,7 +53,7 @@ export default function Main() {
             (item) => item.category === category.category && item.active
           ) && (
             <div key={category.id}>
-              <CardCarousel category={category.category} />
+              <CardCarousel category={category} />
             </div>
           )
       )}

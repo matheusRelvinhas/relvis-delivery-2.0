@@ -9,7 +9,6 @@ import LoginSearch from '../LoginSearch/LoginSearch';
 const LoginItens: React.FC = () => {
   const {
     dataCss,
-    items,
     handleDeleteItem,
     setItemId,
     setIsEditItem,

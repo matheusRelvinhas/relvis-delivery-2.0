@@ -6,7 +6,7 @@ import { useGlobalContext } from '@/Context/store';
 import StyledButton from '../StyledButton/StyledButton';
 
 interface CardCarouselProps {
-  category: string;
+  category: any;
 }
 
 const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
@@ -18,7 +18,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
     handleQuantityChange,
     getItemQuantity,
   } = useGlobalContext();
-  
+
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
   const scrollLeft = () => {
@@ -36,7 +36,17 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
   return (
     <>
       <div className="card-carousel-container">
-        <h1 className="category">{category}</h1>
+        <div className='category-title'>
+          {category.deliveryPromotion && (
+            <figure>
+              <picture>
+                <source src={dataCss.deliveryPromotionImage} type="image/png" />
+                <img src={dataCss.deliveryPromotionImage} alt="icon-img" />
+              </picture>
+            </figure>
+          )}
+          <h1 className="category">{category.category}</h1>
+        </div>
         <div className="card-carousel">
           <StyledButton
             normalColor="#333"
@@ -44,36 +54,44 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
             className="scroll-button left"
             onClick={scrollLeft}
           >
-            <span className='arrow'>◄</span>
+            <span className="arrow">◄</span>
           </StyledButton>
           <div className="card-list" ref={carouselRef}>
             {searchResults?.map((card) => {
               if (card.active) {
-                if (card.category === category) {
+                if (card.category === category.category) {
                   return (
                     <div key={card.id} className="card">
                       <div
                         style={{ backgroundColor: dataCss.backgroundColorCard }}
                         className="card-div"
                       >
-                        <div className='card-img' style={{ borderColor: dataCss.colorPrimary }}>
+                        <div
+                          className="card-img"
+                          style={{ borderColor: dataCss.colorPrimary }}
+                        >
                           <figure>
                             <picture>
                               <source src={card.image} type="image/png" />
-                              <img
-                                src={card.image}
-                                alt="image-item"
-                              />
+                              <img src={card.image} alt="image-item" />
                             </picture>
                           </figure>
                         </div>
-                        <div className='card-info'>
-                          <h3 style={{ borderColor: dataCss.colorPrimary }}>{card.title}</h3>
-                          <p style={{ color: dataCss.fontColor }} className="description">
+                        <div className="card-info">
+                          <h3 style={{ borderColor: dataCss.colorPrimary }}>
+                            {card.title}
+                          </h3>
+                          <p
+                            style={{ color: dataCss.fontColor }}
+                            className="description"
+                          >
                             {card.description}
                           </p>
                           <p
-                            style={{ color: dataCss.fontColor, borderColor: dataCss.colorPrimary }}
+                            style={{
+                              color: dataCss.fontColor,
+                              borderColor: dataCss.colorPrimary,
+                            }}
                             className="price"
                           >
                             R${card.price.toFixed(2)}
@@ -119,7 +137,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
             className="scroll-button right"
             onClick={scrollRight}
           >
-            <span className='arrow'>►</span>
+            <span className="arrow">►</span>
           </StyledButton>
         </div>
       </div>

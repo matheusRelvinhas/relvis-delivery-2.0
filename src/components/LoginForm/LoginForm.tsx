@@ -5,8 +5,7 @@ import { useGlobalContext } from '@/Context/store';
 import './LoginForm.css';
 
 const LoginForm: React.FC = () => {
-  const { dataCss, email, setEmail, password, setPassword, handleLogin } =
-    useGlobalContext();
+  const { dataCss, email, setEmail, password, setPassword, handleLogin } = useGlobalContext();
 
   return (
     <div className="login-form-container">

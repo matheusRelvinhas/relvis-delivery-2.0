@@ -10,7 +10,7 @@ interface StyledSelectProps {
 }
 
 export default function StyledSelect(props: StyledSelectProps) {
-  const { dataCss, setPaymentMethod, paymentMethod } = useGlobalContext();
+  const { dataCss, paymentMethod } = useGlobalContext();
 
   return (
     <div className="styled-select-group">

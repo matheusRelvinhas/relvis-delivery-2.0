@@ -10,8 +10,7 @@ const LoginDelivery: React.FC = () => {
   const { dataCss, deliveryArea, handleDeleteDeliveryArea } =
     useGlobalContext();
 
-  const handlePriceChange = async (newPrice: number, areaId: string) => {
-    // Atualize o Firestore com o novo preço
+  const handlePriceChange = async (newPrice: number, areaId: string) => { // Atualize o Firestore com o novo preço
     const collectionRef = firestore.collection('deliveryArea');
     const docRef = collectionRef.doc(areaId);
     try {
