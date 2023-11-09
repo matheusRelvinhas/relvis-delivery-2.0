@@ -206,7 +206,7 @@ const FormContact: React.FC = () => {
           }}
         >
           <span style={{ color: dataCss.summaryFont }}>
-            Total R$ {totalSumDelivery.toFixed(2)}
+            Total R$ {typeof totalSumDelivery === 'number' ? totalSumDelivery.toFixed(2) : 'Error'}
           </span>
           <figure>
             <picture>
