@@ -763,17 +763,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const existingCategory = await collectionRef
           .where('category', '==', category.toLowerCase())
           .get(); // Verifique se a categoria já existe
-        if (existingCategory.size === 0) {
-          // A categoria ainda não existe, pode adicioná-la com a ordem calculada
+        if (existingCategory.size === 0) { // A categoria ainda não existe, pode adicioná-la com a ordem calculada
           await collectionRef.add({
             category,
             order,
             active: false,
+            deliveryPromotion: false,
           });
           setCategory('');
           setIsContentCategoryOpen(false);
-        } else {
-          // A categoria já existe, defina o alertLogin como true por 3 segundos
+        } else { // A categoria já existe, defina o alertLogin como true por 3 segundos
           setErrorMessage('Categoria já cadastrada');
           setAlertLogin(true);
           setIsLoading(false);
@@ -899,15 +898,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const querySnapshot = await collectionRef
         .where('order', '>', orderToDelete)
         .get(); // Consulte todas as categorias com ordens maiores que a excluída
-      querySnapshot.forEach(async (doc) => {
-        // Atualize as ordens das categorias encontradas
+      querySnapshot.forEach(async (doc) => { // Atualize as ordens das categorias encontradas
         const docRef = collectionRef.doc(doc.id);
         const currentOrder = doc.data().order;
         await docRef.update({ order: currentOrder - 1 });
       });
       const itemQuerySnapshot = await collectionItemRef
-        .where('category', '==', category)
-        .get(); // Consulte os itens com a mesma categoria e exclua-os
+        .where('category', '==', category)  // Consulte os itens com a mesma categoria e exclua-os
+        .get(); 
       itemQuerySnapshot.forEach(async (doc) => {
         await collectionItemRef.doc(doc.id).delete();
       });
@@ -925,8 +923,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const handleMoveCategoryUp = async (categoryId: string, order: number) => {
     setIsLoading(true);
-    if (order > 1) {
-      // Verifique se a categoria pode ser movida para cima
+    if (order > 1) { // Verifique se a categoria pode ser movida para cima
       const batch = firestore.batch();
       const categoryRef = firestore.collection('categories').doc(categoryId);
       const previousCategorySnapshot = await firestore
@@ -934,8 +931,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         .where('order', '==', order - 1)
         .limit(1)
         .get();
-      if (!previousCategorySnapshot.empty) {
-        // Encontrou uma categoria com a ordem anterior, portanto, pode atualizar a ordem
+      if (!previousCategorySnapshot.empty) { // Encontrou uma categoria com a ordem anterior, portanto, pode atualizar a ordem
         const previousCategoryId = previousCategorySnapshot.docs[0].id;
         const previousCategoryRef = firestore
           .collection('categories')
@@ -957,8 +953,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       .where('order', '==', order + 1)
       .limit(1)
       .get();
-    if (!nextCategorySnapshot.empty) {
-      // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
+    if (!nextCategorySnapshot.empty) { // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
       const nextCategoryId = nextCategorySnapshot.docs[0].id;
       const nextCategoryRef = firestore
         .collection('categories')
@@ -986,8 +981,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       active: false,
       order,
     };
-    try {
-      // Verifica se já existe um item com o mesmo título
+    try { // Verifica se já existe um item com o mesmo título
       const querySnapshot = await collectionRef
         .where('title', '==', title)
         .get();
@@ -1032,8 +1026,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     const collectionRef = firestore.collection('items');
     const itemRef = collectionRef.doc(itemId);
-    try {
-      // Verifica se já existe um item com o mesmo título
+    try { // Verifica se já existe um item com o mesmo título
       const existingItem = await collectionRef
         .where('title', '==', title)
         .get();
@@ -1047,16 +1040,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         }, 3000);
         return;
       }
-      const updatedItemData = {
-        // Define os dados atualizados do item
+      const updatedItemData = { // Define os dados atualizados do item
         title: title,
         description: description,
         price: parseFloat(price),
         category: selectedCategory,
         image: lastImage, // Adicione esta propriedade
       };
-      if (imageFile) {
-        // Faz upload da nova imagem para o Firebase Storage
+      if (imageFile) { // Faz upload da nova imagem para o Firebase Storage
         const storageRef = storage.ref();
         const imageRef = storageRef.child(itemId);
         await imageRef.put(imageFile);
@@ -1131,8 +1122,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const handleMoveItemUp = async (itemId: string, order: number) => {
     setIsLoading(true);
-    if (order > 1) {
-      // Verifique se a categoria pode ser movida para cima
+    if (order > 1) { // Verifique se a categoria pode ser movida para cima
       const batch = firestore.batch();
       const itemRef = firestore.collection('items').doc(itemId);
       const previousItemSnapshot = await firestore
@@ -1162,8 +1152,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       .where('order', '==', order + 1)
       .limit(1)
       .get();
-    if (!nextItemSnapshot.empty) {
-      // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
+    if (!nextItemSnapshot.empty) { // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
       const nextItemId = nextItemSnapshot.docs[0].id;
       const nextItemRef = firestore.collection('items').doc(nextItemId); // Atualize a ordem da categoria selecionada
       batch.update(itemRef, { order: order + 1 }); // Atualize a ordem da categoria seguinte
@@ -1186,8 +1175,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       complement: complementClient,
       district: districtClient,
     };
-    try {
-      // Verifica se já existe um item com o mesmo celular
+    try { // Verifica se já existe um item com o mesmo celular 
       const querySnapshot = await collectionRef
         .where('cellphone', '==', cellphoneClient)
         .get();
@@ -1228,8 +1216,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     const collectionRef = firestore.collection('clients');
     const clientRef = collectionRef.doc(clientId);
-    try {
-      // Verifica se já existe um cliente com o mesmo celular
+    try { // Verifica se já existe um cliente com o mesmo celular
       const existingClient = await collectionRef
         .where('cellphone', '==', cellphoneClient)
         .get();
@@ -1243,8 +1230,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         }, 3000);
         return;
       }
-      const updatedClientData = {
-        // Define os dados atualizados do item
+      const updatedClientData = { // Define os dados atualizados do item
         name: nameClient,
         cellphone: cellphoneClient,
         cep: cepClient,
@@ -1478,8 +1464,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    // Verifica se o usuário já está autenticado ao carregar a página
+  useEffect(() => { // Verifica se o usuário já está autenticado ao carregar a página
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setIsLogin(true);
@@ -1494,8 +1479,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   useEffect(() => {
     const collectionRef = firestore.collection('message'); // Substitua 'categories' pelo nome correto da coleção
-    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
-      // Cria o listener para mudanças na coleção
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => { // Cria o listener para mudanças na coleção
       const data: { message: string }[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         message: doc.data().message,
@@ -1523,8 +1507,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   useEffect(() => {
     const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
-    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
-      // Cria o listener para mudanças na coleção
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => { // Cria o listener para mudanças na coleção
       const categoriesData: {
         id: string;
         category: string;
@@ -1878,8 +1861,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     return null;
   };
 
-  // Função para calcular a distância entre dois pontos (latitude e longitude) usando a fórmula de Haversine
-  const calculateDistance = (
+  const calculateDistance = ( // Função para calcular a distância entre dois pontos (latitude e longitude) usando a fórmula de Haversine
     lat1: number,
     lon1: number,
     lat2: number,
@@ -1916,8 +1898,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         .orderBy('order', 'desc')
         .limit(1)
         .get(); // Consulta os documentos ordenados por "order" em ordem decrescente
-      if (!querySnapshot.empty) {
-        // Valor padrão se não houver documentos existentes
+      if (!querySnapshot.empty) { // Valor padrão se não houver documentos existentes
         const lastOrder = querySnapshot.docs[0].data().order; // Se houver documentos, pegue o valor "order" do primeiro documento
         nextOrder = lastOrder + 1; // Calcule o próximo valor para "order"
       }
@@ -2027,8 +2008,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       if (searchQuery === '') {
         setSearchResults(items); // Se a consulta de pesquisa estiver vazia, exiba todos os itens
       } else {
-        const filteredItems = items?.filter((item) => {
-          // Caso contrário, filtre os itens com base na consulta
+        const filteredItems = items?.filter((item) => { // Caso contrário, filtre os itens com base na consulta
           return (
             item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.description

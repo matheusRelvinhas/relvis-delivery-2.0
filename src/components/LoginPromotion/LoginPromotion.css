@@ -88,6 +88,11 @@
   padding: 0.5vh 0;
 }
 
+.login-promotion-categories span {
+  width: 50%;
+  text-align: center;
+}
+
 .login-promotion-categories:last-child {
   border-bottom: rgba(0, 0, 0, 0.1) solid 2px;
 }
