@@ -64,7 +64,7 @@ const FormContact: React.FC = () => {
         style={{ backgroundColor: dataCss.colorPrimary }}
       >
         <figure>
-          <button className="back-button-form" onClick={handleBackFormContact}>
+          <button className="back-button-form" type='button' onClick={handleBackFormContact}>
             <picture>
               <source src={dataCss.backImage} type="image/png" />
               <img src={dataCss.backImage} alt="back-img" />
