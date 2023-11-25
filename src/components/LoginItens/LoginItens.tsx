@@ -22,6 +22,8 @@ const LoginItens: React.FC = () => {
     handleMoveItemDown,
     setIsContentItemOpen,
     toggleActiveItem,
+    toggleActiveComplementsItem,
+    toggleActiveTimeItem,
     searchResultsLogin,
   } = useGlobalContext();
 
@@ -88,6 +90,38 @@ const LoginItens: React.FC = () => {
                   </button>
                   <div>
                     <span>{item.active ? 'Ligado' : 'Desligado'}</span>
+                  </div>
+                  <button
+                    onClick={() => toggleActiveTimeItem(item.id, item.activeTime)}
+                  >
+                    <div className="toggle-switch">
+                      <input
+                        className="toggle-input"
+                        id="toggle"
+                        type="checkbox"
+                        checked={item.activeTime}
+                      />
+                      <label className="toggle-label"></label>
+                    </div>
+                  </button>
+                  <div>
+                    <span>{item.activeTime? 'Horário' : 's/ horário'}</span>
+                  </div>
+                  <button
+                    onClick={() => toggleActiveComplementsItem(item.id, item.activeComplements)}
+                  >
+                    <div className="toggle-switch">
+                      <input
+                        className="toggle-input"
+                        id="toggle"
+                        type="checkbox"
+                        checked={item.activeComplements}
+                      />
+                      <label className="toggle-label"></label>
+                    </div>
+                  </button>
+                  <div>
+                    <span>{item.activeComplements ? 'Complementos' : 's/ complementos'}</span>
                   </div>
                   <div className="login-items-move">
                     <button

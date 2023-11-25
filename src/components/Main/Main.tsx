@@ -220,17 +220,17 @@ export default function Main() {
               <div>
                 <span>Envie uma </span>
                 <a href="https://api.whatsapp.com/send?phone=+5531971451910&text=Oi, teria disponíbilidade de entrega?">
-                <StyledButton
-                normalColor={dataCss.summaryFont}
-                normalBackgroundColor={dataCss.colorPrimary}
-                activeBackgroundColor={dataCss.activeButtonColor}
-                disabledBackgroundColor={dataCss.disabledButtonColor}
-                className="tab-content-client-found-distance-message"
-                onClick={() => setFoundDistance(true)}
-              >
-                <span>mensagem</span>
-              </StyledButton>
-              </a>
+                  <StyledButton
+                    normalColor={dataCss.summaryFont}
+                    normalBackgroundColor={dataCss.colorPrimary}
+                    activeBackgroundColor={dataCss.activeButtonColor}
+                    disabledBackgroundColor={dataCss.disabledButtonColor}
+                    className="tab-content-client-found-distance-message"
+                    onClick={() => setFoundDistance(true)}
+                  >
+                    <span>mensagem</span>
+                  </StyledButton>
+                </a>
                 <span> para verificar disponibilidade</span>
               </div>
             </div>
@@ -249,10 +249,7 @@ export default function Main() {
                 <span>OK</span>
                 <figure>
                   <picture>
-                    <source
-                      src={dataCss.saveIconImage}
-                      type="image/png"
-                    />
+                    <source src={dataCss.saveIconImage} type="image/png" />
                     <img src={dataCss.saveIconImage} alt="icon-img" />
                   </picture>
                 </figure>

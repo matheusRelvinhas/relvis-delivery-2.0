@@ -10,6 +10,7 @@ import LoginProfile from '../LoginProfile/LoginProfile';
 import LoginDelivery from '../LoginDelivery/LoginDelivery';
 import LoginPromotion from '../LoginPromotion/LoginPromotion';
 import './LoginNavigation.css';
+import LoginComplements from '../LoginComplements/LoginComplements';
 
 const LoginNavigation: React.FC = () => {
   const { dataCss, activeItem, setActiveItem, isNavOpen, setIsNavOpen } = useGlobalContext();
@@ -79,6 +80,20 @@ const LoginNavigation: React.FC = () => {
                   </picture>
                 </figure>
                 <span>Categorias</span>
+              </div>
+            </li>
+            <li
+              onClick={() => handleItemClick('Complementos')}
+              className={activeItem === 'Complementos' ? 'active' : ''}
+            >
+              <div className="login-navigation-li">
+                <figure>
+                  <picture>
+                    <source src={dataCss.complementsImage} type="image/png" />
+                    <img src={dataCss.complementsImage} alt="icon-img" />
+                  </picture>
+                </figure>
+                <span>Complementos</span>
               </div>
             </li>
             <li
@@ -156,6 +171,11 @@ const LoginNavigation: React.FC = () => {
           {activeItem === 'Categorias' && (
             <div className="rest-content">
               <LoginCategory />
+            </div>
+          )}
+          {activeItem === 'Complementos' && (
+            <div className="rest-content">
+              <LoginComplements />
             </div>
           )}
           {activeItem === 'Produtos' && (
