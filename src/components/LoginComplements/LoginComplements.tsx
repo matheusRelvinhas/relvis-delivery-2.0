@@ -4,11 +4,12 @@ import React from 'react';
 import { useGlobalContext } from '@/Context/store';
 //import AddCategoryForm from '@/components/AddCategoryForm/AddCategoryForm';
 import './LoginComplements.css';
+import AddComplementsForm from '../AddComplementsForm/AddComplementsForm';
 
 const LoginComplements: React.FC = () => {
   const {
     dataCss,
-    categories,
+    complementsList,
     handleDeleteCategory,
     setIsEditCategory,
     setCategory,
@@ -18,6 +19,7 @@ const LoginComplements: React.FC = () => {
     handleMoveCategoryUp,
     handleMoveCategoryDown,
     toggleActiveCategory,
+    addComplementItem,
   } = useGlobalContext();
 
   const handleIsEditCategory = (categoryId: string, category: string) => {
@@ -38,6 +40,15 @@ const LoginComplements: React.FC = () => {
             <img src={dataCss.complementsImage} alt="icon-img" />
           </picture>
         </figure>
+      </div>
+      <AddComplementsForm />
+      <div className='login-complements-list'>
+        {complementsList.map((complement) => (
+          <div key={complement.id} className="login-complements-items">
+            <span>{complement.complement}</span>
+            <button type='button' onClick={() => addComplementItem(complement.id)}>teste</button>
+          </div>
+        ))}
       </div>
     </div>
   );

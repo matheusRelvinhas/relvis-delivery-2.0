@@ -52,7 +52,7 @@ const LoginItens: React.FC = () => {
       </div>
       <AddItemForm />
       <div className="login-items-list">
-        <LoginSearch/>
+        <LoginSearch />
         {searchResultsLogin?.map((item) => (
           <div key={item.id} className="login-items">
             <div className="login-items-div-title">
@@ -66,63 +66,15 @@ const LoginItens: React.FC = () => {
             </div>
             <div className="login-items-div">
               <div className="login-items-img-toogle">
-                <figure className="login-items-img-toogle-img">
-                  <picture>
-                    <source src={item.image} type="image/webp" />
-                    <source src={item.image} type="image/png" />
-                    <source src={item.image} type="image/jpeg" />
-                    <img src={item.image} alt="img-item" />
-                  </picture>
-                </figure>
-                <div>
-                  <button
-                    onClick={() => toggleActiveItem(item.id, item.active)}
-                  >
-                    <div className="toggle-switch">
-                      <input
-                        className="toggle-input"
-                        id="toggle"
-                        type="checkbox"
-                        checked={item.active}
-                      />
-                      <label className="toggle-label"></label>
-                    </div>
-                  </button>
-                  <div>
-                    <span>{item.active ? 'Ligado' : 'Desligado'}</span>
-                  </div>
-                  <button
-                    onClick={() => toggleActiveTimeItem(item.id, item.activeTime)}
-                  >
-                    <div className="toggle-switch">
-                      <input
-                        className="toggle-input"
-                        id="toggle"
-                        type="checkbox"
-                        checked={item.activeTime}
-                      />
-                      <label className="toggle-label"></label>
-                    </div>
-                  </button>
-                  <div>
-                    <span>{item.activeTime? 'Horário' : 's/ horário'}</span>
-                  </div>
-                  <button
-                    onClick={() => toggleActiveComplementsItem(item.id, item.activeComplements)}
-                  >
-                    <div className="toggle-switch">
-                      <input
-                        className="toggle-input"
-                        id="toggle"
-                        type="checkbox"
-                        checked={item.activeComplements}
-                      />
-                      <label className="toggle-label"></label>
-                    </div>
-                  </button>
-                  <div>
-                    <span>{item.activeComplements ? 'Complementos' : 's/ complementos'}</span>
-                  </div>
+                <div className="login-items-img-up-down">
+                  <figure className="login-items-img-toogle-img">
+                    <picture>
+                      <source src={item.image} type="image/webp" />
+                      <source src={item.image} type="image/png" />
+                      <source src={item.image} type="image/jpeg" />
+                      <img src={item.image} alt="img-item" />
+                    </picture>
+                  </figure>
                   <div className="login-items-move">
                     <button
                       onClick={() => handleMoveItemUp(item.id, item.order)}
@@ -161,6 +113,22 @@ const LoginItens: React.FC = () => {
                       </figure>
                     </button>
                   </div>
+                </div>
+                <div className="login-items-toogle">
+                    <button
+                      onClick={() => toggleActiveItem(item.id, item.active)}
+                    >
+                      <div className="toggle-switch">
+                        <input
+                          className="toggle-input"
+                          id="toggle"
+                          type="checkbox"
+                          checked={item.active}
+                        />
+                        <label className="toggle-label"></label>
+                      </div>
+                    </button>
+                    <span>{item.active ? 'Ligado' : 'Desligado'}</span>
                 </div>
               </div>
               <div className="login-items-info">

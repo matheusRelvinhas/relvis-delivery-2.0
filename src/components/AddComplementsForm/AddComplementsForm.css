@@ -1,0 +1,101 @@
+.add-complements-form-container {
+  margin-top: 46px;
+  width: 30%;
+  min-width: 260px;
+  max-width: 600px;
+  border: #f04134 solid 2px;
+  background-color: #f04134;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  box-shadow: 0 0 6px 0 #555;
+  z-index: 998;
+}
+
+.add-complements-form-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: larger;
+  color: #fff;
+  width: 90%;
+  align-items: center;
+}
+
+.add-complements-form-title span {
+  margin: 0 20px 0 4px;
+}
+
+.add-complements-form-title figure img {
+  height: 25px;
+  width: 30px;
+  margin-top: 2px;
+}
+
+.add-complements-form {
+  background-color: #fef0ef;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  width: 100%;
+  border-bottom-left-radius: 9px;
+  border-bottom-right-radius: 9px;
+  align-items: center;
+  padding: 4px 0 6px 0;
+}
+
+.add-complements-form input {
+  background-color: #f7e0df;
+  border: #f04134 solid 2px;
+  border-radius: 10px;
+  border-bottom-left-radius: 0;
+  width: 90%;
+  height: 4vh;
+  max-height: 35px;
+  min-height: 25px;
+  padding: 0.5px 6px;
+  margin: 3px 2px;
+}
+
+.add-complements-form button {
+  background-color: #f04134;
+  color: #fff;
+  border-radius: 5px;
+  width: 95%;
+  height: 4vh;
+  max-height: 35px;
+  min-height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 2px;
+}
+
+.add-complements-form button figure img {
+  height: 22px;
+  width: 22px;
+  margin-top: 3px;
+}
+
+.add-complements-form button:focus {
+  background-color: #df2e22;
+}
+
+.add-complements-form button:active {
+  background-color: #df2e22;
+}
+
+.add-complements-form input:active {
+  background-color: #f3cac7;
+}
+
+.add-complements-form input:focus {
+  background-color: #f3cac7;
+}
+
+.add-complements-form input:not(:placeholder-shown) {
+  background-color: #f3cac7; /* Cor de fundo quando tiver um valor */
+}

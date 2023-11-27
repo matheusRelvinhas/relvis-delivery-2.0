@@ -341,6 +341,21 @@ interface ContextProps {
   totalSumDelivery: number;
   foundMessage: boolean;
   setActivePromotionCategory: React.Dispatch<React.SetStateAction<boolean>>;
+  complements: string;
+  setComplements: React.Dispatch<React.SetStateAction<string>>;
+  isEditComplements: boolean;
+  setIsEditComplements: React.Dispatch<React.SetStateAction<boolean>>;
+  isContentComplementsOpen: boolean;
+  setIsContentComplementsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  complementsId: string;
+  addComplements: () => void;
+  handleEditComplements: (complementsId: string) => void;
+  addComplementItem: (complementsId: string) => void;
+  complementsList: {
+    id: string;
+    complement: string;
+    order: number;
+  }[];
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -559,6 +574,17 @@ const GlobalContext = createContext<ContextProps>({
   totalSumDelivery: 0,
   foundMessage: false,
   setActivePromotionCategory: () => {},
+  complements: '',
+  setComplements: () => {},
+  isEditComplements: false,
+  setIsEditComplements: () => {},
+  isContentComplementsOpen: false,
+  setIsContentComplementsOpen: () => {},
+  complementsId: '',
+  addComplements: () => {},
+  addComplementItem: () => {},
+  handleEditComplements: () => {},
+  complementsList: [],
 });
 
 type GlobalContextProviderProps = {
@@ -692,6 +718,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [deliveryPrice, setDeliveryPrice] = useState(0);
   const [foundDistance, setFoundDistance] = useState(true);
   const [foundMessage, setFoundMessage] = useState(false);
+  const [complements, setComplements] = useState('');
+  const [isEditComplements, setIsEditComplements] = useState(false);
+  const [isContentComplementsOpen, setIsContentComplementsOpen] = useState(false);
+  const [complementsId, setComplementsId] = useState('');
+  const [complementsList, setComplementsList] = useState<{ id: string; complement: string; order: number }[]>([]);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -970,6 +1001,107 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       batch.update(categoryRef, { order: order + 1 }); // Atualize a ordem da categoria selecionada
       batch.update(nextCategoryRef, { order: order }); // Atualize a ordem da categoria seguinte
       await batch.commit(); // Execute a transação
+    }
+    setIsLoading(false);
+  };
+
+  const addComplements = async () => {
+    setIsLoading(true);
+    if (complements.trim() !== '') {
+      try {
+        const collectionRef = firestore.collection('complements');
+        const querySnapshot = await collectionRef.get();
+        const totalComplements = querySnapshot.size;
+        const order = totalComplements + 1; 
+        const existingComplements = await collectionRef
+          .where('complement', '==', complements.toLowerCase())
+          .get();
+        if (existingComplements.size === 0) {
+          await collectionRef.add({
+            complement: complements,
+            order,
+            complements: [],
+          });
+          setComplements('');
+          setIsContentComplementsOpen(false);
+        } else {
+          setErrorMessage('Complemento já cadastrado');
+          setAlertLogin(true);
+          setIsLoading(false);
+          setTimeout(() => {
+            setAlertLogin(false);
+            setErrorMessage('');
+          }, 3000);
+        }
+      } catch (error) {
+        console.error('Erro ao adicionar categoria:', error);
+        setErrorMessage('Erro ao adicionar categoria');
+        setAlertLogin(true);
+        setIsLoading(false);
+        setTimeout(() => {
+          setAlertLogin(false);
+          setErrorMessage('');
+        }, 3000);
+      }
+    }
+    setIsLoading(false);
+  };
+
+  const addComplementItem = async (complementsId: string) => {
+    setIsLoading(true);
+    try {
+      const complementRef = firestore.collection('complements').doc(complementsId);
+      const complementDoc = await complementRef.get();
+      const currentComplements = complementDoc.data()?.complements || [];
+      const order = currentComplements.length + 1; // Use length para obter o tamanho do array
+      const newItem = { title: 'Pequeno', price: 2.00, order };
+      const updatedComplements = [...currentComplements, newItem];
+      await complementRef.update({ complements: updatedComplements });
+      console.log('Item de complemento adicionado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao adicionar item do complemento:', error);
+      setErrorMessage('Erro ao adicionar item do complemento');
+      setAlertLogin(true);
+      setIsLoading(false);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
+    }
+    setIsLoading(false);
+  };
+
+  const handleEditComplements = async (
+    complementsId: string,
+  ) => {
+    setIsLoading(true);
+    try {
+      const collectionRef = firestore.collection('complements');
+      const existingCategoryQuery = await collectionRef
+        .where('complement', '==', complements.toLowerCase())
+        .get();
+      if (existingCategoryQuery.size > 0) {
+        setErrorMessage('Complemento já cadastrado');
+        setAlertLogin(true);
+        setIsLoading(false);
+        setTimeout(() => {
+          setAlertLogin(false);
+          setErrorMessage('');
+        }, 3000);
+        return;
+      }
+      await collectionRef.doc(complementsId).update({
+        complement: complements,
+      });
+      setIsContentComplementsOpen(false);
+    } catch (error) {
+      console.error('Erro ao editar complemento: ', error);
+      setErrorMessage('Erro ao editar complemento');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
     }
     setIsLoading(false);
   };
@@ -1524,8 +1656,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   }, [setIsLogin]); // Executa somente uma vez ao carregar o componente
 
   useEffect(() => {
-    const collectionRef = firestore.collection('message'); // Substitua 'categories' pelo nome correto da coleção
-    const unsubscribe = collectionRef.onSnapshot((snapshot) => { // Cria o listener para mudanças na coleção
+    const collectionRef = firestore.collection('message'); 
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
       const data: { message: string }[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         message: doc.data().message,
@@ -1533,7 +1665,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setMessage(data[0].message);
     });
     return () => {
-      unsubscribe(); // Remove o listener quando o componente é desmontado
+      unsubscribe();
     };
   }, []);
 
@@ -1572,6 +1704,26 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     });
     return () => {
       unsubscribe(); // Remove o listener quando o componente é desmontado
+    };
+  }, []);
+
+  useEffect(() => {
+    const collectionRef = firestore.collection('complements');
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
+      const complementsData: {
+        id: string;
+        complement: string;
+        order: number;
+      }[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        complement: doc.data().complement,
+        order: doc.data().order,
+      }));
+      complementsData.sort((a, b) => a.order - b.order);
+      setComplementsList(complementsData);
+    });
+    return () => {
+      unsubscribe();
     };
   }, []);
 
@@ -2369,6 +2521,17 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         handleDeleteDeliveryArea,
         setFoundDistance,
         setActivePromotionCategory,
+        complements,
+        setComplements,
+        isEditComplements,
+        setIsEditComplements,
+        isContentComplementsOpen,
+        setIsContentComplementsOpen,
+        complementsId,
+        addComplements,
+        addComplementItem,
+        handleEditComplements,
+        complementsList,
       }}
     >
       {children}

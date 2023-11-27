@@ -88,13 +88,12 @@
   flex-direction: row;
 }
 
-.login-items-img-toogle div {
+.login-items-img-up-down {
   display: flex;
   flex-direction: column;
-  width: 100%;
   align-items: center;
   text-align: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .login-items-img-toogle-img picture img {
@@ -111,6 +110,14 @@
   justify-content: space-between;
   width: 100%;
 }
+
+.login-items-toogle {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: end;
+}
+
 
 .login-items-move button {
   font-size: larger;
