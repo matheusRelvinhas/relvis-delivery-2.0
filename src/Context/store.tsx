@@ -119,6 +119,12 @@ interface Address {
   uf: string;
 }
 
+interface complementsItem {
+  title: string;
+  price: number;
+  order: number;
+}
+
 interface ContextProps {
   dataCss: Record<string, any>;
   isLogin: boolean;
@@ -355,7 +361,10 @@ interface ContextProps {
     id: string;
     complement: string;
     order: number;
+    complements: complementsItem[];
   }[];
+  handleDeleteComplements: (complementsId: string) => void;
+  handleDeleteItemComplements: (itemComplementsId: string, itemComplementsOrder: number) => void;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -585,6 +594,8 @@ const GlobalContext = createContext<ContextProps>({
   addComplementItem: () => {},
   handleEditComplements: () => {},
   complementsList: [],
+  handleDeleteComplements: () => {},
+  handleDeleteItemComplements: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -722,7 +733,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [isEditComplements, setIsEditComplements] = useState(false);
   const [isContentComplementsOpen, setIsContentComplementsOpen] = useState(false);
   const [complementsId, setComplementsId] = useState('');
-  const [complementsList, setComplementsList] = useState<{ id: string; complement: string; order: number }[]>([]);
+  const [complementsList, setComplementsList] = useState<{ id: string; complement: string; order: number; complements: complementsItem[] }[]>([]);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -1097,6 +1108,65 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     } catch (error) {
       console.error('Erro ao editar complemento: ', error);
       setErrorMessage('Erro ao editar complemento');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
+    }
+    setIsLoading(false);
+  };
+
+  const handleDeleteComplements = async (complementsId: string) => {
+    setIsLoading(true);
+    try {
+      const collectionRef = firestore.collection('complements');
+      const complementsDoc = await collectionRef.doc(complementsId).get();
+      const orderToDelete = complementsDoc.data()?.order;
+      await collectionRef.doc(complementsId).delete();
+      const querySnapshot = await collectionRef
+        .where('order', '>', orderToDelete)
+        .get();
+      querySnapshot.forEach(async (doc) => {
+        const docRef = collectionRef.doc(doc.id);
+        const currentOrder = doc.data().order;
+        await docRef.update({ order: currentOrder - 1 });
+      });
+    } catch (error) {
+      console.error('Erro ao excluir complemento:', error);
+      setErrorMessage('Erro ao excluir complemento');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
+    }
+    setIsLoading(false);
+  };
+
+  const handleDeleteItemComplements = async (itemComplementsId: string, itemComplementsOrder: number) => {
+    setIsLoading(true);
+    try {
+      const collectionRef = firestore.collection('complements');
+      const complementsDocRef = collectionRef.doc(itemComplementsId); 
+      const complementsDoc = await complementsDocRef.get(); // Obter o documento do Firestore
+      if (complementsDoc.exists) {
+        const complementsArray = complementsDoc.data()?.complements || [];
+        const updatedComplements = complementsArray.filter((complement: any) => complement.order !== itemComplementsOrder);
+        await complementsDocRef.update({ complements: updatedComplements });
+        console.log('Item do complemento excluído com sucesso!');
+      } else {
+        console.error('Documento de complementos não encontrado');
+        setErrorMessage('Erro ao excluir item do complemento');
+        setAlertLogin(true);
+        setTimeout(() => {
+          setAlertLogin(false);
+          setErrorMessage('');
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Erro ao excluir item do complemento:', error);
+      setErrorMessage('Erro ao excluir item do complemento');
       setAlertLogin(true);
       setTimeout(() => {
         setAlertLogin(false);
@@ -1714,10 +1784,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         id: string;
         complement: string;
         order: number;
+        complements: complementsItem[];
       }[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         complement: doc.data().complement,
         order: doc.data().order,
+        complements: doc.data().complements as complementsItem[],
       }));
       complementsData.sort((a, b) => a.order - b.order);
       setComplementsList(complementsData);
@@ -2532,6 +2604,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         addComplementItem,
         handleEditComplements,
         complementsList,
+        handleDeleteComplements,
+        handleDeleteItemComplements,
       }}
     >
       {children}

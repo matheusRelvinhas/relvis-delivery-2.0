@@ -20,6 +20,8 @@ const LoginComplements: React.FC = () => {
     handleMoveCategoryDown,
     toggleActiveCategory,
     addComplementItem,
+    handleDeleteComplements,
+    handleDeleteItemComplements,
   } = useGlobalContext();
 
   const handleIsEditCategory = (categoryId: string, category: string) => {
@@ -42,11 +44,35 @@ const LoginComplements: React.FC = () => {
         </figure>
       </div>
       <AddComplementsForm />
-      <div className='login-complements-list'>
+      <div className="login-complements-list">
         {complementsList.map((complement) => (
           <div key={complement.id} className="login-complements-items">
-            <span>{complement.complement}</span>
-            <button type='button' onClick={() => addComplementItem(complement.id)}>teste</button>
+            <div>
+              <span>{complement.complement}</span>
+              <button type="button" onClick={() => handleDeleteComplements(complement.id)}>Remover</button>
+            </div>
+            {complement.complements && (
+              <ul>
+                {complement.complements.map((complementItem) => (
+                  <li key={complement.id}>
+                    <div>
+                      <span>{complementItem.title}</span>
+                      <span>R$ {complementItem.price}</span>
+                      <button type="button" onClick={() => handleDeleteItemComplements(complement.id, complementItem.order)}>Remover</button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div></div>
+            <div>
+              <button
+                type="button"
+                onClick={() => addComplementItem(complement.id)}
+              >
+                Adicionar
+              </button>
+            </div>
           </div>
         ))}
       </div>
