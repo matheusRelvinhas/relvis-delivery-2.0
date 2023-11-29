@@ -12,17 +12,21 @@ const LoginComplements: React.FC = () => {
     setIsEditComplements,
     setComplements,
     setComplementsId,
+    setComplementsOrder,
     setLastComplements,
     setIsContentComplementsOpen,
     handleMoveCategoryUp,
     handleMoveCategoryDown,
     handleDeleteComplements,
     handleDeleteItemComplements,
-    setIsAddComplementsItem,
+    setIsAddEditComplementsItem,
+    setIsEditComplementsItem,
     handleMoveComplementsUp,
     handleMoveComplementsDown,
     handleMoveComplementsItemUp,
     handleMoveComplementsItemDown,
+    setComplementTitle,
+    setComplementPrice,
   } = useGlobalContext();
 
   const handleIsEditComplements = (
@@ -39,7 +43,22 @@ const LoginComplements: React.FC = () => {
   const handleIsAddComplementsItem = (complementsId: string) => {
     setIsContentComplementsOpen(true);
     setComplementsId(complementsId);
-    setIsAddComplementsItem(true);
+    setIsAddEditComplementsItem(true);
+  };
+
+  const handleIsEditComplementsItem = (
+    complementsId: string,
+    itemOrder: number,
+    complementsTitle: string,
+    complementsPrice: number,
+  ) => {
+    setIsContentComplementsOpen(true);
+    setComplementsId(complementsId);
+    setComplementsOrder(itemOrder);
+    setComplementTitle(complementsTitle);
+    setComplementPrice(complementsPrice.toString());
+    setIsAddEditComplementsItem(true);
+    setIsEditComplementsItem(true);
   };
 
   return (
@@ -91,7 +110,7 @@ const LoginComplements: React.FC = () => {
             {complement.complements && (
               <ul>
                 {complement.complements.map((complementItem) => (
-                  <li key={complement.id}>
+                  <li key={complement.id + complementItem.order}>
                     <div>
                       <span>{complementItem.title}</span>
                       <span>R$ {complementItem.price}</span>
@@ -114,6 +133,19 @@ const LoginComplements: React.FC = () => {
                         }
                       >
                         DOWN
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleIsEditComplementsItem(
+                            complement.id,
+                            complementItem.order,
+                            complementItem.title,
+                            complementItem.price,
+                          )
+                        }
+                      >
+                        Editar
                       </button>
                       <button
                         type="button"

@@ -174,11 +174,14 @@ interface ContextProps {
   handleMoveCategoryDown: (categoryId: string, order: number) => void;
   handleEditCategory: (categoryId: string, category: string) => void;
   toggleActiveCategory: (categoryId: string, categoryActive: boolean) => void;
-  toggleActivePromotionCategory: (categoryId: string, categoryDeliveryPromotion: boolean) => void;
+  toggleActivePromotionCategory: (
+    categoryId: string,
+    categoryDeliveryPromotion: boolean
+  ) => void;
   handleDeleteItem: (categoryId: string) => void;
   category: string;
   setCategory: React.Dispatch<React.SetStateAction<string>>;
-  addCategory: (category:string) => void;
+  addCategory: (category: string) => void;
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   price: string;
@@ -195,7 +198,10 @@ interface ContextProps {
   handleMoveItemUp: (itemId: string, order: number) => void;
   handleMoveItemDown: (itemId: string, order: number) => void;
   toggleActiveItem: (itemId: string, itemActive: boolean) => void;
-  toggleActiveComplementsItem: (itemId: string, itemActiveComplements: boolean) => void;
+  toggleActiveComplementsItem: (
+    itemId: string,
+    itemActiveComplements: boolean
+  ) => void;
   toggleActiveTimeItem: (itemId: string, itemActiveTime: boolean) => void;
   handleQuantityChange: (
     card: Card,
@@ -337,7 +343,12 @@ interface ContextProps {
   inputDeliveryRadius: number;
   setInputDeliveryRadius: React.Dispatch<React.SetStateAction<number>>;
   addDeliveryRadius: (deliveryRadius: number) => void;
-  deliveryArea: { id: string; order: number; price: number, distance:number }[];
+  deliveryArea: {
+    id: string;
+    order: number;
+    price: number;
+    distance: number;
+  }[];
   addDeliveryArea: () => void;
   isEditDelivery: boolean;
   setIsEditDelivery: React.Dispatch<React.SetStateAction<boolean>>;
@@ -351,17 +362,26 @@ interface ContextProps {
   setComplements: React.Dispatch<React.SetStateAction<string>>;
   isEditComplements: boolean;
   setIsEditComplements: React.Dispatch<React.SetStateAction<boolean>>;
-  isAddComplementsItem: boolean;
-  setIsAddComplementsItem: React.Dispatch<React.SetStateAction<boolean>>;
+  isAddEditComplementsItem: boolean;
+  setIsAddEditComplementsItem: React.Dispatch<React.SetStateAction<boolean>>;
+  isEditComplementsItem: boolean;
+  setIsEditComplementsItem: React.Dispatch<React.SetStateAction<boolean>>;
   isContentComplementsOpen: boolean;
   setIsContentComplementsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   complementsId: string;
   setComplementsId: React.Dispatch<React.SetStateAction<string>>;
+  complementsOrder: number;
+  setComplementsOrder: React.Dispatch<React.SetStateAction<number>>;
   lastComplements: string;
   setLastComplements: React.Dispatch<React.SetStateAction<string>>;
-  addComplements: (complement:string) => void;
+  addComplements: (complement: string) => void;
   handleEditComplements: (complementsId: string, complement: string) => void;
-  addComplementItem: (complementsId: string, complementsTitle:string, complementsPrice: string ) => void;
+  handleEditComplementsItem: (complementsId: string, itemOrder: number, complementsTitle: string, complementsPrice: string) => void;
+  addComplementItem: (
+    complementsId: string,
+    complementsTitle: string,
+    complementsPrice: string
+  ) => void;
   complementsList: {
     id: string;
     complement: string;
@@ -369,7 +389,10 @@ interface ContextProps {
     complements: complementsItem[];
   }[];
   handleDeleteComplements: (complementsId: string) => void;
-  handleDeleteItemComplements: (itemComplementsId: string, itemComplementsOrder: number) => void;
+  handleDeleteItemComplements: (
+    itemComplementsId: string,
+    itemComplementsOrder: number
+  ) => void;
   complementTitle: string;
   setComplementTitle: React.Dispatch<React.SetStateAction<string>>;
   complementPrice: string;
@@ -600,17 +623,22 @@ const GlobalContext = createContext<ContextProps>({
   setComplements: () => {},
   isEditComplements: false,
   setIsEditComplements: () => {},
-  isAddComplementsItem: false,
-  setIsAddComplementsItem: () => {},
+  isAddEditComplementsItem: false,
+  setIsAddEditComplementsItem: () => {},
+  isEditComplementsItem: false,
+  setIsEditComplementsItem: () => {},
   isContentComplementsOpen: false,
   setIsContentComplementsOpen: () => {},
   complementsId: '',
   setComplementsId: () => {},
+  complementsOrder: 0,
+  setComplementsOrder: () => {},
   lastComplements: '',
   setLastComplements: () => {},
   addComplements: () => {},
   addComplementItem: () => {},
   handleEditComplements: () => {},
+  handleEditComplementsItem: () => {},
   complementsList: [],
   handleDeleteComplements: () => {},
   handleDeleteItemComplements: () => {},
@@ -687,7 +715,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   //LOGIN PAGE
   const [isLogin, setIsLogin] = useState(false);
-  const [categories, setCategories] = useState<{ id: string; category: string; order: number; active: boolean; deliveryPromotion: boolean }[]>([]);
+  const [categories, setCategories] = useState<
+    {
+      id: string;
+      category: string;
+      order: number;
+      active: boolean;
+      deliveryPromotion: boolean;
+    }[]
+  >([]);
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -698,7 +734,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [password, setPassword] = useState('');
   const [items, setItens] = useState<Item[]>();
   const [purchaseRequests, setPurchaseRequests] = useState<PurchaseRequest[]>();
-  const [filteredPurchaseRequests, setFilteredPurchaseRequests] = useState<PurchaseRequest[]>();
+  const [filteredPurchaseRequests, setFilteredPurchaseRequests] =
+    useState<PurchaseRequest[]>();
   const [alertLogin, setAlertLogin] = useState(false);
   const [isEditCategory, setIsEditCategory] = useState(false);
   const [categoryId, setCategoryId] = useState('');
@@ -746,22 +783,36 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [activeItem, setActiveItem] = useState<string>('Perfil');
   const [isNavOpen, setIsNavOpen] = useState<boolean>(false);
   const [searchQueryLogin, setSearchQueryLogin] = useState('');
-  const [searchResultsLogin, setSearchResultsLogin] = useState<Item[] | undefined>(items);
+  const [searchResultsLogin, setSearchResultsLogin] = useState<
+    Item[] | undefined
+  >(items);
   const [isContentDeliveryOpen, setIsContentDeliveryOpen] = useState(false);
   const [deliveryRadius, setDeliveryRadius] = useState(0);
   const [inputDeliveryRadius, setInputDeliveryRadius] = useState(0);
-  const [deliveryArea, setDeliveryArea] = useState<{ id: string; order: number; price: number; distance:number }[]>([]);
+  const [deliveryArea, setDeliveryArea] = useState<
+    { id: string; order: number; price: number; distance: number }[]
+  >([]);
   const [isEditDelivery, setIsEditDelivery] = useState(false);
   const [deliveryPrice, setDeliveryPrice] = useState(0);
   const [foundDistance, setFoundDistance] = useState(true);
   const [foundMessage, setFoundMessage] = useState(false);
   const [complements, setComplements] = useState('');
   const [isEditComplements, setIsEditComplements] = useState(false);
-  const [isAddComplementsItem, setIsAddComplementsItem] = useState(false);
-  const [isContentComplementsOpen, setIsContentComplementsOpen] = useState(false);
+  const [isAddEditComplementsItem, setIsAddEditComplementsItem] = useState(false);
+  const [isEditComplementsItem, setIsEditComplementsItem] = useState(false);
+  const [isContentComplementsOpen, setIsContentComplementsOpen] =
+    useState(false);
   const [complementsId, setComplementsId] = useState('');
+  const [complementsOrder, setComplementsOrder] = useState(0);
   const [lastComplements, setLastComplements] = useState('');
-  const [complementsList, setComplementsList] = useState<{ id: string; complement: string; order: number; complements: complementsItem[] }[]>([]);
+  const [complementsList, setComplementsList] = useState<
+    {
+      id: string;
+      complement: string;
+      order: number;
+      complements: complementsItem[];
+    }[]
+  >([]);
   const [complementTitle, setComplementTitle] = useState('');
   const [complementPrice, setComplementPrice] = useState('');
 
@@ -832,8 +883,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
     setIsLoading(false);
   };
-  
-  const addCategory = async (category:string) => {
+
+  const addCategory = async (category: string) => {
     setIsLoading(true);
     if (category.trim() !== '') {
       try {
@@ -841,7 +892,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const existingCategory = await collectionRef
           .where('category', '==', category)
           .get();
-        if (existingCategory.size === 0) { // Se não existir, continua com o processo de adição
+        if (existingCategory.size === 0) {
+          // Se não existir, continua com o processo de adição
           const querySnapshot = await collectionRef.get();
           const totalCategories = querySnapshot.size;
           const order = totalCategories + 1;
@@ -853,7 +905,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           });
           setCategory('');
           setIsContentCategoryOpen(false);
-        } else { // Se já existir, exibe uma mensagem de erro
+        } else {
+          // Se já existir, exibe uma mensagem de erro
           setErrorMessage('Categoria já cadastrada');
           setAlertLogin(true);
           setIsLoading(false);
@@ -979,14 +1032,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const querySnapshot = await collectionRef
         .where('order', '>', orderToDelete)
         .get(); // Consulte todas as categorias com ordens maiores que a excluída
-      querySnapshot.forEach(async (doc) => { // Atualize as ordens das categorias encontradas
+      querySnapshot.forEach(async (doc) => {
+        // Atualize as ordens das categorias encontradas
         const docRef = collectionRef.doc(doc.id);
         const currentOrder = doc.data().order;
         await docRef.update({ order: currentOrder - 1 });
       });
       const itemQuerySnapshot = await collectionItemRef
-        .where('category', '==', category)  // Consulte os itens com a mesma categoria e exclua-os
-        .get(); 
+        .where('category', '==', category) // Consulte os itens com a mesma categoria e exclua-os
+        .get();
       itemQuerySnapshot.forEach(async (doc) => {
         await collectionItemRef.doc(doc.id).delete();
       });
@@ -1004,7 +1058,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const handleMoveCategoryUp = async (categoryId: string, order: number) => {
     setIsLoading(true);
-    if (order > 1) { // Verifique se a categoria pode ser movida para cima
+    if (order > 1) {
+      // Verifique se a categoria pode ser movida para cima
       const batch = firestore.batch();
       const categoryRef = firestore.collection('categories').doc(categoryId);
       const previousCategorySnapshot = await firestore
@@ -1012,7 +1067,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         .where('order', '==', order - 1)
         .limit(1)
         .get();
-      if (!previousCategorySnapshot.empty) { // Encontrou uma categoria com a ordem anterior, portanto, pode atualizar a ordem
+      if (!previousCategorySnapshot.empty) {
+        // Encontrou uma categoria com a ordem anterior, portanto, pode atualizar a ordem
         const previousCategoryId = previousCategorySnapshot.docs[0].id;
         const previousCategoryRef = firestore
           .collection('categories')
@@ -1034,7 +1090,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       .where('order', '==', order + 1)
       .limit(1)
       .get();
-    if (!nextCategorySnapshot.empty) { // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
+    if (!nextCategorySnapshot.empty) {
+      // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
       const nextCategoryId = nextCategorySnapshot.docs[0].id;
       const nextCategoryRef = firestore
         .collection('categories')
@@ -1046,7 +1103,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const addComplements = async (complement:string) => {
+  const addComplements = async (complement: string) => {
     setIsLoading(true);
     if (complements.trim() !== '') {
       try {
@@ -1054,7 +1111,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const existingComplements = await collectionRef
           .where('complement', '==', complement)
           .get();
-        if (existingComplements.size === 0) { // Se não existir, continua com o processo de adição
+        if (existingComplements.size === 0) {
+          // Se não existir, continua com o processo de adição
           const querySnapshot = await collectionRef.get();
           const totalComplements = querySnapshot.size;
           const order = totalComplements + 1;
@@ -1065,7 +1123,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           });
           setComplements('');
           setIsContentComplementsOpen(false);
-        } else { // Se já existir, exibe uma mensagem de erro
+        } else {
+          // Se já existir, exibe uma mensagem de erro
           setErrorMessage('Complemento já cadastrado');
           setAlertLogin(true);
           setIsLoading(false);
@@ -1088,13 +1147,21 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const addComplementItem = async (complementsId: string, complementsTitle: string, complementsPrice: string) => {
+  const addComplementItem = async (
+    complementsId: string,
+    complementsTitle: string,
+    complementsPrice: string
+  ) => {
     setIsLoading(true);
     try {
-      const complementRef = firestore.collection('complements').doc(complementsId);
+      const complementRef = firestore
+        .collection('complements')
+        .doc(complementsId);
       const complementDoc = await complementRef.get();
       const currentComplements = complementDoc.data()?.complements || []; // Verifica se já existe um item com o mesmo título
-      const isTitleAlreadyExists = currentComplements.some((complementItem: any) => complementItem.title === complementsTitle);
+      const isTitleAlreadyExists = currentComplements.some(
+        (complementItem: any) => complementItem.title === complementsTitle
+      );
       if (isTitleAlreadyExists) { // Exibe uma mensagem de erro se o título já existir
         setErrorMessage('Item já cadastrado');
         setAlertLogin(true);
@@ -1105,10 +1172,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         }, 3000);
       } else { // Se não existir, continua com o processo de adição
         const order = currentComplements.length + 1;
-        const newItem = { title: complementsTitle, price: parseFloat(complementsPrice), order: order };
+        const newItem = {
+          title: complementsTitle,
+          price: parseFloat(complementsPrice),
+          order: order,
+        };
         const updatedComplements = [...currentComplements, newItem];
         await complementRef.update({ complements: updatedComplements });
-        console.log('Item de complemento adicionado com sucesso!');
         setComplementTitle('');
         setComplementPrice('');
       }
@@ -1127,7 +1197,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const handleEditComplements = async (
     complementsId: string,
-    complement: string,
+    complement: string
   ) => {
     setIsLoading(true);
     try {
@@ -1161,6 +1231,54 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsEditComplements(false);
     setIsLoading(false);
   };
+  
+  const handleEditComplementsItem = async (
+    complementsId: string,
+    itemOrder: number,
+    complementsTitle: string,
+    complementsPrice:string,
+  ) => {
+    setIsLoading(true);
+    try {
+      const collectionRef = firestore.collection('complements');
+      const complementsDocRef = collectionRef.doc(complementsId);
+      const complementsDoc = await complementsDocRef.get();
+      if (complementsDoc.exists) {
+        const complementsArray = complementsDoc.data()?.complements || []; // Encontrar o objeto no array com a propriedade order igual a itemOrder
+        const tempComplement = complementsArray.find(
+          (complement: { order: number }) => complement.order == itemOrder
+        );
+        const isTitleAlreadyExists = complementsArray.some(
+          (complementItem: any) => complementItem.title === complementsTitle
+        );
+        if (isTitleAlreadyExists && tempComplement.title !== complementsTitle) {
+          setErrorMessage('Item já cadastrado');
+          setAlertLogin(true);
+          setTimeout(() => {
+            setAlertLogin(false);
+            setErrorMessage('');
+          }, 3000);
+        } else {
+          const batch = firestore.batch(); // Trocar ordens dos itens
+          tempComplement.title = complementsTitle
+          tempComplement.price = parseFloat(complementsPrice),
+          batch.update(complementsDocRef, { complements: complementsArray });
+          await batch.commit();
+          setComplementTitle('');
+          setComplementPrice('');
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao editar item do complemento');
+      setErrorMessage('Erro ao editar item do complemento');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
+    }
+    setIsLoading(false);
+  };
 
   const handleDeleteComplements = async (complementsId: string) => {
     setIsLoading(true);
@@ -1189,7 +1307,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const handleDeleteItemComplements = async (itemComplementsId: string, itemComplementsOrder: number) => {
+  const handleDeleteItemComplements = async (
+    itemComplementsId: string,
+    itemComplementsOrder: number
+  ) => {
     setIsLoading(true);
     try {
       const collectionRef = firestore.collection('complements');
@@ -1197,7 +1318,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const complementsDoc = await complementsDocRef.get();
       if (complementsDoc.exists) {
         const complementsArray = complementsDoc.data()?.complements || []; // Filtrar o array para excluir o item com a propriedade de order correspondente
-        const updatedComplements = complementsArray.filter((complement: any) => complement.order !== itemComplementsOrder); // Atualizar o documento no Firestore com o novo array de complementos
+        const updatedComplements = complementsArray.filter(
+          (complement: any) => complement.order !== itemComplementsOrder
+        ); // Atualizar o documento no Firestore com o novo array de complementos
         await complementsDocRef.update({ complements: updatedComplements }); // Atualizar as ordens dos itens restantes no array complements
         const orderToDelete = itemComplementsOrder;
         updatedComplements.forEach(async (complement: any) => {
@@ -1228,11 +1351,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const handleMoveComplementsUp = async (complementsId: string, order: number) => {
+  const handleMoveComplementsUp = async (
+    complementsId: string,
+    order: number
+  ) => {
     setIsLoading(true);
-    if (order > 1) { 
+    if (order > 1) {
       const batch = firestore.batch();
-      const complementsRef = firestore.collection('complements').doc(complementsId);
+      const complementsRef = firestore
+        .collection('complements')
+        .doc(complementsId);
       const previousComplementsSnapshot = await firestore
         .collection('complements')
         .where('order', '==', order - 1)
@@ -1251,10 +1379,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const handleMoveComplementsDown = async (complementsId: string, order: number) => {
+  const handleMoveComplementsDown = async (
+    complementsId: string,
+    order: number
+  ) => {
     setIsLoading(true);
     const batch = firestore.batch();
-    const complementsRef = firestore.collection('complements').doc(complementsId);
+    const complementsRef = firestore
+      .collection('complements')
+      .doc(complementsId);
     const nextComplementsSnapshot = await firestore
       .collection('complements')
       .where('order', '==', order + 1)
@@ -1272,85 +1405,68 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const handleMoveComplementsItemUp = async (complementsId: string, itemOrder: number) => {
+  const handleMoveComplementsItemUp = async (
+    complementsId: string,
+    itemOrder: number
+  ) => {
     setIsLoading(true);
     try {
       const collectionRef = firestore.collection('complements');
       const complementsDocRef = collectionRef.doc(complementsId);
       const complementsDoc = await complementsDocRef.get();
-  
       if (complementsDoc.exists) {
-        const complementsArray = complementsDoc.data()?.complements || [];
-  
-        // Encontrar o índice do item no array
-  
-        if (itemOrder > 1) {
-          const batch = firestore.batch();
-  
-          // Trocar ordens dos itens
-          const tempOrder = complementsArray[itemOrder -1].order;
-          complementsArray[itemOrder - 1].order = itemOrder - 1
-          complementsArray[itemOrder - 2].order = tempOrder;
-  
-          // Atualizar o documento no Firestore com os complementos atualizados
+        const complementsArray = complementsDoc.data()?.complements || []; // Encontrar o objeto no array com a propriedade order igual a itemOrder
+        const tempComplement = complementsArray.find(
+          (complement: { order: number }) => complement.order == itemOrder
+        );
+        const tempComplementNext = complementsArray.find(
+          (complement: { order: number }) => complement.order == itemOrder - 1
+        );
+        if (tempComplement.order > 1) {
+          const batch = firestore.batch(); // Trocar ordens dos itens
+          const tempOrder = tempComplement.order;
+          tempComplement.order = tempOrder - 1;
+          const tempOrderNext = tempComplementNext.order;
+          tempComplementNext.order = tempOrderNext + 1; // Atualizar o documento no Firestore com os complementos atualizados
           batch.update(complementsDocRef, { complements: complementsArray });
           await batch.commit();
         }
       }
     } catch (error) {
       console.error('Erro ao mover item para cima:', error);
-      setErrorMessage('Erro ao mover item para cima');
-      setAlertLogin(true);
-      setTimeout(() => {
-        setAlertLogin(false);
-        setErrorMessage('');
-      }, 3000);
     }
     setIsLoading(false);
   };
-  
-  const handleMoveComplementsItemDown = async (complementsId: string, itemOrder: number) => {
+
+  const handleMoveComplementsItemDown = async (
+    complementsId: string,
+    itemOrder: number
+  ) => {
     setIsLoading(true);
     try {
       const collectionRef = firestore.collection('complements');
       const complementsDocRef = collectionRef.doc(complementsId);
       const complementsDoc = await complementsDocRef.get();
-  
       if (complementsDoc.exists) {
-        const complementsArray = complementsDoc.data()?.complements || [];
-  
-        // Encontrar o índice do item no array
-        const itemIndex = complementsArray.findIndex((complement: any) => complement.order === itemOrder);
-  
-        if (itemIndex < complementsArray.length - 1) {
-          const batch = firestore.batch();
-  
-          // Trocar ordens dos itens
-          const tempOrder = complementsArray[itemIndex].order;
-          complementsArray[itemIndex].order = complementsArray[itemIndex + 1].order;
-          complementsArray[itemIndex + 1].order = tempOrder;
-  
-          // Atualizar o documento no Firestore com os complementos atualizados
+        const complementsArray = complementsDoc.data()?.complements || []; // Encontrar o objeto no array com a propriedade order igual a itemOrder
+        const tempComplement = complementsArray.find(
+          (complement: { order: number }) => complement.order == itemOrder
+        );
+        const tempComplementNext = complementsArray.find(
+          (complement: { order: number }) => complement.order == itemOrder + 1
+        );
+        if (tempComplement.order < tempComplementNext.order) {
+          const batch = firestore.batch(); // Trocar ordens dos itens
+          const tempOrder = tempComplement.order;
+          tempComplement.order = tempOrder + 1;
+          const tempOrderNext = tempComplementNext.order;
+          tempComplementNext.order = tempOrderNext - 1; // Atualizar o documento no Firestore com os complementos atualizados
           batch.update(complementsDocRef, { complements: complementsArray });
           await batch.commit();
         }
-      } else {
-        console.error('Documento de complementos não encontrado');
-        setErrorMessage('Erro ao mover item para baixo');
-        setAlertLogin(true);
-        setTimeout(() => {
-          setAlertLogin(false);
-          setErrorMessage('');
-        }, 3000);
       }
     } catch (error) {
       console.error('Erro ao mover item para baixo:', error);
-      setErrorMessage('Erro ao mover item para baixo');
-      setAlertLogin(true);
-      setTimeout(() => {
-        setAlertLogin(false);
-        setErrorMessage('');
-      }, 3000);
     }
     setIsLoading(false);
   };
@@ -1373,7 +1489,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       activeComplements: false,
       activeTime: false,
     };
-    try { // Verifica se já existe um item com o mesmo título
+    try {
+      // Verifica se já existe um item com o mesmo título
       const querySnapshot = await collectionRef
         .where('title', '==', title)
         .get();
@@ -1387,7 +1504,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         }, 3000);
         return; // Não continue o processo de salvar
       }
-      if (imageFile) { // Se não houver itens com o mesmo título, continue com o processo de salvar
+      if (imageFile) {
+        // Se não houver itens com o mesmo título, continue com o processo de salvar
         const storageRef = storage.ref(); // Faz upload da imagem para o Storage
         const imageRef = storageRef.child(imageFile.name);
         await imageRef.put(imageFile);
@@ -1417,7 +1535,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     const collectionRef = firestore.collection('items');
     const itemRef = collectionRef.doc(itemId);
-    try { // Verifica se já existe um item com o mesmo título
+    try {
+      // Verifica se já existe um item com o mesmo título
       const existingItem = await collectionRef
         .where('title', '==', title)
         .get();
@@ -1431,14 +1550,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         }, 3000);
         return;
       }
-      const updatedItemData = { // Define os dados atualizados do item
+      const updatedItemData = {
+        // Define os dados atualizados do item
         title: title,
         description: description,
         price: parseFloat(price),
         category: selectedCategory,
         image: lastImage, // Adicione esta propriedade
       };
-      if (imageFile) { // Faz upload da nova imagem para o Firebase Storage
+      if (imageFile) {
+        // Faz upload da nova imagem para o Firebase Storage
         const storageRef = storage.ref();
         const imageRef = storageRef.child(itemId);
         await imageRef.put(imageFile);
@@ -1484,7 +1605,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const toggleActiveComplementsItem = async (itemId: string, itemActiveComplements: boolean) => {
+  const toggleActiveComplementsItem = async (
+    itemId: string,
+    itemActiveComplements: boolean
+  ) => {
     setIsLoading(true);
     try {
       const itemRef = firestore.collection('items').doc(itemId); // Substitua 'seu_nome_de_colecao' pelo nome real da sua coleção Firestore
@@ -1502,7 +1626,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const toggleActiveTimeItem = async (itemId: string, itemActiveTime: boolean) => {
+  const toggleActiveTimeItem = async (
+    itemId: string,
+    itemActiveTime: boolean
+  ) => {
     setIsLoading(true);
     try {
       const itemRef = firestore.collection('items').doc(itemId); // Substitua 'seu_nome_de_colecao' pelo nome real da sua coleção Firestore
@@ -1549,7 +1676,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const handleMoveItemUp = async (itemId: string, order: number) => {
     setIsLoading(true);
-    if (order > 1) { // Verifique se a categoria pode ser movida para cima
+    if (order > 1) {
+      // Verifique se a categoria pode ser movida para cima
       const batch = firestore.batch();
       const itemRef = firestore.collection('items').doc(itemId);
       const previousItemSnapshot = await firestore
@@ -1579,7 +1707,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       .where('order', '==', order + 1)
       .limit(1)
       .get();
-    if (!nextItemSnapshot.empty) { // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
+    if (!nextItemSnapshot.empty) {
+      // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
       const nextItemId = nextItemSnapshot.docs[0].id;
       const nextItemRef = firestore.collection('items').doc(nextItemId); // Atualize a ordem da categoria selecionada
       batch.update(itemRef, { order: order + 1 }); // Atualize a ordem da categoria seguinte
@@ -1602,7 +1731,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       complement: complementClient,
       district: districtClient,
     };
-    try { // Verifica se já existe um item com o mesmo celular 
+    try {
+      // Verifica se já existe um item com o mesmo celular
       const querySnapshot = await collectionRef
         .where('cellphone', '==', cellphoneClient)
         .get();
@@ -1643,7 +1773,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     const collectionRef = firestore.collection('clients');
     const clientRef = collectionRef.doc(clientId);
-    try { // Verifica se já existe um cliente com o mesmo celular
+    try {
+      // Verifica se já existe um cliente com o mesmo celular
       const existingClient = await collectionRef
         .where('cellphone', '==', cellphoneClient)
         .get();
@@ -1657,7 +1788,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         }, 3000);
         return;
       }
-      const updatedClientData = { // Define os dados atualizados do item
+      const updatedClientData = {
+        // Define os dados atualizados do item
         name: nameClient,
         cellphone: cellphoneClient,
         cep: cepClient,
@@ -1710,7 +1842,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     const collectionRadiusRef = firestore.collection('deliveryRadius');
     const deliveryRadiusRef = collectionRadiusRef.doc('deliveryRadiusID');
     const collectionAreaRef = firestore.collection('deliveryArea');
-    try { // Atualize a entrega de raio
+    try {
+      // Atualize a entrega de raio
       const updatedDeliveryRadiusData = {
         deliveryRadius: deliveryRadius,
       };
@@ -1734,7 +1867,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const querySnapshot = await collectionRef.get();
       const totalDeliveryArea = querySnapshot.size;
       const order = totalDeliveryArea + 1; // Determine a ordem para a nova categoria
-      const distanceCalculation = deliveryRadius * order
+      const distanceCalculation = deliveryRadius * order;
       await collectionRef.add({
         order: order,
         price: 0,
@@ -1891,7 +2024,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  useEffect(() => { // Verifica se o usuário já está autenticado ao carregar a página
+  useEffect(() => {
+    // Verifica se o usuário já está autenticado ao carregar a página
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setIsLogin(true);
@@ -1905,7 +2039,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   }, [setIsLogin]); // Executa somente uma vez ao carregar o componente
 
   useEffect(() => {
-    const collectionRef = firestore.collection('message'); 
+    const collectionRef = firestore.collection('message');
     const unsubscribe = collectionRef.onSnapshot((snapshot) => {
       const data: { message: string }[] = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -1934,7 +2068,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   useEffect(() => {
     const collectionRef = firestore.collection('categories'); // Substitua 'categories' pelo nome correto da coleção
-    const unsubscribe = collectionRef.onSnapshot((snapshot) => { // Cria o listener para mudanças na coleção
+    const unsubscribe = collectionRef.onSnapshot((snapshot) => {
+      // Cria o listener para mudanças na coleção
       const categoriesData: {
         id: string;
         category: string;
@@ -1970,18 +2105,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         order: doc.data().order,
         complements: doc.data().complements as complementsItem[],
       }));
-  
-      // Ordenar os objetos pais com base na propriedade order
-      complementsData.sort((a, b) => a.order - b.order);
-  
-      // Para cada objeto pai, ordenar os objetos filhos dentro do array complements[]
+      complementsData.sort((a, b) => a.order - b.order); // Ordenar os objetos pais com base na propriedade order
       complementsData.forEach((complement) => {
+        // Para cada objeto pai, ordenar os objetos filhos dentro do array complements[]
         complement.complements.sort((a, b) => a.order - b.order);
       });
-  
       setComplementsList(complementsData);
     });
-  
     return () => {
       unsubscribe();
     };
@@ -2119,12 +2249,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
   }, [startDate, endDate, purchaseRequests]);
 
-  useEffect(() => { // Função para atualizar os resultados com base na consulta de pesquisa
+  useEffect(() => {
+    // Função para atualizar os resultados com base na consulta de pesquisa
     const updateResults = () => {
       if (searchQueryLogin === '') {
         setSearchResultsLogin(items); // Se a consulta de pesquisa estiver vazia, exiba todos os itens
       } else {
-        const filteredItems = items?.filter((item) => { // Caso contrário, filtre os itens com base na consulta
+        const filteredItems = items?.filter((item) => {
+          // Caso contrário, filtre os itens com base na consulta
           return (
             item.title.toLowerCase().includes(searchQueryLogin.toLowerCase()) ||
             item.description
@@ -2158,13 +2290,17 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   useEffect(() => {
     const collectionRef = firestore.collection('deliveryArea');
     const unsubscribe = collectionRef.onSnapshot((snapshot) => {
-      const deliveryAreaData: { id: string; order: number; price: number, distance:number }[] =
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          order: doc.data().order,
-          price: doc.data().price,
-          distance: doc.data().distance,
-        }));
+      const deliveryAreaData: {
+        id: string;
+        order: number;
+        price: number;
+        distance: number;
+      }[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        order: doc.data().order,
+        price: doc.data().price,
+        distance: doc.data().distance,
+      }));
       deliveryAreaData.sort((a, b) => a.order - b.order);
       setDeliveryArea(deliveryAreaData);
     });
@@ -2289,10 +2425,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     });
     const formattedText = formattedLines.join('\n-------\n');
     setMessageItens(formattedText);
-    const categoriesInPromotion = categories.filter((category) => category.deliveryPromotion);
+    const categoriesInPromotion = categories.filter(
+      (category) => category.deliveryPromotion
+    );
     for (const itemName in cartItems) {
       const item = items?.find((i) => i.title === itemName);
-      if (item && categoriesInPromotion.some((cat) => cat.category === item.category)) {
+      if (
+        item &&
+        categoriesInPromotion.some((cat) => cat.category === item.category)
+      ) {
         setActivePromotionCategory(true);
       }
     }
@@ -2321,7 +2462,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     return null;
   };
 
-  const calculateDistance = ( // Função para calcular a distância entre dois pontos (latitude e longitude) usando a fórmula de Haversine
+  const calculateDistance = (
+    // Função para calcular a distância entre dois pontos (latitude e longitude) usando a fórmula de Haversine
     lat1: number,
     lon1: number,
     lat2: number,
@@ -2358,7 +2500,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         .orderBy('order', 'desc')
         .limit(1)
         .get(); // Consulta os documentos ordenados por "order" em ordem decrescente
-      if (!querySnapshot.empty) { // Valor padrão se não houver documentos existentes
+      if (!querySnapshot.empty) {
+        // Valor padrão se não houver documentos existentes
         const lastOrder = querySnapshot.docs[0].data().order; // Se houver documentos, pegue o valor "order" do primeiro documento
         nextOrder = lastOrder + 1; // Calcule o próximo valor para "order"
       }
@@ -2396,14 +2539,17 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       observation: observation,
       delivery: deliveryPrice,
     };
-    try { // Verifique se já existe um cliente com o mesmo número de celular
+    try {
+      // Verifique se já existe um cliente com o mesmo número de celular
       const snapshot = await clientRef
         .where('cellphone', '==', cellphone)
         .get();
-      if (!snapshot.empty) {  // Já existe um cliente com o mesmo número de celular, exiba uma mensagem de erro
+      if (!snapshot.empty) {
+        // Já existe um cliente com o mesmo número de celular, exiba uma mensagem de erro
         const docId = snapshot.docs[0].id; // Obtenha o ID do documento existente
         await clientRef.doc(docId).update(data); // Atualize o documento existente com os novos dados
-      } else { // Não há cliente com o mesmo número de celular, salve o novo cliente
+      } else {
+        // Não há cliente com o mesmo número de celular, salve o novo cliente
         await clientRef.add(data);
       }
     } catch (error) {
@@ -2415,10 +2561,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       console.error('Erro ao enviar novo pedido', error);
     }
     const orderPurchase = `00${nextOrder}`;
-    let message = `${formattedDate} / ${formattedTime}\nPedido Novo !!\nID: ${orderPurchase}\n--------------\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}  Compl.: ${complement}\nBairro: ${district}\n--------------\nCarrinho\n${messageItens}\n--------------\nObs.: ${observation}\n--------------\nTotal carrinho: ${cartTotal.toFixed(2)}\nEntrega: ${deliveryPrice.toFixed(2)}\nTotal: ${totalSumDelivery.toFixed(2)}\nForma de Pagamento: ${paymentMethod}\n`;
-      if (trocoMessage == Math.abs(totalSumDelivery - parseFloat(troco))) {
-        message += `Troco: R$${trocoMessage.toFixed(2)}`;
-      }
+    let message = `${formattedDate} / ${formattedTime}\nPedido Novo !!\nID: ${orderPurchase}\n--------------\nCliente: ${name}\nTelefone: ${cellphone}\nCEP: ${cep}\nEndereço: ${road}\nNº: ${number}  Compl.: ${complement}\nBairro: ${district}\n--------------\nCarrinho\n${messageItens}\n--------------\nObs.: ${observation}\n--------------\nTotal carrinho: ${cartTotal.toFixed(
+      2
+    )}\nEntrega: ${deliveryPrice.toFixed(2)}\nTotal: ${totalSumDelivery.toFixed(
+      2
+    )}\nForma de Pagamento: ${paymentMethod}\n`;
+    if (trocoMessage == Math.abs(totalSumDelivery - parseFloat(troco))) {
+      message += `Troco: R$${trocoMessage.toFixed(2)}`;
+    }
     setOrderMessage(`#00${nextOrder}`);
     setWhatsappMessage(encodeURIComponent(message));
     setCartItems({});
@@ -2463,12 +2613,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }));
   };
 
-  useEffect(() => {  // Função para atualizar os resultados com base na consulta de pesquisa
+  useEffect(() => {
+    // Função para atualizar os resultados com base na consulta de pesquisa
     const updateResults = () => {
       if (searchQuery === '') {
         setSearchResults(items); // Se a consulta de pesquisa estiver vazia, exiba todos os itens
       } else {
-        const filteredItems = items?.filter((item) => { // Caso contrário, filtre os itens com base na consulta
+        const filteredItems = items?.filter((item) => {
+          // Caso contrário, filtre os itens com base na consulta
           return (
             item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.description
@@ -2528,11 +2680,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   }, []);
 
   useEffect(() => {
-    const address1 = 'Rua Vereador Geraldo Pereira, 232, A, Padre Eustáquio, BH, MG';
+    const address1 =
+      'Rua Vereador Geraldo Pereira, 232, A, Padre Eustáquio, BH, MG';
     const address2 = `${road}, ${number}, ${complement}, ${district}`;
     Promise.all([getCoordinates(address1), getCoordinates(address2)]) // Obter coordenadas dos endereços
       .then(([coords1, coords2]) => {
-        if (coords1 && coords2) { // Calcular a distância
+        if (coords1 && coords2) {
+          // Calcular a distância
           const dist = calculateDistance(
             coords1.lat,
             coords1.lng,
@@ -2547,7 +2701,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   }, [road, number, complement, district]);
 
   useEffect(() => {
-    if (distance !== null) { // Iterar sobre os objetos em deliveryArea e verificar a condição
+    if (distance !== null) {
+      // Iterar sobre os objetos em deliveryArea e verificar a condição
       for (const area of deliveryArea) {
         if (distance <= area.distance) {
           setDeliveryPrice(area.price);
@@ -2785,18 +2940,22 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setComplements,
         isEditComplements,
         setIsEditComplements,
-        isAddComplementsItem, 
-        setIsAddComplementsItem,
+        isAddEditComplementsItem,
+        setIsAddEditComplementsItem,
+        isEditComplementsItem,
+        setIsEditComplementsItem,
         isContentComplementsOpen,
         setIsContentComplementsOpen,
         complementsId,
+        setComplementsId,
+        complementsOrder,
+        setComplementsOrder,
         addComplements,
         addComplementItem,
         handleEditComplements,
         complementsList,
         handleDeleteComplements,
         handleDeleteItemComplements,
-        setComplementsId,
         lastComplements,
         setLastComplements,
         complementTitle,
@@ -2807,6 +2966,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         handleMoveComplementsDown,
         handleMoveComplementsItemUp,
         handleMoveComplementsItemDown,
+        handleEditComplementsItem,
       }}
     >
       {children}

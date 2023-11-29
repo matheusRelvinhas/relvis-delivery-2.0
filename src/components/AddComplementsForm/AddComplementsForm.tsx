@@ -12,17 +12,21 @@ const AddComplementsForm: React.FC = () => {
     isEditComplements,
     setIsEditComplements,
     complementsId,
+    complementsOrder,
     addComplements,
     handleEditComplements,
     isContentComplementsOpen,
     setIsContentComplementsOpen,
-    isAddComplementsItem,
-    setIsAddComplementsItem,
+    isAddEditComplementsItem,
+    setIsAddEditComplementsItem,
     addComplementItem,
     complementTitle,
     setComplementTitle,
     complementPrice,
     setComplementPrice,
+    isEditComplementsItem,
+    setIsEditComplementsItem,
+    handleEditComplementsItem,
   } = useGlobalContext();
 
   const toggleContentComplements = () => {
@@ -31,7 +35,7 @@ const AddComplementsForm: React.FC = () => {
     setComplementPrice('');
     setIsContentComplementsOpen(!isContentComplementsOpen);
     setIsEditComplements(false);
-    setIsAddComplementsItem(false);
+    setIsAddEditComplementsItem(false);
   };
 
   const handleSubmitComplements = (event: React.FormEvent) => {
@@ -45,12 +49,21 @@ const AddComplementsForm: React.FC = () => {
 
   const handleSubmitComplementsItem = (event: React.FormEvent) => {
     event.preventDefault();
-    addComplementItem(complementsId, complementTitle, complementPrice);
-    setIsContentComplementsOpen(false);
-    setIsAddComplementsItem(false);
+    if (isEditComplementsItem) {
+      handleEditComplementsItem(complementsId, complementsOrder, complementTitle, complementPrice);
+      setIsContentComplementsOpen(false);
+      setIsEditComplements(false);
+      setIsAddEditComplementsItem(false);
+    } else {
+      addComplementItem(complementsId, complementTitle, complementPrice);
+      setIsContentComplementsOpen(false);
+      setIsAddEditComplementsItem(false);
+    }
   };
 
-  const handlePriceComplementItemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePriceComplementItemChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     let input = event.target.value;
     input = input.replace(/\D/g, '');
     if (input !== '') {
@@ -64,7 +77,11 @@ const AddComplementsForm: React.FC = () => {
       <button onClick={toggleContentComplements}>
         <div className="add-complements-form-title">
           <span>{isContentComplementsOpen ? '-' : '+'}</span>
-          <h2>{isEditComplements ? 'Editar' : 'Adicionar'}</h2>
+          <h2>
+            {isEditComplements || isEditComplementsItem
+              ? 'Editar'
+              : 'Adicionar'}
+          </h2>
           <figure>
             <picture>
               <source src={dataCss.complementsImage} type="image/png" />
@@ -75,16 +92,21 @@ const AddComplementsForm: React.FC = () => {
       </button>
       {isContentComplementsOpen && (
         <>
-          {isAddComplementsItem ? (
+          {isAddEditComplementsItem ? (
             <form
               onSubmit={handleSubmitComplementsItem}
               className="add-complements-form"
             >
               <input
                 type="text"
-                placeholder={'novo item do complemento'}
+                placeholder={
+                  isEditComplementsItem
+                    ? 'editar item do complemento'
+                    : 'novo item do complemento'
+                }
                 value={complementTitle}
                 onChange={(event) => setComplementTitle(event.target.value)}
+                maxLength={20}
                 required
               />
               <input
@@ -95,15 +117,23 @@ const AddComplementsForm: React.FC = () => {
                 required
               />
               <button type="submit">
-                <span>Adicionar</span>
+                <span>{isEditComplementsItem ? 'Editar' : 'Adicionar'}</span>
                 <figure>
                   <picture>
                     <source
-                      src={dataCss.addIconImage}
+                      src={
+                        isEditComplementsItem
+                          ? dataCss.editIconImage
+                          : dataCss.addIconImage
+                      }
                       type="image/png"
                     />
                     <img
-                      src={dataCss.addIconImage}
+                      src={
+                        isEditComplementsItem
+                          ? dataCss.editIconImage
+                          : dataCss.addIconImage
+                      }
                       alt="icon-img"
                     />
                   </picture>
@@ -122,6 +152,7 @@ const AddComplementsForm: React.FC = () => {
                 }
                 value={complements}
                 onChange={(event) => setComplements(event.target.value)}
+                maxLength={20}
                 required
               />
               <button type="submit">
