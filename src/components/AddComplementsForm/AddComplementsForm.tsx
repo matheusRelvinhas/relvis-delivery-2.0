@@ -52,7 +52,7 @@ const AddComplementsForm: React.FC = () => {
     if (isEditComplementsItem) {
       handleEditComplementsItem(complementsId, complementsOrder, complementTitle, complementPrice);
       setIsContentComplementsOpen(false);
-      setIsEditComplements(false);
+      setIsEditComplementsItem(false);
       setIsAddEditComplementsItem(false);
     } else {
       addComplementItem(complementsId, complementTitle, complementPrice);
@@ -78,9 +78,7 @@ const AddComplementsForm: React.FC = () => {
         <div className="add-complements-form-title">
           <span>{isContentComplementsOpen ? '-' : '+'}</span>
           <h2>
-            {isEditComplements || isEditComplementsItem
-              ? 'Editar'
-              : 'Adicionar'}
+            {isEditComplements || isEditComplementsItem ? 'Editar': 'Adicionar'}
           </h2>
           <figure>
             <picture>
@@ -99,11 +97,7 @@ const AddComplementsForm: React.FC = () => {
             >
               <input
                 type="text"
-                placeholder={
-                  isEditComplementsItem
-                    ? 'editar item do complemento'
-                    : 'novo item do complemento'
-                }
+                placeholder={isEditComplementsItem ? 'editar item do complemento' : 'novo item do complemento'}
                 value={complementTitle}
                 onChange={(event) => setComplementTitle(event.target.value)}
                 maxLength={20}

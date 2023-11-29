@@ -42,6 +42,9 @@ type Card = {
   category: string;
   active: boolean;
   order: number;
+  activeComplements: boolean;
+  complements: string;
+  activeTime: boolean;
 };
 
 type Item = {
@@ -54,6 +57,7 @@ type Item = {
   active: boolean;
   order: number;
   activeComplements: boolean;
+  complements: string;
   activeTime: boolean;
 };
 
@@ -77,6 +81,7 @@ interface ItemData {
   active: boolean;
   order: number;
   activeComplements: boolean;
+  complements: string;
   activeTime: boolean;
 }
 
@@ -198,11 +203,6 @@ interface ContextProps {
   handleMoveItemUp: (itemId: string, order: number) => void;
   handleMoveItemDown: (itemId: string, order: number) => void;
   toggleActiveItem: (itemId: string, itemActive: boolean) => void;
-  toggleActiveComplementsItem: (
-    itemId: string,
-    itemActiveComplements: boolean
-  ) => void;
-  toggleActiveTimeItem: (itemId: string, itemActiveTime: boolean) => void;
   handleQuantityChange: (
     card: Card,
     e: React.ChangeEvent<HTMLInputElement>
@@ -401,6 +401,16 @@ interface ContextProps {
   handleMoveComplementsDown: (complementsId: string, order: number) => void;
   handleMoveComplementsItemUp: (complementsId: string, order: number) => void;
   handleMoveComplementsItemDown: (complementsId: string, order: number) => void;
+  toggleActiveComplementItem: boolean;
+  setToggleActiveComplementItem: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedComplement: string;
+  setSelectedComplement: React.Dispatch<React.SetStateAction<string>>;
+  toggleActiveTimeItem: boolean;
+  setToggleActiveTimeItem: React.Dispatch<React.SetStateAction<boolean>>;
+  startTimeItem: string;
+  setStartTimeItem: React.Dispatch<React.SetStateAction<string>>;
+  endTimeItem: string;
+  setEndTimeItem: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -446,8 +456,6 @@ const GlobalContext = createContext<ContextProps>({
   handleMoveCategoryUp: () => {},
   handleMoveCategoryDown: () => {},
   toggleActiveItem: () => {},
-  toggleActiveComplementsItem: () => {},
-  toggleActiveTimeItem: () => {},
   toggleActiveCategory: () => {},
   toggleActivePromotionCategory: () => {},
   handleDeleteItem: () => {},
@@ -650,6 +658,16 @@ const GlobalContext = createContext<ContextProps>({
   handleMoveComplementsDown: () => {},
   handleMoveComplementsItemUp: () => {},
   handleMoveComplementsItemDown: () => {},
+  toggleActiveComplementItem: false,
+  setToggleActiveComplementItem: () => {},
+  selectedComplement: '',
+  setSelectedComplement: () => {},
+  toggleActiveTimeItem: false,
+  setToggleActiveTimeItem: () => {},
+  startTimeItem: '',
+  setStartTimeItem: () => {},
+  endTimeItem: '',
+  setEndTimeItem: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -815,6 +833,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   >([]);
   const [complementTitle, setComplementTitle] = useState('');
   const [complementPrice, setComplementPrice] = useState('');
+  const [toggleActiveComplementItem, setToggleActiveComplementItem] = useState(false);
+  const [selectedComplement, setSelectedComplement] = useState('');
+  const [toggleActiveTimeItem, setToggleActiveTimeItem] = useState(false);
+  const [startTimeItem, setStartTimeItem] = useState<string>('');
+  const [endTimeItem, setEndTimeItem] = useState<string>('');
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -1111,8 +1134,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const existingComplements = await collectionRef
           .where('complement', '==', complement)
           .get();
-        if (existingComplements.size === 0) {
-          // Se não existir, continua com o processo de adição
+        if (existingComplements.size === 0) { // Se não existir, continua com o processo de adição
           const querySnapshot = await collectionRef.get();
           const totalComplements = querySnapshot.size;
           const order = totalComplements + 1;
@@ -1123,8 +1145,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           });
           setComplements('');
           setIsContentComplementsOpen(false);
-        } else {
-          // Se já existir, exibe uma mensagem de erro
+        } else { // Se já existir, exibe uma mensagem de erro
           setErrorMessage('Complemento já cadastrado');
           setAlertLogin(true);
           setIsLoading(false);
@@ -1478,6 +1499,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     const querySnapshotOrder = await collectionRef.get(); // Consulte todas os itenss para contar quantos existem
     const totalItems = querySnapshotOrder.size;
     const order = totalItems + 1; // Determine a ordem para o novo item
+    let activeComplement = false;
+    if (selectedComplement == '') {
+      activeComplement = false
+    } else {
+      activeComplement = true
+    }
     const data: ItemData = {
       title,
       description,
@@ -1486,7 +1513,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       category: selectedCategory,
       active: false,
       order,
-      activeComplements: false,
+      activeComplements: activeComplement,
+      complements: selectedComplement,
       activeTime: false,
     };
     try {
@@ -1519,6 +1547,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setPrice('');
       setImageFile(null);
       setSelectedCategory('');
+      setToggleActiveComplementItem(false);
+      setSelectedComplement('')
     } catch (error) {
       console.error('Erro ao adicionar item:', error);
       setErrorMessage('Erro ao adicionar item');
@@ -1535,8 +1565,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     const collectionRef = firestore.collection('items');
     const itemRef = collectionRef.doc(itemId);
-    try {
-      // Verifica se já existe um item com o mesmo título
+    try { // Verifica se já existe um item com o mesmo título
       const existingItem = await collectionRef
         .where('title', '==', title)
         .get();
@@ -1550,16 +1579,22 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         }, 3000);
         return;
       }
+      let activeComplement = false;
+      if (selectedComplement == '') {
+        activeComplement = false
+      } else {
+        activeComplement = true
+      }
       const updatedItemData = {
-        // Define os dados atualizados do item
         title: title,
         description: description,
         price: parseFloat(price),
         category: selectedCategory,
-        image: lastImage, // Adicione esta propriedade
+        image: lastImage,
+        activeComplements: activeComplement,
+        complements: selectedComplement,
       };
-      if (imageFile) {
-        // Faz upload da nova imagem para o Firebase Storage
+      if (imageFile) { // Faz upload da nova imagem para o Firebase Storage
         const storageRef = storage.ref();
         const imageRef = storageRef.child(itemId);
         await imageRef.put(imageFile);
@@ -1573,6 +1608,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setImageFile(null);
       setSelectedCategory('');
       setLastImage('');
+      setToggleActiveComplementItem(false);
+      setSelectedComplement('');
       setIsEditItem(false);
       setIsContentItemOpen(false);
     } catch (error) {
@@ -1593,48 +1630,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const itemRef = firestore.collection('items').doc(itemId); // Substitua 'seu_nome_de_colecao' pelo nome real da sua coleção Firestore
       const newValueActive = !itemActive; // Alterna a propriedade 'active'
       await itemRef.update({ active: newValueActive }); // Atualiza o Firestore
-    } catch (error) {
-      console.error('Erro ao editar item:', error);
-      setErrorMessage('Erro ao editar item');
-      setAlertLogin(true);
-      setTimeout(() => {
-        setAlertLogin(false);
-        setErrorMessage('');
-      }, 3000);
-    }
-    setIsLoading(false);
-  };
-
-  const toggleActiveComplementsItem = async (
-    itemId: string,
-    itemActiveComplements: boolean
-  ) => {
-    setIsLoading(true);
-    try {
-      const itemRef = firestore.collection('items').doc(itemId); // Substitua 'seu_nome_de_colecao' pelo nome real da sua coleção Firestore
-      const newValueActive = !itemActiveComplements; // Alterna a propriedade 'active'
-      await itemRef.update({ activeComplements: newValueActive }); // Atualiza o Firestore
-    } catch (error) {
-      console.error('Erro ao editar item:', error);
-      setErrorMessage('Erro ao editar item');
-      setAlertLogin(true);
-      setTimeout(() => {
-        setAlertLogin(false);
-        setErrorMessage('');
-      }, 3000);
-    }
-    setIsLoading(false);
-  };
-
-  const toggleActiveTimeItem = async (
-    itemId: string,
-    itemActiveTime: boolean
-  ) => {
-    setIsLoading(true);
-    try {
-      const itemRef = firestore.collection('items').doc(itemId); // Substitua 'seu_nome_de_colecao' pelo nome real da sua coleção Firestore
-      const newValueActive = !itemActiveTime; // Alterna a propriedade 'active'
-      await itemRef.update({ activeTime: newValueActive }); // Atualiza o Firestore
     } catch (error) {
       console.error('Erro ao editar item:', error);
       setErrorMessage('Erro ao editar item');
@@ -2132,6 +2127,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           active: data.active,
           order: data.order,
           activeComplements: data.activeComplements,
+          complements: data.complements,
           activeTime: data.activeTime,
         };
       });
@@ -2900,8 +2896,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         handleMoveItemDown,
         setIsContentItemOpen,
         toggleActiveItem,
-        toggleActiveComplementsItem,
-        toggleActiveTimeItem,
         setNamePurchase,
         setCellphonePurchase,
         setCepPurchase,
@@ -2967,6 +2961,16 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         handleMoveComplementsItemUp,
         handleMoveComplementsItemDown,
         handleEditComplementsItem,
+        toggleActiveComplementItem,
+        setToggleActiveComplementItem,
+        selectedComplement, 
+        setSelectedComplement,
+        toggleActiveTimeItem,
+        setToggleActiveTimeItem,
+        startTimeItem, 
+        setStartTimeItem,
+        endTimeItem, 
+        setEndTimeItem,
       }}
     >
       {children}

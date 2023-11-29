@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useGlobalContext } from '@/Context/store';
 import './AddItemForm.css';
 
@@ -24,6 +24,17 @@ const AddItemForm: React.FC = () => {
     handleEditItem,
     isContentItemOpen,
     setIsContentItemOpen,
+    toggleActiveComplementItem,
+    setToggleActiveComplementItem,
+    selectedComplement,
+    setSelectedComplement,
+    complementsList,
+    toggleActiveTimeItem,
+    setToggleActiveTimeItem,
+    startTimeItem,
+    setStartTimeItem,
+    endTimeItem,
+    setEndTimeItem,
   } = useGlobalContext();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -34,6 +45,11 @@ const AddItemForm: React.FC = () => {
     setDescription('');
     setSelectedCategory('');
     setImageFile(null);
+    setSelectedComplement('');
+    setToggleActiveComplementItem(false);
+    setToggleActiveTimeItem(false);
+    setStartTimeItem('');
+    setEndTimeItem('');
     setIsContentItemOpen(!isContentItemOpen);
     setIsEditItem(false);
   };
@@ -45,12 +61,14 @@ const AddItemForm: React.FC = () => {
     } else {
       addItem(event);
     }
-    if (fileInputRef.current) { // Redefina o valor do input file para null 
-      fileInputRef.current.value = '';
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''; // Redefina o valor do input file para null
     }
   };
 
-  const handlePriceItemChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePriceItemChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     let input = event.target.value;
     input = input.replace(/\D/g, '');
     if (input !== '') {
@@ -123,7 +141,73 @@ const AddItemForm: React.FC = () => {
             }}
             ref={fileInputRef}
           />
-          <button type="submit">
+          <div className="add-item-form-time">
+            <button
+              onClick={() => {
+                setToggleActiveTimeItem(!toggleActiveTimeItem);
+                setStartTimeItem('');
+                setEndTimeItem('');
+              }}
+            >
+              <div className="toggle-switch">
+                <input
+                  className="toggle-input"
+                  id="toggle"
+                  type="checkbox"
+                  checked={toggleActiveTimeItem}
+                />
+                <label className="toggle-label"></label>
+              </div>
+            </button>
+            <input
+              type="time"
+              value={startTimeItem}
+              onChange={(e) => setStartTimeItem(e.target.value)}
+              disabled={!toggleActiveTimeItem}
+            />
+            <input
+              type="time"
+              value={endTimeItem}
+              onChange={(e) => setEndTimeItem(e.target.value)}
+              disabled={startTimeItem == ''}
+            />
+          </div>
+          <div className="add-item-form-complements">
+            <button
+              onClick={() => {
+                setToggleActiveComplementItem(!toggleActiveComplementItem);
+                setSelectedComplement('');
+              }}
+            >
+              <div className="toggle-switch">
+                <input
+                  className="toggle-input"
+                  id="toggle"
+                  type="checkbox"
+                  checked={toggleActiveComplementItem}
+                />
+                <label className="toggle-label"></label>
+              </div>
+            </button>
+            <select
+              className="add-item-form-complements-select"
+              value={selectedComplement}
+              onChange={(event) => setSelectedComplement(event.target.value)}
+              disabled={!toggleActiveComplementItem}
+            >
+              <option value="">
+                {toggleActiveComplementItem
+                  ? 'sem complemento'
+                  : 'selecione um complemento'}
+              </option>
+              {complementsList.map((complement) => (
+                <option key={complement.id} value={complement.complement}>
+                  {complement.complement}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button className="add-items-form-button" type="submit">
             <span>{isEditItem ? 'Editar' : 'Adicionar'}</span>
             <figure>
               <picture>

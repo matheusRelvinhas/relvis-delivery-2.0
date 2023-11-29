@@ -22,8 +22,9 @@ const LoginItens: React.FC = () => {
     handleMoveItemDown,
     setIsContentItemOpen,
     toggleActiveItem,
-    toggleActiveComplementsItem,
     toggleActiveTimeItem,
+    setToggleActiveComplementItem,
+    setSelectedComplement,
     searchResultsLogin,
   } = useGlobalContext();
 
@@ -35,6 +36,8 @@ const LoginItens: React.FC = () => {
     setSelectedCategory(item.category);
     setLastImage(item.image);
     setImageFile(null);
+    setToggleActiveComplementItem(item.activeComplements);
+    setSelectedComplement(item.complements)
     setIsEditItem(true);
     setIsContentItemOpen(true);
   };

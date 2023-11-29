@@ -81,7 +81,29 @@
   background-color: #f04134;
 }
 
-.add-items-form button {
+.add-item-form-complements {
+  display: flex;
+  justify-content:space-around;
+  width: 100%;
+}
+
+.add-item-form-complements select {
+  width: 80%;
+  height: 3.5vh;
+}
+
+.add-item-form-time {
+  display: flex;
+  justify-content:space-around;
+  width: 100%;
+}
+
+.add-item-form-time input {
+  width: 32.5%;
+  height: 3.5vh;
+}
+
+.add-items-form-button {
   background-color: #f04134;
   color: #fff;
   border-radius: 5px;
@@ -95,17 +117,17 @@
   margin-top: 2px;
 }
 
-.add-items-form button figure img {
+.add-items-form-button figure img {
   height: 22px;
   width: 22px;
   margin-top: 3px;
 }
 
-.add-items-form button:focus {
+.add-items-form-button:focus {
   background-color: #df2e22;
 }
 
-.add-items-form button:active {
+.add-items-form-button:active {
   background-color: #df2e22;
 }
 
