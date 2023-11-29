@@ -178,7 +178,7 @@ interface ContextProps {
   handleDeleteItem: (categoryId: string) => void;
   category: string;
   setCategory: React.Dispatch<React.SetStateAction<string>>;
-  addCategory: () => void;
+  addCategory: (category:string) => void;
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   price: string;
@@ -351,12 +351,17 @@ interface ContextProps {
   setComplements: React.Dispatch<React.SetStateAction<string>>;
   isEditComplements: boolean;
   setIsEditComplements: React.Dispatch<React.SetStateAction<boolean>>;
+  isAddComplementsItem: boolean;
+  setIsAddComplementsItem: React.Dispatch<React.SetStateAction<boolean>>;
   isContentComplementsOpen: boolean;
   setIsContentComplementsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   complementsId: string;
-  addComplements: () => void;
-  handleEditComplements: (complementsId: string) => void;
-  addComplementItem: (complementsId: string) => void;
+  setComplementsId: React.Dispatch<React.SetStateAction<string>>;
+  lastComplements: string;
+  setLastComplements: React.Dispatch<React.SetStateAction<string>>;
+  addComplements: (complement:string) => void;
+  handleEditComplements: (complementsId: string, complement: string) => void;
+  addComplementItem: (complementsId: string, complementsTitle:string, complementsPrice: string ) => void;
   complementsList: {
     id: string;
     complement: string;
@@ -365,6 +370,14 @@ interface ContextProps {
   }[];
   handleDeleteComplements: (complementsId: string) => void;
   handleDeleteItemComplements: (itemComplementsId: string, itemComplementsOrder: number) => void;
+  complementTitle: string;
+  setComplementTitle: React.Dispatch<React.SetStateAction<string>>;
+  complementPrice: string;
+  setComplementPrice: React.Dispatch<React.SetStateAction<string>>;
+  handleMoveComplementsUp: (complementsId: string, order: number) => void;
+  handleMoveComplementsDown: (complementsId: string, order: number) => void;
+  handleMoveComplementsItemUp: (complementsId: string, order: number) => void;
+  handleMoveComplementsItemDown: (complementsId: string, order: number) => void;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -587,15 +600,28 @@ const GlobalContext = createContext<ContextProps>({
   setComplements: () => {},
   isEditComplements: false,
   setIsEditComplements: () => {},
+  isAddComplementsItem: false,
+  setIsAddComplementsItem: () => {},
   isContentComplementsOpen: false,
   setIsContentComplementsOpen: () => {},
   complementsId: '',
+  setComplementsId: () => {},
+  lastComplements: '',
+  setLastComplements: () => {},
   addComplements: () => {},
   addComplementItem: () => {},
   handleEditComplements: () => {},
   complementsList: [],
   handleDeleteComplements: () => {},
   handleDeleteItemComplements: () => {},
+  complementTitle: '',
+  setComplementTitle: () => {},
+  complementPrice: '',
+  setComplementPrice: () => {},
+  handleMoveComplementsUp: () => {},
+  handleMoveComplementsDown: () => {},
+  handleMoveComplementsItemUp: () => {},
+  handleMoveComplementsItemDown: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -731,9 +757,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [foundMessage, setFoundMessage] = useState(false);
   const [complements, setComplements] = useState('');
   const [isEditComplements, setIsEditComplements] = useState(false);
+  const [isAddComplementsItem, setIsAddComplementsItem] = useState(false);
   const [isContentComplementsOpen, setIsContentComplementsOpen] = useState(false);
   const [complementsId, setComplementsId] = useState('');
+  const [lastComplements, setLastComplements] = useState('');
   const [complementsList, setComplementsList] = useState<{ id: string; complement: string; order: number; complements: complementsItem[] }[]>([]);
+  const [complementTitle, setComplementTitle] = useState('');
+  const [complementPrice, setComplementPrice] = useState('');
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -802,28 +832,28 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
     setIsLoading(false);
   };
-
-  const addCategory = async () => {
+  
+  const addCategory = async (category:string) => {
     setIsLoading(true);
     if (category.trim() !== '') {
       try {
-        const collectionRef = firestore.collection('categories'); // Consulte todas as categorias para contar quantas existem
-        const querySnapshot = await collectionRef.get();
-        const totalCategories = querySnapshot.size;
-        const order = totalCategories + 1; // Determine a ordem para a nova categoria
+        const collectionRef = firestore.collection('categories'); // Verifica se já existe um complemento com o mesmo nome
         const existingCategory = await collectionRef
-          .where('category', '==', category.toLowerCase())
-          .get(); // Verifique se a categoria já existe
-        if (existingCategory.size === 0) { // A categoria ainda não existe, pode adicioná-la com a ordem calculada
+          .where('category', '==', category)
+          .get();
+        if (existingCategory.size === 0) { // Se não existir, continua com o processo de adição
+          const querySnapshot = await collectionRef.get();
+          const totalCategories = querySnapshot.size;
+          const order = totalCategories + 1;
           await collectionRef.add({
-            category,
-            order,
+            category: category,
+            order: order,
             active: false,
             deliveryPromotion: false,
           });
           setCategory('');
           setIsContentCategoryOpen(false);
-        } else { // A categoria já existe, defina o alertLogin como true por 3 segundos
+        } else { // Se já existir, exibe uma mensagem de erro
           setErrorMessage('Categoria já cadastrada');
           setAlertLogin(true);
           setIsLoading(false);
@@ -833,8 +863,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           }, 3000);
         }
       } catch (error) {
-        console.error('Erro ao adicioanar categoria:', error);
-        setErrorMessage('Erro ao adicioanar categoria');
+        console.error('Erro ao adicionar categoria:', error);
+        setErrorMessage('Erro ao adicionar categoria');
         setAlertLogin(true);
         setIsLoading(false);
         setTimeout(() => {
@@ -855,7 +885,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const collectionRef = firestore.collection('categories');
       const collectionItemRef = firestore.collection('items');
       const existingCategoryQuery = await collectionRef
-        .where('category', '==', category.toLowerCase())
+        .where('category', '==', lastCategory)
         .get(); // Verifique se a nova categoria já existe (independentemente de ser maiúscula ou minúscula)
       if (existingCategoryQuery.size > 0) {
         setErrorMessage('Categoria já cadastrada');
@@ -1016,26 +1046,26 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const addComplements = async () => {
+  const addComplements = async (complement:string) => {
     setIsLoading(true);
     if (complements.trim() !== '') {
       try {
-        const collectionRef = firestore.collection('complements');
-        const querySnapshot = await collectionRef.get();
-        const totalComplements = querySnapshot.size;
-        const order = totalComplements + 1; 
+        const collectionRef = firestore.collection('complements'); // Verifica se já existe um complemento com o mesmo nome
         const existingComplements = await collectionRef
-          .where('complement', '==', complements.toLowerCase())
+          .where('complement', '==', complement)
           .get();
-        if (existingComplements.size === 0) {
+        if (existingComplements.size === 0) { // Se não existir, continua com o processo de adição
+          const querySnapshot = await collectionRef.get();
+          const totalComplements = querySnapshot.size;
+          const order = totalComplements + 1;
           await collectionRef.add({
-            complement: complements,
-            order,
+            complement: complement,
+            order: order,
             complements: [],
           });
           setComplements('');
           setIsContentComplementsOpen(false);
-        } else {
+        } else { // Se já existir, exibe uma mensagem de erro
           setErrorMessage('Complemento já cadastrado');
           setAlertLogin(true);
           setIsLoading(false);
@@ -1045,8 +1075,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           }, 3000);
         }
       } catch (error) {
-        console.error('Erro ao adicionar categoria:', error);
-        setErrorMessage('Erro ao adicionar categoria');
+        console.error('Erro ao adicionar complemento:', error);
+        setErrorMessage('Erro ao adicionar complemento');
         setAlertLogin(true);
         setIsLoading(false);
         setTimeout(() => {
@@ -1058,17 +1088,30 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const addComplementItem = async (complementsId: string) => {
+  const addComplementItem = async (complementsId: string, complementsTitle: string, complementsPrice: string) => {
     setIsLoading(true);
     try {
       const complementRef = firestore.collection('complements').doc(complementsId);
       const complementDoc = await complementRef.get();
-      const currentComplements = complementDoc.data()?.complements || [];
-      const order = currentComplements.length + 1; // Use length para obter o tamanho do array
-      const newItem = { title: 'Pequeno', price: 2.00, order };
-      const updatedComplements = [...currentComplements, newItem];
-      await complementRef.update({ complements: updatedComplements });
-      console.log('Item de complemento adicionado com sucesso!');
+      const currentComplements = complementDoc.data()?.complements || []; // Verifica se já existe um item com o mesmo título
+      const isTitleAlreadyExists = currentComplements.some((complementItem: any) => complementItem.title === complementsTitle);
+      if (isTitleAlreadyExists) { // Exibe uma mensagem de erro se o título já existir
+        setErrorMessage('Item já cadastrado');
+        setAlertLogin(true);
+        setIsLoading(false);
+        setTimeout(() => {
+          setAlertLogin(false);
+          setErrorMessage('');
+        }, 3000);
+      } else { // Se não existir, continua com o processo de adição
+        const order = currentComplements.length + 1;
+        const newItem = { title: complementsTitle, price: parseFloat(complementsPrice), order: order };
+        const updatedComplements = [...currentComplements, newItem];
+        await complementRef.update({ complements: updatedComplements });
+        console.log('Item de complemento adicionado com sucesso!');
+        setComplementTitle('');
+        setComplementPrice('');
+      }
     } catch (error) {
       console.error('Erro ao adicionar item do complemento:', error);
       setErrorMessage('Erro ao adicionar item do complemento');
@@ -1084,14 +1127,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 
   const handleEditComplements = async (
     complementsId: string,
+    complement: string,
   ) => {
     setIsLoading(true);
     try {
       const collectionRef = firestore.collection('complements');
-      const existingCategoryQuery = await collectionRef
-        .where('complement', '==', complements.toLowerCase())
+      const existingComplementQuery = await collectionRef
+        .where('complement', '==', complement)
         .get();
-      if (existingCategoryQuery.size > 0) {
+      if (existingComplementQuery.size > 0) {
         setErrorMessage('Complemento já cadastrado');
         setAlertLogin(true);
         setIsLoading(false);
@@ -1114,6 +1158,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setErrorMessage('');
       }, 3000);
     }
+    setIsEditComplements(false);
     setIsLoading(false);
   };
 
@@ -1148,15 +1193,22 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     try {
       const collectionRef = firestore.collection('complements');
-      const complementsDocRef = collectionRef.doc(itemComplementsId); 
-      const complementsDoc = await complementsDocRef.get(); // Obter o documento do Firestore
+      const complementsDocRef = collectionRef.doc(itemComplementsId); // Obter o documento do Firestore
+      const complementsDoc = await complementsDocRef.get();
       if (complementsDoc.exists) {
-        const complementsArray = complementsDoc.data()?.complements || [];
-        const updatedComplements = complementsArray.filter((complement: any) => complement.order !== itemComplementsOrder);
+        const complementsArray = complementsDoc.data()?.complements || []; // Filtrar o array para excluir o item com a propriedade de order correspondente
+        const updatedComplements = complementsArray.filter((complement: any) => complement.order !== itemComplementsOrder); // Atualizar o documento no Firestore com o novo array de complementos
+        await complementsDocRef.update({ complements: updatedComplements }); // Atualizar as ordens dos itens restantes no array complements
+        const orderToDelete = itemComplementsOrder;
+        updatedComplements.forEach(async (complement: any) => {
+          if (complement.order > orderToDelete) {
+            complement.order -= 1;
+          }
+        }); // Atualizar o documento no Firestore com os complementos atualizados
         await complementsDocRef.update({ complements: updatedComplements });
         console.log('Item do complemento excluído com sucesso!');
       } else {
-        console.error('Documento de complementos não encontrado');
+        console.error('Erro ao excluir item do complemento');
         setErrorMessage('Erro ao excluir item do complemento');
         setAlertLogin(true);
         setTimeout(() => {
@@ -1167,6 +1219,133 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     } catch (error) {
       console.error('Erro ao excluir item do complemento:', error);
       setErrorMessage('Erro ao excluir item do complemento');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
+    }
+    setIsLoading(false);
+  };
+
+  const handleMoveComplementsUp = async (complementsId: string, order: number) => {
+    setIsLoading(true);
+    if (order > 1) { 
+      const batch = firestore.batch();
+      const complementsRef = firestore.collection('complements').doc(complementsId);
+      const previousComplementsSnapshot = await firestore
+        .collection('complements')
+        .where('order', '==', order - 1)
+        .limit(1)
+        .get();
+      if (!previousComplementsSnapshot.empty) {
+        const previousComplementsId = previousComplementsSnapshot.docs[0].id;
+        const previousComplementsRef = firestore
+          .collection('complements')
+          .doc(previousComplementsId);
+        batch.update(complementsRef, { order: order - 1 });
+        batch.update(previousComplementsRef, { order: order });
+        await batch.commit();
+      }
+    }
+    setIsLoading(false);
+  };
+
+  const handleMoveComplementsDown = async (complementsId: string, order: number) => {
+    setIsLoading(true);
+    const batch = firestore.batch();
+    const complementsRef = firestore.collection('complements').doc(complementsId);
+    const nextComplementsSnapshot = await firestore
+      .collection('complements')
+      .where('order', '==', order + 1)
+      .limit(1)
+      .get();
+    if (!nextComplementsSnapshot.empty) {
+      const nextComplementsId = nextComplementsSnapshot.docs[0].id;
+      const nextComplementsRef = firestore
+        .collection('complements')
+        .doc(nextComplementsId);
+      batch.update(complementsRef, { order: order + 1 });
+      batch.update(nextComplementsRef, { order: order });
+      await batch.commit();
+    }
+    setIsLoading(false);
+  };
+
+  const handleMoveComplementsItemUp = async (complementsId: string, itemOrder: number) => {
+    setIsLoading(true);
+    try {
+      const collectionRef = firestore.collection('complements');
+      const complementsDocRef = collectionRef.doc(complementsId);
+      const complementsDoc = await complementsDocRef.get();
+  
+      if (complementsDoc.exists) {
+        const complementsArray = complementsDoc.data()?.complements || [];
+  
+        // Encontrar o índice do item no array
+  
+        if (itemOrder > 1) {
+          const batch = firestore.batch();
+  
+          // Trocar ordens dos itens
+          const tempOrder = complementsArray[itemOrder -1].order;
+          complementsArray[itemOrder - 1].order = itemOrder - 1
+          complementsArray[itemOrder - 2].order = tempOrder;
+  
+          // Atualizar o documento no Firestore com os complementos atualizados
+          batch.update(complementsDocRef, { complements: complementsArray });
+          await batch.commit();
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao mover item para cima:', error);
+      setErrorMessage('Erro ao mover item para cima');
+      setAlertLogin(true);
+      setTimeout(() => {
+        setAlertLogin(false);
+        setErrorMessage('');
+      }, 3000);
+    }
+    setIsLoading(false);
+  };
+  
+  const handleMoveComplementsItemDown = async (complementsId: string, itemOrder: number) => {
+    setIsLoading(true);
+    try {
+      const collectionRef = firestore.collection('complements');
+      const complementsDocRef = collectionRef.doc(complementsId);
+      const complementsDoc = await complementsDocRef.get();
+  
+      if (complementsDoc.exists) {
+        const complementsArray = complementsDoc.data()?.complements || [];
+  
+        // Encontrar o índice do item no array
+        const itemIndex = complementsArray.findIndex((complement: any) => complement.order === itemOrder);
+  
+        if (itemIndex < complementsArray.length - 1) {
+          const batch = firestore.batch();
+  
+          // Trocar ordens dos itens
+          const tempOrder = complementsArray[itemIndex].order;
+          complementsArray[itemIndex].order = complementsArray[itemIndex + 1].order;
+          complementsArray[itemIndex + 1].order = tempOrder;
+  
+          // Atualizar o documento no Firestore com os complementos atualizados
+          batch.update(complementsDocRef, { complements: complementsArray });
+          await batch.commit();
+        }
+      } else {
+        console.error('Documento de complementos não encontrado');
+        setErrorMessage('Erro ao mover item para baixo');
+        setAlertLogin(true);
+        setTimeout(() => {
+          setAlertLogin(false);
+          setErrorMessage('');
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Erro ao mover item para baixo:', error);
+      setErrorMessage('Erro ao mover item para baixo');
       setAlertLogin(true);
       setTimeout(() => {
         setAlertLogin(false);
@@ -1791,9 +1970,18 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         order: doc.data().order,
         complements: doc.data().complements as complementsItem[],
       }));
+  
+      // Ordenar os objetos pais com base na propriedade order
       complementsData.sort((a, b) => a.order - b.order);
+  
+      // Para cada objeto pai, ordenar os objetos filhos dentro do array complements[]
+      complementsData.forEach((complement) => {
+        complement.complements.sort((a, b) => a.order - b.order);
+      });
+  
       setComplementsList(complementsData);
     });
+  
     return () => {
       unsubscribe();
     };
@@ -2597,6 +2785,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setComplements,
         isEditComplements,
         setIsEditComplements,
+        isAddComplementsItem, 
+        setIsAddComplementsItem,
         isContentComplementsOpen,
         setIsContentComplementsOpen,
         complementsId,
@@ -2606,6 +2796,17 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         complementsList,
         handleDeleteComplements,
         handleDeleteItemComplements,
+        setComplementsId,
+        lastComplements,
+        setLastComplements,
+        complementTitle,
+        setComplementTitle,
+        complementPrice,
+        setComplementPrice,
+        handleMoveComplementsUp,
+        handleMoveComplementsDown,
+        handleMoveComplementsItemUp,
+        handleMoveComplementsItemDown,
       }}
     >
       {children}

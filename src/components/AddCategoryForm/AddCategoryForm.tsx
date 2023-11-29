@@ -30,7 +30,7 @@ const AddCategoryForm: React.FC = () => {
     if (isEditCategory) {
       handleEditCategory(categoryId, lastCategory);
     } else {
-      addCategory();
+      addCategory(category);
     }
   };
 
