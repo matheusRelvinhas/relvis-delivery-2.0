@@ -79,7 +79,7 @@ const AddItemForm: React.FC = () => {
 
   return (
     <div className="add-item-form-container">
-      <button onClick={toggleContentItem}>
+      <button onClick={toggleContentItem} type='button'>
         <div className="add-item-form-title">
           <span>{isContentItemOpen ? '-' : '+'}</span>
           <h2>{isEditItem ? 'Editar' : 'Adicionar'}</h2>
@@ -141,39 +141,9 @@ const AddItemForm: React.FC = () => {
             }}
             ref={fileInputRef}
           />
-          <div className="add-item-form-time">
-            <button
-              onClick={() => {
-                setToggleActiveTimeItem(!toggleActiveTimeItem);
-                setStartTimeItem('');
-                setEndTimeItem('');
-              }}
-            >
-              <div className="toggle-switch">
-                <input
-                  className="toggle-input"
-                  id="toggle"
-                  type="checkbox"
-                  checked={toggleActiveTimeItem}
-                />
-                <label className="toggle-label"></label>
-              </div>
-            </button>
-            <input
-              type="time"
-              value={startTimeItem}
-              onChange={(e) => setStartTimeItem(e.target.value)}
-              disabled={!toggleActiveTimeItem}
-            />
-            <input
-              type="time"
-              value={endTimeItem}
-              onChange={(e) => setEndTimeItem(e.target.value)}
-              disabled={startTimeItem == ''}
-            />
-          </div>
           <div className="add-item-form-complements">
             <button
+              type='button'
               onClick={() => {
                 setToggleActiveComplementItem(!toggleActiveComplementItem);
                 setSelectedComplement('');
@@ -206,6 +176,48 @@ const AddItemForm: React.FC = () => {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="add-item-form-time">
+            <button
+              type='button'
+              onClick={() => {
+                setToggleActiveTimeItem(!toggleActiveTimeItem);
+                setStartTimeItem('');
+                setEndTimeItem('');
+              }}
+            >
+              <div className="toggle-switch">
+                <input
+                  className="toggle-input"
+                  id="toggle"
+                  type="checkbox"
+                  checked={toggleActiveTimeItem}
+                />
+                <label className="toggle-label"></label>
+              </div>
+            </button>
+            <input
+              type="time"
+              value={startTimeItem}
+              onChange={(e) => setStartTimeItem(e.target.value)}
+              disabled={!toggleActiveTimeItem}
+              required={toggleActiveTimeItem}
+            />
+            <span>até:</span>
+            <input
+              type="time"
+              value={endTimeItem}
+              onChange={(e) => { // Validar se o endTime é maior que o startTime
+                if (startTimeItem && e.target.value <= startTimeItem) { // Se for menor ou igual ao startTime, defina o endTime como vazio
+                  setEndTimeItem('');
+                } else { // Se for maior que o startTime, atualize o endTime
+                  setEndTimeItem(e.target.value);
+                }
+              }}
+              disabled={startTimeItem === ''}
+              required={toggleActiveTimeItem}
+              min={startTimeItem}
+            />
           </div>
           <button className="add-items-form-button" type="submit">
             <span>{isEditItem ? 'Editar' : 'Adicionar'}</span>

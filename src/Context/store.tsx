@@ -45,6 +45,8 @@ type Card = {
   activeComplements: boolean;
   complements: string;
   activeTime: boolean;
+  startTime: string;
+  endTime: string;
 };
 
 type Item = {
@@ -59,6 +61,8 @@ type Item = {
   activeComplements: boolean;
   complements: string;
   activeTime: boolean;
+  startTime: string;
+  endTime: string;
 };
 
 type Client = {
@@ -83,6 +87,8 @@ interface ItemData {
   activeComplements: boolean;
   complements: string;
   activeTime: boolean;
+  startTime: string;
+  endTime: string;
 }
 
 interface PurchaseRequestData {
@@ -338,10 +344,10 @@ interface ContextProps {
   distance: number | null;
   isContentDeliveryOpen: boolean;
   setIsContentDeliveryOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  deliveryRadius: number;
-  setDeliveryRadius: React.Dispatch<React.SetStateAction<number>>;
-  inputDeliveryRadius: number;
-  setInputDeliveryRadius: React.Dispatch<React.SetStateAction<number>>;
+  deliveryRadius: string;
+  setDeliveryRadius: React.Dispatch<React.SetStateAction<string>>;
+  inputDeliveryRadius: string;
+  setInputDeliveryRadius: React.Dispatch<React.SetStateAction<string>>;
   addDeliveryRadius: (deliveryRadius: number) => void;
   deliveryArea: {
     id: string;
@@ -612,9 +618,9 @@ const GlobalContext = createContext<ContextProps>({
   distance: null,
   isContentDeliveryOpen: false,
   setIsContentDeliveryOpen: () => {},
-  deliveryRadius: 0,
+  deliveryRadius: '',
   setDeliveryRadius: () => {},
-  inputDeliveryRadius: 0,
+  inputDeliveryRadius: '',
   setInputDeliveryRadius: () => {},
   addDeliveryRadius: () => {},
   deliveryArea: [],
@@ -805,8 +811,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     Item[] | undefined
   >(items);
   const [isContentDeliveryOpen, setIsContentDeliveryOpen] = useState(false);
-  const [deliveryRadius, setDeliveryRadius] = useState(0);
-  const [inputDeliveryRadius, setInputDeliveryRadius] = useState(0);
+  const [deliveryRadius, setDeliveryRadius] = useState('');
+  const [inputDeliveryRadius, setInputDeliveryRadius] = useState('');
   const [deliveryArea, setDeliveryArea] = useState<
     { id: string; order: number; price: number; distance: number }[]
   >([]);
@@ -1515,10 +1521,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       order,
       activeComplements: activeComplement,
       complements: selectedComplement,
-      activeTime: false,
+      activeTime: toggleActiveTimeItem,
+      startTime: startTimeItem,
+      endTime: endTimeItem,
     };
-    try {
-      // Verifica se já existe um item com o mesmo título
+    try { // Verifica se já existe um item com o mesmo título
       const querySnapshot = await collectionRef
         .where('title', '==', title)
         .get();
@@ -1549,6 +1556,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setSelectedCategory('');
       setToggleActiveComplementItem(false);
       setSelectedComplement('')
+      setToggleActiveTimeItem(false);
+      setStartTimeItem('');
+      setEndTimeItem('');
     } catch (error) {
       console.error('Erro ao adicionar item:', error);
       setErrorMessage('Erro ao adicionar item');
@@ -1593,6 +1603,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         image: lastImage,
         activeComplements: activeComplement,
         complements: selectedComplement,
+        activeTime: toggleActiveTimeItem,
+        startTime: startTimeItem,
+        endTime: endTimeItem,
       };
       if (imageFile) { // Faz upload da nova imagem para o Firebase Storage
         const storageRef = storage.ref();
@@ -1610,6 +1623,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setLastImage('');
       setToggleActiveComplementItem(false);
       setSelectedComplement('');
+      setToggleActiveTimeItem(false);
+      setStartTimeItem('');
+      setEndDate('');
       setIsEditItem(false);
       setIsContentItemOpen(false);
     } catch (error) {
@@ -1862,7 +1878,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const querySnapshot = await collectionRef.get();
       const totalDeliveryArea = querySnapshot.size;
       const order = totalDeliveryArea + 1; // Determine a ordem para a nova categoria
-      const distanceCalculation = deliveryRadius * order;
+      const distanceCalculation = parseFloat(deliveryRadius) * order;
       await collectionRef.add({
         order: order,
         price: 0,
@@ -2129,6 +2145,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           activeComplements: data.activeComplements,
           complements: data.complements,
           activeTime: data.activeTime,
+          startTime: data.startTime,
+          endTime: data.endTime,
         };
       });
       resultItens.sort((a, b) => a.order - b.order);
@@ -2276,7 +2294,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const data: { deliveryRadius: number }[] = snapshot.docs.map((doc) => ({
         deliveryRadius: doc.data().deliveryRadius,
       }));
-      setDeliveryRadius(data[0].deliveryRadius);
+      setDeliveryRadius(data[0].deliveryRadius.toString());
     });
     return () => {
       unsubscribe();

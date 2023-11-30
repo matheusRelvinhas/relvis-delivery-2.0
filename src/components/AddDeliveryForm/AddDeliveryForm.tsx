@@ -29,9 +29,20 @@ const AddDeliveryForm: React.FC = () => {
       setIsEditDelivery(true);
       setInputDeliveryRadius(deliveryRadius);
     } else {
-      addDeliveryRadius(inputDeliveryRadius);
+      addDeliveryRadius(parseFloat(inputDeliveryRadius));
       setIsEditDelivery(false);
     }
+  };
+
+  const handleDeliveryRadiusChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    let input = event.target.value;
+    input = input.replace(/\D/g, '');
+    if (input !== '') {
+      input = (parseFloat(input) / 10).toFixed(1);
+    }
+    setInputDeliveryRadius(input)
   };
 
   return (
@@ -58,12 +69,7 @@ const AddDeliveryForm: React.FC = () => {
                   className="add-delivery-form-radius-input"
                   type="number"
                   value={inputDeliveryRadius}
-                  onChange={(event) => {
-                    const inputValue = event.target.value;
-                    if (/^-?\d*\.?\d+$/.test(inputValue)) {
-                      setInputDeliveryRadius(parseFloat(inputValue));
-                    }
-                  }}
+                  onChange={handleDeliveryRadiusChange}
                   required
                 />
               ) : (

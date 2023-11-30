@@ -111,11 +111,29 @@
   width: 100%;
 }
 
-.login-items-toogle {
+.login-items-toggle {
   display: flex;
   flex-direction: column;
   width: 100%;
   align-items: end;
+  justify-content: space-between;
+}
+
+.login-items-toggle-button {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  margin-right: 0.75vw;
+}
+
+.login-items-toggle-button span {
+  margin-right: 0.75vw;
+}
+
+.login-items-toggle span {
+  font-size: x-small;
+  text-align: center;
+  color:#595959;
 }
 
 

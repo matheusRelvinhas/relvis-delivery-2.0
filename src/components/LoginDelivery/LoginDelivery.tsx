@@ -19,7 +19,7 @@ const LoginDelivery: React.FC = () => {
       console.error('Erro ao atualizar o preço:', error);
     }
   };
-
+  
   return (
     <div className="login-delivery-container">
       <div className="login-delivery-title">

@@ -84,6 +84,7 @@
 .add-item-form-complements {
   display: flex;
   justify-content:space-around;
+  align-items: center;
   width: 100%;
 }
 
@@ -95,11 +96,12 @@
 .add-item-form-time {
   display: flex;
   justify-content:space-around;
+  align-items: center;
   width: 100%;
 }
 
 .add-item-form-time input {
-  width: 32.5%;
+  width: 25%;
   height: 3.5vh;
 }
 

@@ -22,9 +22,11 @@ const LoginItens: React.FC = () => {
     handleMoveItemDown,
     setIsContentItemOpen,
     toggleActiveItem,
-    toggleActiveTimeItem,
     setToggleActiveComplementItem,
     setSelectedComplement,
+    setToggleActiveTimeItem,
+    setStartTimeItem,
+    setEndTimeItem,
     searchResultsLogin,
   } = useGlobalContext();
 
@@ -37,7 +39,10 @@ const LoginItens: React.FC = () => {
     setLastImage(item.image);
     setImageFile(null);
     setToggleActiveComplementItem(item.activeComplements);
-    setSelectedComplement(item.complements)
+    setSelectedComplement(item.complements);
+    setToggleActiveTimeItem(item.activeTime);
+    setStartTimeItem(item.startTime);
+    setEndTimeItem(item.endTime);
     setIsEditItem(true);
     setIsContentItemOpen(true);
   };
@@ -78,6 +83,32 @@ const LoginItens: React.FC = () => {
                       <img src={item.image} alt="img-item" />
                     </picture>
                   </figure>
+                </div>
+                <div className="login-items-toggle">
+                  <div className="login-items-toggle-button">
+                    <span>{item.active ? 'Ligado' : 'Desligado'}</span>
+                    <button
+                      onClick={() => toggleActiveItem(item.id, item.active)}
+                    >
+                      <div className="toggle-switch">
+                        <input
+                          className="toggle-input"
+                          id="toggle"
+                          type="checkbox"
+                          checked={item.active}
+                        />
+                        <label className="toggle-label"></label>
+                      </div>
+                    </button>
+                  </div>
+                  {item.activeComplements && (
+                    <span>Compl.: {item.complements}</span>
+                  )}
+                  {item.activeTime && (
+                    <span>
+                      de {item.startTime} até {item.endTime}
+                    </span>
+                  )}
                   <div className="login-items-move">
                     <button
                       onClick={() => handleMoveItemUp(item.id, item.order)}
@@ -116,22 +147,6 @@ const LoginItens: React.FC = () => {
                       </figure>
                     </button>
                   </div>
-                </div>
-                <div className="login-items-toogle">
-                    <button
-                      onClick={() => toggleActiveItem(item.id, item.active)}
-                    >
-                      <div className="toggle-switch">
-                        <input
-                          className="toggle-input"
-                          id="toggle"
-                          type="checkbox"
-                          checked={item.active}
-                        />
-                        <label className="toggle-label"></label>
-                      </div>
-                    </button>
-                    <span>{item.active ? 'Ligado' : 'Desligado'}</span>
                 </div>
               </div>
               <div className="login-items-info">
