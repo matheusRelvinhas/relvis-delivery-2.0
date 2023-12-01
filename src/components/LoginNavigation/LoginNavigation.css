@@ -19,19 +19,19 @@
   min-width: 230px;
 }
 
-ul {
+.login-navigation-list ul {
   list-style-type: none;
   padding: 0;
 }
 
-li {
+.login-navigation-list li {
   padding: 10px;
   cursor: pointer;
   transition: 0.2s;
   align-items: center;
 }
 
-li:hover {
+.login-navigation-list li:hover {
   background-color: #555;
 }
 

@@ -138,6 +138,39 @@ const LoginPurchaseRequest: React.FC = () => {
     }
   };
 
+  const handlePurchaseRequestPriceTrocoChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    let input = event.target.value;
+    input = input.replace(/\D/g, '');
+    if (input !== '') {
+      input = (parseFloat(input) / 100).toFixed(2);
+    }
+    setTrocoPurchase(input)
+  };
+
+  const handlePurchaseRequestPriceDeliveryChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    let input = event.target.value;
+    input = input.replace(/\D/g, '');
+    if (input !== '') {
+      input = (parseFloat(input) / 100).toFixed(2);
+    }
+    setDeliveryPurchase(input)
+  };
+
+  const handlePurchaseRequestPriceTotalChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    let input = event.target.value;
+    input = input.replace(/\D/g, '');
+    if (input !== '') {
+      input = (parseFloat(input) / 100).toFixed(2);
+    }
+    setTotalPurchase(input)
+  };
+
   function formatPurchaseString(purchaseString: string) {
     const lines = purchaseString.split('-------');
     return lines.map((line, index) => (
@@ -493,12 +526,10 @@ const LoginPurchaseRequest: React.FC = () => {
                         type="number"
                         placeholder="Troco"
                         value={trocoPurchase}
-                        onChange={(event) =>
-                          setTrocoPurchase(event.target.value)
-                        }
+                        onChange={handlePurchaseRequestPriceTrocoChange}
                       />
                     ) : (
-                      <span>{purchaseRequest?.troco}</span>
+                      <>{purchaseRequest?.troco !== '' && <span>R$ {purchaseRequest?.troco}</span>}</>
                     )}
                   </p>
                 </div>
@@ -510,9 +541,7 @@ const LoginPurchaseRequest: React.FC = () => {
                         type="number"
                         placeholder="Total"
                         value={deliveryPurchase}
-                        onChange={(event) =>
-                          setDeliveryPurchase(event.target.value)
-                        }
+                        onChange={handlePurchaseRequestPriceDeliveryChange}
                       />
                     ) : (
                       <span>
@@ -532,9 +561,7 @@ const LoginPurchaseRequest: React.FC = () => {
                         type="number"
                         placeholder="Total"
                         value={totalPurchase}
-                        onChange={(event) =>
-                          setTotalPurchase(event.target.value)
-                        }
+                        onChange={handlePurchaseRequestPriceTotalChange}
                       />
                     ) : (
                       <span>

@@ -394,7 +394,7 @@ interface ContextProps {
     order: number;
     complements: complementsItem[];
   }[];
-  handleDeleteComplements: (complementsId: string) => void;
+  handleDeleteComplements: (complementsId: string, complement:string) => void;
   handleDeleteItemComplements: (
     itemComplementsId: string,
     itemComplementsOrder: number
@@ -1061,8 +1061,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const querySnapshot = await collectionRef
         .where('order', '>', orderToDelete)
         .get(); // Consulte todas as categorias com ordens maiores que a excluída
-      querySnapshot.forEach(async (doc) => {
-        // Atualize as ordens das categorias encontradas
+      querySnapshot.forEach(async (doc) => {  // Atualize as ordens das categorias encontradas
         const docRef = collectionRef.doc(doc.id);
         const currentOrder = doc.data().order;
         await docRef.update({ order: currentOrder - 1 });
@@ -1119,8 +1118,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       .where('order', '==', order + 1)
       .limit(1)
       .get();
-    if (!nextCategorySnapshot.empty) {
-      // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
+    if (!nextCategorySnapshot.empty) { // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
       const nextCategoryId = nextCategorySnapshot.docs[0].id;
       const nextCategoryRef = firestore
         .collection('categories')
@@ -1307,10 +1305,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const handleDeleteComplements = async (complementsId: string) => {
+  const handleDeleteComplements = async (complementsId: string, complement:string) => {
     setIsLoading(true);
     try {
       const collectionRef = firestore.collection('complements');
+      const collectionItemRef = firestore.collection('items');
       const complementsDoc = await collectionRef.doc(complementsId).get();
       const orderToDelete = complementsDoc.data()?.order;
       await collectionRef.doc(complementsId).delete();
@@ -1321,6 +1320,17 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const docRef = collectionRef.doc(doc.id);
         const currentOrder = doc.data().order;
         await docRef.update({ order: currentOrder - 1 });
+      });
+      const itemQuerySnapshot = await collectionItemRef
+        .where('complement', '==', complement) // Consulte os itens com a mesma categoria e exclua-os
+        .get();
+      itemQuerySnapshot.forEach(async (doc) => {
+        const updatePromises = itemQuerySnapshot.docs.map(async (doc) => {
+          await collectionItemRef.doc(doc.id).update({ // Atualizar os valores em vez de excluir
+            activeComplements: false,
+            complements: '',
+          });
+        });
       });
     } catch (error) {
       console.error('Erro ao excluir complemento:', error);
@@ -1356,7 +1366,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           }
         }); // Atualizar o documento no Firestore com os complementos atualizados
         await complementsDocRef.update({ complements: updatedComplements });
-        console.log('Item do complemento excluído com sucesso!');
       } else {
         console.error('Erro ao excluir item do complemento');
         setErrorMessage('Erro ao excluir item do complemento');

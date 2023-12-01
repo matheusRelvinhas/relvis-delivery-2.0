@@ -85,7 +85,7 @@
   border-radius: 9px;
   border-top-left-radius: 0;
   border-bottom: none;
-  padding: 0.5vh 0;
+  padding: 1vh 0;
 }
 
 .login-promotion-categories span {
@@ -101,5 +101,9 @@
   display: flex;
   align-items: center;
   width: 100%;
-  margin-left: 50px;
+  margin-left: 1vw;
+}
+
+.login-promotion-categories-span {
+  margin-left: 1vw;
 }

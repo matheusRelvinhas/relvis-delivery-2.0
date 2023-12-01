@@ -35,6 +35,7 @@ const AddComplementsForm: React.FC = () => {
     setComplementPrice('');
     setIsContentComplementsOpen(!isContentComplementsOpen);
     setIsEditComplements(false);
+    setIsEditComplementsItem(false);
     setIsAddEditComplementsItem(false);
   };
 

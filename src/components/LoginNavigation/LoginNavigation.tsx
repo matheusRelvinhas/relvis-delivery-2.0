@@ -39,6 +39,7 @@ const LoginNavigation: React.FC = () => {
             <span></span>
             <span></span>
           </label>
+          <div className='login-navigation-list'>
           <ul>
             <li
               onClick={() => handleItemClick('Perfil')}
@@ -156,6 +157,7 @@ const LoginNavigation: React.FC = () => {
               </div>
             </li>
           </ul>
+          </div>
         </div>
         <div className="content">
           {activeItem === 'Perfil' && (

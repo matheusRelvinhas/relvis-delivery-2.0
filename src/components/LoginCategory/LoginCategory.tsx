@@ -99,8 +99,6 @@ const LoginCategory: React.FC = () => {
                       <img
                         src={dataCss.arrowImage.up}
                         alt="icon-img"
-                        height={'10px'}
-                        width={'17.5px'}
                       />
                     </picture>
                   </figure>
@@ -116,8 +114,6 @@ const LoginCategory: React.FC = () => {
                       <img
                         src={dataCss.arrowImage.down}
                         alt="icon-img"
-                        height={'10px'}
-                        width={'17.5px'}
                       />
                     </picture>
                   </figure>
