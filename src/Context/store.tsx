@@ -1227,6 +1227,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     try {
       const collectionRef = firestore.collection('complements');
+      const collectionItemRef = firestore.collection('items');
       const existingComplementQuery = await collectionRef
         .where('complement', '==', complement)
         .get();
@@ -1244,6 +1245,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         complement: complements,
       });
       setIsContentComplementsOpen(false);
+      const itemQuerySnapshot = await collectionItemRef
+      .where('complements', '==', lastComplements)
+      .get();
+    const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
+      await collectionItemRef.doc(docItem.id).update({
+        complements: complement,
+      });
+    });
+    await Promise.all(updatePromises);
     } catch (error) {
       console.error('Erro ao editar complemento: ', error);
       setErrorMessage('Erro ao editar complemento');
@@ -1322,16 +1332,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         await docRef.update({ order: currentOrder - 1 });
       });
       const itemQuerySnapshot = await collectionItemRef
-        .where('complement', '==', complement) // Consulte os itens com a mesma categoria e exclua-os
+        .where('complements', '==', complement)
         .get();
-      itemQuerySnapshot.forEach(async (doc) => {
-        const updatePromises = itemQuerySnapshot.docs.map(async (doc) => {
-          await collectionItemRef.doc(doc.id).update({ // Atualizar os valores em vez de excluir
-            activeComplements: false,
-            complements: '',
-          });
+      const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
+        await collectionItemRef.doc(docItem.id).update({
+          activeComplements: false,
+          complements: '',
         });
       });
+      await Promise.all(updatePromises);
     } catch (error) {
       console.error('Erro ao excluir complemento:', error);
       setErrorMessage('Erro ao excluir complemento');
@@ -1340,8 +1349,9 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setAlertLogin(false);
         setErrorMessage('');
       }, 3000);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleDeleteItemComplements = async (

@@ -197,12 +197,12 @@
 }
 
 .login-complements-add-button button {
-  margin: 0 0 0.5vh 2vw;
+  margin: 0.5vh 0 0.5vh 2vw;
   background-color: #f04134;
   border-radius: 5px;
   color: #f0f0f0;
   padding: 2.5px;
-  font-size: smaller;
+  font-size: small;
 }
 
 .login-complements-add-button button:focus {
