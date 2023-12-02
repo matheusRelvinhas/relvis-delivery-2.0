@@ -27,6 +27,13 @@ const LoginItens: React.FC = () => {
     setToggleActiveTimeItem,
     setStartTimeItem,
     setEndTimeItem,
+    setToggleActiveSundayItem,
+    setToggleActiveMondayItem,
+    setToggleActiveTuesdayItem,
+    setToggleActiveWednesdayItem,
+    setToggleActiveThursdayItem,
+    setToggleActiveFridayItem,
+    setToggleActiveSaturdayItem,
     searchResultsLogin,
   } = useGlobalContext();
 
@@ -43,6 +50,13 @@ const LoginItens: React.FC = () => {
     setToggleActiveTimeItem(item.activeTime);
     setStartTimeItem(item.startTime);
     setEndTimeItem(item.endTime);
+    setToggleActiveSundayItem(item.activeSunday);
+    setToggleActiveMondayItem(item.activeMonday);
+    setToggleActiveTuesdayItem(item.activeTuesday);
+    setToggleActiveWednesdayItem(item.activeWednesday);
+    setToggleActiveThursdayItem(item.activeThursday);
+    setToggleActiveFridayItem(item.activeFriday);
+    setToggleActiveSaturdayItem(item.activeSaturday);
     setIsEditItem(true);
     setIsContentItemOpen(true);
   };

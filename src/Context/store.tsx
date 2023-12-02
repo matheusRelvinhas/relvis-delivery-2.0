@@ -47,6 +47,13 @@ type Card = {
   activeTime: boolean;
   startTime: string;
   endTime: string;
+  activeSunday: boolean;
+  activeMonday: boolean;
+  activeTuesday: boolean;
+  activeWednesday: boolean;
+  activeThursday: boolean;
+  activeFriday: boolean;
+  activeSaturday: boolean;
 };
 
 type Item = {
@@ -63,6 +70,13 @@ type Item = {
   activeTime: boolean;
   startTime: string;
   endTime: string;
+  activeSunday: boolean;
+  activeMonday: boolean;
+  activeTuesday: boolean;
+  activeWednesday: boolean;
+  activeThursday: boolean;
+  activeFriday: boolean;
+  activeSaturday: boolean;
 };
 
 type Client = {
@@ -89,6 +103,13 @@ interface ItemData {
   activeTime: boolean;
   startTime: string;
   endTime: string;
+  activeSunday: boolean;
+  activeMonday: boolean;
+  activeTuesday: boolean;
+  activeWednesday: boolean;
+  activeThursday: boolean;
+  activeFriday: boolean;
+  activeSaturday: boolean;
 }
 
 interface PurchaseRequestData {
@@ -417,6 +438,22 @@ interface ContextProps {
   setStartTimeItem: React.Dispatch<React.SetStateAction<string>>;
   endTimeItem: string;
   setEndTimeItem: React.Dispatch<React.SetStateAction<string>>;
+  toggleActiveDaysItem: boolean;
+  setToggleActiveDaysItem: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleActiveSundayItem: boolean; //domingo
+  setToggleActiveSundayItem: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleActiveMondayItem: boolean; //segunda
+  setToggleActiveMondayItem: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleActiveTuesdayItem: boolean; //terça
+  setToggleActiveTuesdayItem: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleActiveWednesdayItem: boolean; //quarta
+  setToggleActiveWednesdayItem: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleActiveThursdayItem: boolean; //quinta
+  setToggleActiveThursdayItem: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleActiveFridayItem: boolean; //sexta
+  setToggleActiveFridayItem: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleActiveSaturdayItem: boolean; //sábado
+  setToggleActiveSaturdayItem: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -674,6 +711,22 @@ const GlobalContext = createContext<ContextProps>({
   setStartTimeItem: () => {},
   endTimeItem: '',
   setEndTimeItem: () => {},
+  toggleActiveDaysItem: false,
+  setToggleActiveDaysItem: () => {},
+  toggleActiveSundayItem: false, //domingo
+  setToggleActiveSundayItem: () => {},
+  toggleActiveMondayItem: false, //segunda
+  setToggleActiveMondayItem: () => {},
+  toggleActiveTuesdayItem: false, //terça
+  setToggleActiveTuesdayItem: () => {},
+  toggleActiveWednesdayItem: false, //quarta
+  setToggleActiveWednesdayItem: () => {},
+  toggleActiveThursdayItem: false, //quinta
+  setToggleActiveThursdayItem: () => {},
+  toggleActiveFridayItem: false, //sexta
+  setToggleActiveFridayItem: () => {},
+  toggleActiveSaturdayItem: false, //sábado
+  setToggleActiveSaturdayItem: () => {},
 });
 
 type GlobalContextProviderProps = {
@@ -844,6 +897,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [toggleActiveTimeItem, setToggleActiveTimeItem] = useState(false);
   const [startTimeItem, setStartTimeItem] = useState<string>('');
   const [endTimeItem, setEndTimeItem] = useState<string>('');
+  const [toggleActiveDaysItem, setToggleActiveDaysItem] = useState(false);
+  const [toggleActiveSundayItem, setToggleActiveSundayItem] = useState(false); //domingo
+  const [toggleActiveMondayItem, setToggleActiveMondayItem] = useState(false); //segunda
+  const [toggleActiveTuesdayItem, setToggleActiveTuesdayItem] = useState(false); //terça
+  const [toggleActiveWednesdayItem, setToggleActiveWednesdayItem] = useState(false); //quarta
+  const [toggleActiveThursdayItem, setToggleActiveThursdayItem] = useState(false); //quinta
+  const [toggleActiveFridayItem, setToggleActiveFridayItem] = useState(false); //sexta
+  const [toggleActiveSaturdayItem, setToggleActiveSaturdayItem] = useState(false); //sábado
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -1543,6 +1604,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       activeTime: toggleActiveTimeItem,
       startTime: startTimeItem,
       endTime: endTimeItem,
+      activeSunday: toggleActiveSundayItem,
+      activeMonday: toggleActiveMondayItem,
+      activeTuesday: toggleActiveTuesdayItem,
+      activeWednesday: toggleActiveWednesdayItem,
+      activeThursday: toggleActiveThursdayItem,
+      activeFriday: toggleActiveFridayItem,
+      activeSaturday: toggleActiveSaturdayItem,
     };
     try { // Verifica se já existe um item com o mesmo título
       const querySnapshot = await collectionRef
@@ -1578,6 +1646,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setToggleActiveTimeItem(false);
       setStartTimeItem('');
       setEndTimeItem('');
+      setToggleActiveSundayItem(false);
+      setToggleActiveMondayItem(false);
+      setToggleActiveTuesdayItem(false);
+      setToggleActiveWednesdayItem(false);
+      setToggleActiveThursdayItem(false);
+      setToggleActiveFridayItem(false);
+      setToggleActiveSaturdayItem(false);
     } catch (error) {
       console.error('Erro ao adicionar item:', error);
       setErrorMessage('Erro ao adicionar item');
@@ -1625,6 +1700,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         activeTime: toggleActiveTimeItem,
         startTime: startTimeItem,
         endTime: endTimeItem,
+        activeSunday: toggleActiveSundayItem,
+        activeMonday: toggleActiveMondayItem,
+        activeTuesday: toggleActiveTuesdayItem,
+        activeWednesday: toggleActiveWednesdayItem,
+        activeThursday: toggleActiveThursdayItem,
+        activeFriday: toggleActiveFridayItem,
+        activeSaturday: toggleActiveSaturdayItem,
       };
       if (imageFile) { // Faz upload da nova imagem para o Firebase Storage
         const storageRef = storage.ref();
@@ -1645,6 +1727,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setToggleActiveTimeItem(false);
       setStartTimeItem('');
       setEndDate('');
+      setToggleActiveSundayItem(false);
+      setToggleActiveMondayItem(false);
+      setToggleActiveTuesdayItem(false);
+      setToggleActiveWednesdayItem(false);
+      setToggleActiveThursdayItem(false);
+      setToggleActiveFridayItem(false);
+      setToggleActiveSaturdayItem(false);
       setIsEditItem(false);
       setIsContentItemOpen(false);
     } catch (error) {
@@ -2166,6 +2255,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           activeTime: data.activeTime,
           startTime: data.startTime,
           endTime: data.endTime,
+          activeSunday: data.activeSunday,
+          activeMonday: data.activeMonday,
+          activeTuesday: data.activeTuesday,
+          activeWednesday: data.activeWednesday,
+          activeThursday: data.activeThursday,
+          activeFriday: data.activeFriday,
+          activeSaturday: data.activeSaturday,
         };
       });
       resultItens.sort((a, b) => a.order - b.order);
@@ -2282,14 +2378,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
   }, [startDate, endDate, purchaseRequests]);
 
-  useEffect(() => {
-    // Função para atualizar os resultados com base na consulta de pesquisa
+  useEffect(() => { // Função para atualizar os resultados com base na consulta de pesquisa
     const updateResults = () => {
       if (searchQueryLogin === '') {
         setSearchResultsLogin(items); // Se a consulta de pesquisa estiver vazia, exiba todos os itens
       } else {
-        const filteredItems = items?.filter((item) => {
-          // Caso contrário, filtre os itens com base na consulta
+        const filteredItems = items?.filter((item) => { // Caso contrário, filtre os itens com base na consulta
           return (
             item.title.toLowerCase().includes(searchQueryLogin.toLowerCase()) ||
             item.description
@@ -2645,15 +2739,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       [title]: 0,
     }));
   };
-
-  useEffect(() => {
-    // Função para atualizar os resultados com base na consulta de pesquisa
+  
+  useEffect(() => { // Função para atualizar os resultados com base na consulta de pesquisa
     const updateResults = () => {
       if (searchQuery === '') {
         setSearchResults(items); // Se a consulta de pesquisa estiver vazia, exiba todos os itens
       } else {
-        const filteredItems = items?.filter((item) => {
-          // Caso contrário, filtre os itens com base na consulta
+        const filteredItems = items?.filter((item) => { // Caso contrário, filtre os itens com base na consulta
           return (
             item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.description
@@ -3008,6 +3100,22 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         setStartTimeItem,
         endTimeItem, 
         setEndTimeItem,
+        toggleActiveDaysItem,
+        setToggleActiveDaysItem,
+        toggleActiveSundayItem, //domingo
+        setToggleActiveSundayItem,
+        toggleActiveMondayItem, //segunda
+        setToggleActiveMondayItem,
+        toggleActiveTuesdayItem, //terça
+        setToggleActiveTuesdayItem,
+        toggleActiveWednesdayItem, //quarta
+        setToggleActiveWednesdayItem,
+        toggleActiveThursdayItem, //quinta
+        setToggleActiveThursdayItem,
+        toggleActiveFridayItem, //sexta
+        setToggleActiveFridayItem,
+        toggleActiveSaturdayItem, //sábado
+        setToggleActiveSaturdayItem,
       }}
     >
       {children}

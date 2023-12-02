@@ -6,6 +6,9 @@ import Search from '../Search/Search';
 import StyledButton from '../StyledButton/StyledButton';
 import StyledInput from '../StyledInput/StyledInput';
 import AddressLookup from '../AddressLookup/AddressLookup';
+import { useState, useEffect } from 'react';
+import { format } from 'date-fns-tz';
+
 import './Main.css';
 
 export default function Main() {
@@ -41,9 +44,26 @@ export default function Main() {
     setIsTilted(true);
     setIsClientRegistration(false);
   };
+  
+  const [dateTime] = useState(new Date());
+  const currentDay = format(dateTime, 'EEEE');
+  const [time, setTime] = useState<string>('');
+
+  useEffect(() => {
+    const updateDateTime = () => {
+      const currentDateTime = new Date();
+      const formattedTime = format(currentDateTime, 'HH:mm', { timeZone: 'America/Sao_Paulo' });
+      setTime(formattedTime);
+    };
+    const intervalId = setInterval(updateDateTime, 60000);  // Atualiza a hora a cada minuto
+    updateDateTime();  // Chama a função uma vez para definir o valor inicial
+    return () => clearInterval(intervalId);   // Limpa o intervalo quando o componente é desmontado
+  }, []);
+
 
   return (
     <main style={{ color: dataCss.fontColor }} className="main">
+      {currentDay}, {time}
       <Search />
       {categories.map(
         (category) =>

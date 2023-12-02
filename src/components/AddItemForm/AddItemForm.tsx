@@ -35,6 +35,22 @@ const AddItemForm: React.FC = () => {
     setStartTimeItem,
     endTimeItem,
     setEndTimeItem,
+    toggleActiveDaysItem,
+    setToggleActiveDaysItem,
+    toggleActiveSundayItem, //domingo
+    setToggleActiveSundayItem,
+    toggleActiveMondayItem, //segunda
+    setToggleActiveMondayItem,
+    toggleActiveTuesdayItem, //terça
+    setToggleActiveTuesdayItem,
+    toggleActiveWednesdayItem, //quarta
+    setToggleActiveWednesdayItem,
+    toggleActiveThursdayItem, //quinta
+    setToggleActiveThursdayItem,
+    toggleActiveFridayItem, //sexta
+    setToggleActiveFridayItem,
+    toggleActiveSaturdayItem, //sábado
+    setToggleActiveSaturdayItem,
   } = useGlobalContext();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -52,6 +68,13 @@ const AddItemForm: React.FC = () => {
     setEndTimeItem('');
     setIsContentItemOpen(!isContentItemOpen);
     setIsEditItem(false);
+    setToggleActiveSundayItem(true);
+    setToggleActiveMondayItem(true);
+    setToggleActiveTuesdayItem(true);
+    setToggleActiveWednesdayItem(true);
+    setToggleActiveThursdayItem(true);
+    setToggleActiveFridayItem(true);
+    setToggleActiveSaturdayItem(true);
   };
 
   const handleSubmitItem = (event: React.FormEvent) => {
@@ -79,7 +102,7 @@ const AddItemForm: React.FC = () => {
 
   return (
     <div className="add-item-form-container">
-      <button onClick={toggleContentItem} type='button'>
+      <button onClick={toggleContentItem} type="button">
         <div className="add-item-form-title">
           <span>{isContentItemOpen ? '-' : '+'}</span>
           <h2>{isEditItem ? 'Editar' : 'Adicionar'}</h2>
@@ -143,7 +166,7 @@ const AddItemForm: React.FC = () => {
           />
           <div className="add-item-form-complements">
             <button
-              type='button'
+              type="button"
               onClick={() => {
                 setToggleActiveComplementItem(!toggleActiveComplementItem);
                 setSelectedComplement('');
@@ -179,7 +202,7 @@ const AddItemForm: React.FC = () => {
           </div>
           <div className="add-item-form-time">
             <button
-              type='button'
+              type="button"
               onClick={() => {
                 setToggleActiveTimeItem(!toggleActiveTimeItem);
                 setStartTimeItem('');
@@ -207,10 +230,13 @@ const AddItemForm: React.FC = () => {
             <input
               type="time"
               value={endTimeItem}
-              onChange={(e) => { // Validar se o endTime é maior que o startTime
-                if (startTimeItem && e.target.value <= startTimeItem) { // Se for menor ou igual ao startTime, defina o endTime como vazio
+              onChange={(e) => {
+                // Validar se o endTime é maior que o startTime
+                if (startTimeItem && e.target.value <= startTimeItem) {
+                  // Se for menor ou igual ao startTime, defina o endTime como vazio
                   setEndTimeItem('');
-                } else { // Se for maior que o startTime, atualize o endTime
+                } else {
+                  // Se for maior que o startTime, atualize o endTime
                   setEndTimeItem(e.target.value);
                 }
               }}
@@ -218,6 +244,141 @@ const AddItemForm: React.FC = () => {
               required={toggleActiveTimeItem}
               min={startTimeItem}
             />
+          </div>
+          <div className="add-item-form-days">
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setToggleActiveSundayItem(!toggleActiveSundayItem);
+                }}
+              >
+                <div className="toggle-switch">
+                  <input
+                    className="toggle-input"
+                    id="toggle"
+                    type="checkbox"
+                    checked={toggleActiveSundayItem}
+                  />
+                  <label className="toggle-label"></label>
+                </div>
+              </button>
+              <span>Dom</span>
+            </div>
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setToggleActiveMondayItem(!toggleActiveMondayItem);
+                }}
+              >
+                <div className="toggle-switch">
+                  <input
+                    className="toggle-input"
+                    id="toggle"
+                    type="checkbox"
+                    checked={toggleActiveMondayItem}
+                  />
+                  <label className="toggle-label"></label>
+                </div>
+              </button>
+              <span>Seg</span>
+            </div>
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setToggleActiveTuesdayItem(!toggleActiveTuesdayItem);
+                }}
+              >
+                <div className="toggle-switch">
+                  <input
+                    className="toggle-input"
+                    id="toggle"
+                    type="checkbox"
+                    checked={toggleActiveTuesdayItem}
+                  />
+                  <label className="toggle-label"></label>
+                </div>
+              </button>
+              <span>Ter</span>
+            </div>
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setToggleActiveWednesdayItem(!toggleActiveWednesdayItem);
+                }}
+              >
+                <div className="toggle-switch">
+                  <input
+                    className="toggle-input"
+                    id="toggle"
+                    type="checkbox"
+                    checked={toggleActiveWednesdayItem}
+                  />
+                  <label className="toggle-label"></label>
+                </div>
+              </button>
+              <span>Qua</span>
+            </div>
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setToggleActiveThursdayItem(!toggleActiveThursdayItem);
+                }}
+              >
+                <div className="toggle-switch">
+                  <input
+                    className="toggle-input"
+                    id="toggle"
+                    type="checkbox"
+                    checked={toggleActiveThursdayItem}
+                  />
+                  <label className="toggle-label"></label>
+                </div>
+              </button>
+              <span>Qui</span>
+            </div>
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setToggleActiveFridayItem(!toggleActiveFridayItem);
+                }}
+              >
+                <div className="toggle-switch">
+                  <input
+                    className="toggle-input"
+                    id="toggle"
+                    type="checkbox"
+                    checked={toggleActiveFridayItem}
+                  />
+                  <label className="toggle-label"></label>
+                </div>
+              </button>
+              <span>Sex</span>
+            </div>
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setToggleActiveSaturdayItem(!toggleActiveSaturdayItem);
+                }}
+              >
+                <div className="toggle-switch">
+                  <input
+                    className="toggle-input"
+                    id="toggle"
+                    type="checkbox"
+                    checked={toggleActiveSaturdayItem}
+                  />
+                  <label className="toggle-label"></label>
+                </div>
+              </button>
+              <span>Sáb</span>
+            </div>
           </div>
           <button className="add-items-form-button" type="submit">
             <span>{isEditItem ? 'Editar' : 'Adicionar'}</span>
