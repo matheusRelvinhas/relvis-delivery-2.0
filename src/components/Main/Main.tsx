@@ -47,30 +47,25 @@ export default function Main() {
   
   const [dateTime] = useState(new Date());
   const currentDay = format(dateTime, 'EEEE');
-  const [time, setTime] = useState<string>('');
-
-  useEffect(() => {
-    const updateDateTime = () => {
-      const currentDateTime = new Date();
-      const formattedTime = format(currentDateTime, 'HH:mm', { timeZone: 'America/Sao_Paulo' });
-      setTime(formattedTime);
-    };
-    const intervalId = setInterval(updateDateTime, 60000);  // Atualiza a hora a cada minuto
-    updateDateTime();  // Chama a função uma vez para definir o valor inicial
-    return () => clearInterval(intervalId);   // Limpa o intervalo quando o componente é desmontado
-  }, []);
 
 
   return (
     <main style={{ color: dataCss.fontColor }} className="main">
-      {currentDay}, {time}
       <Search />
       {categories.map(
         (category) =>
           category.active &&
           items &&
           items.some(
-            (item) => item.category === category.category && item.active
+            (item) => item.category === category.category && item.active && (
+              (item.activeSaturday && currentDay == 'Saturday') ||
+              (item.activeMonday && currentDay == 'Monday') ||
+              (item.activeTuesday && currentDay == 'Tuesday') ||
+              (item.activeWednesday && currentDay == 'Wednesday') ||
+              (item.activeThursday && currentDay == 'Thursday') ||
+              (item.activeFriday && currentDay == 'Friday') ||
+              (item.activeSaturday && currentDay == 'Saturday')
+            )
           ) && (
             <div key={category.id}>
               <CardCarousel category={category} />
