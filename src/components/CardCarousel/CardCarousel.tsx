@@ -78,7 +78,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
             {searchResults?.map((card) => {
               if (card.active && card.category === category.category) {
                 if (
-                  (card.activeSaturday && currentDay == 'Saturday') ||
+                  (card.activeSunday && currentDay == 'Sunday') ||
                   (card.activeMonday && currentDay == 'Monday') ||
                   (card.activeTuesday && currentDay == 'Tuesday') ||
                   (card.activeWednesday && currentDay == 'Wednesday') ||
@@ -86,15 +86,20 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                   (card.activeFriday && currentDay == 'Friday') ||
                   (card.activeSaturday && currentDay == 'Saturday')
                 ) {
-                  if ( (card.activeTime) &&
-                    (new Date(`1970-01-01T${time}:00`) >= new Date(`1970-01-01T${card.startTime}:00`) &&
-                    new Date(`1970-01-01T${time}:00`) <= new Date(`1970-01-01T${card.endTime}:00`)) ||
+                  if (
+                    (card.activeTime &&
+                      new Date(`1970-01-01T${time}:00`) >=
+                        new Date(`1970-01-01T${card.startTime}:00`) &&
+                      new Date(`1970-01-01T${time}:00`) <=
+                        new Date(`1970-01-01T${card.endTime}:00`)) ||
                     card.activeTime == false
                   ) {
                     return (
                       <div key={card.id} className="card">
                         <div
-                          style={{ backgroundColor: dataCss.backgroundColorCard }}
+                          style={{
+                            backgroundColor: dataCss.backgroundColorCard,
+                          }}
                           className="card-div"
                         >
                           <div
@@ -125,36 +130,56 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                               }}
                               className="price"
                             >
-                              R${card.price.toFixed(2)}
+                              R$ {card.price.toFixed(2)}
                             </p>
                           </div>
                         </div>
-                        <div className="item-controls">
-                          <StyledButton
-                            style={{ color: dataCss.buttonColor }}
-                            normalBackgroundColor={dataCss.colorPrimary}
-                            hoverBackgroundColor={dataCss.activeButtonColor}
-                            className="card-carousel-remove-button"
-                            onClick={() => handleRemoveItem(card)}
-                          >
-                            -
-                          </StyledButton>
-                          <input
-                            type="number"
-                            min={0}
-                            value={getItemQuantity(card)}
-                            onChange={(e) => handleQuantityChange(card, e)}
-                          />
-                          <StyledButton
-                            style={{ color: dataCss.buttonColor }}
-                            normalBackgroundColor={dataCss.colorPrimary}
-                            hoverBackgroundColor={dataCss.activeButtonColor}
-                            onClick={() => handleAddItem(card)}
-                            className="card-carousel-add-button"
-                          >
-                            +
-                          </StyledButton>
-                        </div>
+                        {card.activeComplements ? (
+                          <div className="item-controls">
+                            {card.complements.complement}
+                            <select>
+                              {card.complements.complements.map((option) =>(
+                                <option key={`${card.complements.id}${option.order}`}>{option.title} - R$ {option.price.toFixed(2)}</option>
+                              ))}
+                            </select>
+                            <StyledButton
+                              style={{ color: dataCss.buttonColor }}
+                              normalBackgroundColor={dataCss.colorPrimary}
+                              hoverBackgroundColor={dataCss.activeButtonColor}
+                              className="card-carousel-remove-button"
+                              onClick={() => handleAddItem(card)}
+                            >
+                              Adcionar
+                            </StyledButton>
+                          </div>
+                        ) : (
+                          <div className="item-controls">
+                            <StyledButton
+                              style={{ color: dataCss.buttonColor }}
+                              normalBackgroundColor={dataCss.colorPrimary}
+                              hoverBackgroundColor={dataCss.activeButtonColor}
+                              className="card-carousel-remove-button"
+                              onClick={() => handleRemoveItem(card)}
+                            >
+                              -
+                            </StyledButton>
+                            <input
+                              type="number"
+                              min={0}
+                              value={getItemQuantity(card)}
+                              onChange={(e) => handleQuantityChange(card, e)}
+                            />
+                            <StyledButton
+                              style={{ color: dataCss.buttonColor }}
+                              normalBackgroundColor={dataCss.colorPrimary}
+                              hoverBackgroundColor={dataCss.activeButtonColor}
+                              onClick={() => handleAddItem(card)}
+                              className="card-carousel-add-button"
+                            >
+                              +
+                            </StyledButton>
+                          </div>
+                        )}
                       </div>
                     );
                   }

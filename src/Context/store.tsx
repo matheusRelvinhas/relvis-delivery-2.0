@@ -43,7 +43,16 @@ type Card = {
   active: boolean;
   order: number;
   activeComplements: boolean;
-  complements: string;
+  complements: {
+    complement: string;
+    complements: Array<{
+      order: number;
+      title: string;
+      price: number;
+    }>;
+    id: string;
+    order: number;
+  };
   activeTime: boolean;
   startTime: string;
   endTime: string;
@@ -66,7 +75,16 @@ type Item = {
   active: boolean;
   order: number;
   activeComplements: boolean;
-  complements: string;
+  complements: {
+    complement: string;
+    complements: Array<{
+      order: number;
+      title: string;
+      price: number;
+    }>;
+    id: string;
+    order: number;
+  };
   activeTime: boolean;
   startTime: string;
   endTime: string;
@@ -99,7 +117,16 @@ interface ItemData {
   active: boolean;
   order: number;
   activeComplements: boolean;
-  complements: string;
+  complements: {
+    complement: string;
+    complements: Array<{
+      order: number;
+      title: string;
+      price: number;
+    }>;
+    id: string;
+    order: number;
+  };
   activeTime: boolean;
   startTime: string;
   endTime: string;
@@ -1591,6 +1618,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     } else {
       activeComplement = true
     }
+    let selectComplementObject = {complement: '', complements: [{price:0, title:'', order: 0}], order: 0, id: ''};
+    if(selectedComplement !== '') {
+      complementsList.map((complement) => {
+        if (complement.complement == selectedComplement) {
+          selectComplementObject = complement
+        }
+      })
+    };
     const data: ItemData = {
       title,
       description,
@@ -1600,7 +1635,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       active: false,
       order,
       activeComplements: activeComplement,
-      complements: selectedComplement,
+      complements: selectComplementObject,
       activeTime: toggleActiveTimeItem,
       startTime: startTimeItem,
       endTime: endTimeItem,
@@ -1689,6 +1724,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       } else {
         activeComplement = true
       }
+      let selectComplementObject = {complement: '', complements: [{price:0, title:'', order: 0}], order: 0, id: ''};
+      if(selectedComplement !== '') {
+        complementsList.map((complement) => {
+          if (complement.complement == selectedComplement) {
+            selectComplementObject = complement
+          }
+        })
+      };
       const updatedItemData = {
         title: title,
         description: description,
@@ -1696,7 +1739,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         category: selectedCategory,
         image: lastImage,
         activeComplements: activeComplement,
-        complements: selectedComplement,
+        complements: selectComplementObject,
         activeTime: toggleActiveTimeItem,
         startTime: startTimeItem,
         endTime: endTimeItem,
@@ -2226,8 +2269,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       }));
       complementsData.sort((a, b) => a.order - b.order); // Ordenar os objetos pais com base na propriedade order
       complementsData.forEach((complement) => {
-        // Para cada objeto pai, ordenar os objetos filhos dentro do array complements[]
-        complement.complements.sort((a, b) => a.order - b.order);
+        complement.complements.sort((a, b) => a.order - b.order); // Para cada objeto pai, ordenar os objetos filhos dentro do array complements[]
       });
       setComplementsList(complementsData);
     });

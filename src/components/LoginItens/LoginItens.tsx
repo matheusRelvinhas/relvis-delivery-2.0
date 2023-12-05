@@ -46,7 +46,7 @@ const LoginItens: React.FC = () => {
     setLastImage(item.image);
     setImageFile(null);
     setToggleActiveComplementItem(item.activeComplements);
-    setSelectedComplement(item.complements);
+    setSelectedComplement(item.complements.complement);
     setToggleActiveTimeItem(item.activeTime);
     setStartTimeItem(item.startTime);
     setEndTimeItem(item.endTime);
@@ -99,6 +99,12 @@ const LoginItens: React.FC = () => {
                   </figure>
                 </div>
                 <div className="login-items-toggle">
+                  <div>
+                  {item.activeTime && (
+                    <span>
+                      de {item.startTime} até {item.endTime}
+                    </span>
+                  )}
                   <div className="login-items-toggle-button">
                     <span>{item.active ? 'Ligado' : 'Desligado'}</span>
                     <button
@@ -115,13 +121,9 @@ const LoginItens: React.FC = () => {
                       </div>
                     </button>
                   </div>
+                  </div>
                   {item.activeComplements && (
-                    <span>Compl.: {item.complements}</span>
-                  )}
-                  {item.activeTime && (
-                    <span>
-                      de {item.startTime} até {item.endTime}
-                    </span>
+                    <span>Compl.: {item.complements.complement}</span>
                   )}
                   <div className="login-items-move">
                     <button
