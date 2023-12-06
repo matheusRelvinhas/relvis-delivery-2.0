@@ -99,28 +99,28 @@ const LoginItens: React.FC = () => {
                   </figure>
                 </div>
                 <div className="login-items-toggle">
-                  <div>
-                  {item.activeTime && (
-                    <span>
-                      de {item.startTime} até {item.endTime}
-                    </span>
-                  )}
-                  <div className="login-items-toggle-button">
-                    <span>{item.active ? 'Ligado' : 'Desligado'}</span>
-                    <button
-                      onClick={() => toggleActiveItem(item.id, item.active)}
-                    >
-                      <div className="toggle-switch">
-                        <input
-                          className="toggle-input"
-                          id="toggle"
-                          type="checkbox"
-                          checked={item.active}
-                        />
-                        <label className="toggle-label"></label>
-                      </div>
-                    </button>
-                  </div>
+                  <div className="login-items-toggle-hours">
+                    {item.activeTime && (
+                      <span className="login-items-toggle-hours-span">
+                        {item.startTime} até {item.endTime}
+                      </span>
+                    )}
+                    <div className="login-items-toggle-button">
+                      <span>{item.active ? 'Ligado' : 'Desligado'}</span>
+                      <button
+                        onClick={() => toggleActiveItem(item.id, item.active)}
+                      >
+                        <div className="toggle-switch">
+                          <input
+                            className="toggle-input"
+                            id="toggle"
+                            type="checkbox"
+                            checked={item.active}
+                          />
+                          <label className="toggle-label"></label>
+                        </div>
+                      </button>
+                    </div>
                   </div>
                   {item.activeComplements && (
                     <span>Compl.: {item.complements.complement}</span>

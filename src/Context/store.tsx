@@ -2921,15 +2921,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setCartItems(updatedItems);
     }
   };
-
-  useEffect(() => {
-    // Função para atualizar os resultados com base na consulta de pesquisa
+  
+  useEffect(() => { // Função para atualizar os resultados com base na consulta de pesquisa
     const updateResults = () => {
       if (searchQuery === '') {
         setSearchResults(items); // Se a consulta de pesquisa estiver vazia, exiba todos os itens
       } else {
-        const filteredItems = items?.filter((item) => {
-          // Caso contrário, filtre os itens com base na consulta
+        const filteredItems = items?.filter((item) => { // Caso contrário, filtre os itens com base na consulta
           return (
             item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.description

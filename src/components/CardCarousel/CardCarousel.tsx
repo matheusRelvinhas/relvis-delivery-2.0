@@ -43,8 +43,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
       const existingItemIndex = prevStates.findIndex(
         (state) => state.id === itemId
       );
-      if (existingItemIndex !== -1) {
-        // Item já existe, atualize-o
+      if (existingItemIndex !== -1) { // Item já existe, atualize-o
         const updatedStates = [...prevStates];
         updatedStates[existingItemIndex] = {
           ...updatedStates[existingItemIndex],
@@ -52,8 +51,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
           valueTitleComplements: valueTitle,
         };
         return updatedStates;
-      } else {
-        // Item não existe, adicione-o
+      } else { // Item não existe, adicione-o
         return [
           ...prevStates,
           {
