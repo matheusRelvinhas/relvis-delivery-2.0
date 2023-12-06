@@ -184,6 +184,12 @@ interface complementsItem {
   order: number;
 }
 
+interface CartItem {
+  title: string;
+  amount: number;
+  price: number;
+}
+
 interface ContextProps {
   dataCss: Record<string, any>;
   isLogin: boolean;
@@ -193,8 +199,8 @@ interface ContextProps {
   setIsTilted: React.Dispatch<React.SetStateAction<boolean>>;
   handleCheckboxChange: () => void;
   handleCartClick: () => void;
-  cartItems: Record<string, number>;
-  setCartItems: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  cartItems: CartItem[];
+  setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
   cep: string;
   address: Address | null; // Adicione essa linha à interface
   handleCepChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -252,16 +258,18 @@ interface ContextProps {
   imageFile: any;
   setImageFile: React.Dispatch<React.SetStateAction<File | null>>;
   addItem: (event: React.FormEvent) => Promise<void>;
-  handleAddItem: (card: Card) => void;
-  handleRemoveItem: (card: Card) => void;
+  handleAddItem: (card: Card, complementTitle:string, complementPrice:number) => void;
+  handleRemoveItem: (card: Card, complementTitle:string) => void;
   handleMoveItemUp: (itemId: string, order: number) => void;
   handleMoveItemDown: (itemId: string, order: number) => void;
   toggleActiveItem: (itemId: string, itemActive: boolean) => void;
   handleQuantityChange: (
     card: Card,
-    e: React.ChangeEvent<HTMLInputElement>
+    complementTitle: string,
+    complementPrice: number,
+    newAmount: number,
   ) => void;
-  getItemQuantity: (card: Card) => number;
+  getItemQuantity: (card: Card, complementTitle:string) => number;
   cartTotal: number;
   totalItems: number; // Adicione essa linha à interface
   handleRemoveAllItems: (title: string) => void;
@@ -492,7 +500,7 @@ const GlobalContext = createContext<ContextProps>({
   setIsTilted: () => {},
   handleCheckboxChange: () => {},
   handleCartClick: () => {},
-  cartItems: {},
+  cartItems: [],
   setCartItems: () => {},
   cep: '', // Adicione essa linha para incluir a propriedade cep
   address: null, // Adicione essa linha para incluir a propriedade address
@@ -543,15 +551,17 @@ const GlobalContext = createContext<ContextProps>({
   imageFile: null,
   setImageFile: () => {},
   addItem: async (event: React.FormEvent) => {},
-  handleAddItem: (card: Card) => {},
+  handleAddItem: (card: Card, complementTitle: string, complementPrice:number) => {},
   handleMoveItemUp: () => {},
   handleMoveItemDown: () => {},
-  handleRemoveItem: (card: Card) => {},
+  handleRemoveItem: (card: Card, complementTitle: string) => {},
   handleQuantityChange: (
     card: Card,
-    e: React.ChangeEvent<HTMLInputElement>
+    complementTitle: string,
+    complementPrice: number,
+    newAmount: number,
   ) => {},
-  getItemQuantity: (card: Card) => 0,
+  getItemQuantity: (card: Card, complementTitle:string) => 0,
   cartTotal: 0,
   totalItems: 0, // Adicione essa linha à interface
   handleRemoveAllItems: () => {},
@@ -2510,7 +2520,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   //CLIENT PAGE
   const [isOpen, setIsOpen] = useState(false);
   const [isTilted, setIsTilted] = useState(false);
-  const [cartItems, setCartItems] = useState<Record<string, number>>({});
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cep, setCep] = useState('');
   const [address, setAddress] = useState<Address | null>(null);
   const [road, setRoad] = useState('');
@@ -2546,37 +2556,66 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsFinalizeOrder(false);
   };
 
-  const handleAddItem = (card: Card) => {
-    setCartItems((prevItems) => ({
-      ...prevItems,
-      [card.title]: (prevItems[card.title] || 0) + 1,
-    }));
+  const handleAddItem = (card: Card, complementTitle: string, complementPrice: number) => {
+    event?.preventDefault();
+    const newItem = {
+      title: (complementTitle != '' ? `${card.title} ${complementTitle}` : `${card.title}`),
+      price: card.price + complementPrice,
+      amount: 1,
+    };  // Verifica se o item já existe no carrinho
+    const existingItem = cartItems.find((item) => item.title === newItem.title);
+    if (existingItem) { // Se o item existir, atualiza o amount
+      const updatedItems = cartItems.map((item) =>
+        item.title === newItem.title ? { ...item, amount: item.amount + 1 } : item
+      );
+      setCartItems(updatedItems); // Se o item não existir, adiciona-o ao carrinho
+    } else { 
+      setCartItems((prevCartItems) => [...prevCartItems, newItem]);
+    }
+    console.log(cartItems);
   };
 
-  const handleRemoveItem = (card: Card) => {
-    setCartItems((prevItems) => {
-      const updatedItems = { ...prevItems };
-      if (updatedItems[card.title] > 0) {
-        updatedItems[card.title] -= 1;
-      }
-      return updatedItems;
-    });
+  const handleRemoveItem = (card: Card, complementTitle: string) => {
+    event?.preventDefault();
+    const cardTitle = (complementTitle != '' ? `${card.title} ${complementTitle}` : `${card.title}`);
+    const existingItem = cartItems.find((item) => item.title === cardTitle && item.amount > 0);
+    if (existingItem) {
+      const updatedItems = cartItems.map((item) =>
+        item.title === cardTitle ? { ...item, amount: Math.max(0, item.amount - 1) } : item
+      ); 
+      setCartItems(updatedItems);
+    }
+    console.log(cartItems);
   };
 
   const handleQuantityChange = (
     card: Card,
-    e: React.ChangeEvent<HTMLInputElement>
+    complementTitle: string,
+    complementPrice: number,
+    newAmount: number,
   ) => {
-    const newQuantity = parseInt(e.target.value);
-    if (isNaN(newQuantity)) return;
-    setCartItems((prevItems) => ({
-      ...prevItems,
-      [card.title]: newQuantity,
-    }));
+    const cardTitle = complementTitle ? `${card.title} ${complementTitle}` : card.title; // Verifica se o item já existe no carrinho
+    const existingItem = cartItems.find((item) => item.title === cardTitle);
+    if (existingItem) { // Se o item existir, atualiza a quantidade para o novo valor
+      const updatedItems = cartItems.map((item) =>
+        item.title === cardTitle ? { ...item, amount: newAmount } : item
+      );
+      setCartItems(updatedItems);
+    } else { // Se o item não existir, adiciona-o ao carrinho com a quantidade digitada
+      const newItem = {
+        title: cardTitle,
+        price: card.price + complementPrice,
+        amount: newAmount,
+      };
+      setCartItems((prevCartItems) => [...prevCartItems, newItem]);
+    }
+    console.log(cartItems);
   };
 
-  const getItemQuantity = (card: Card) => {
-    return cartItems[card.title] || 0;
+  const getItemQuantity = (card: Card, complementTitle: string) => {
+    const cardTitle = complementTitle ? `${card.title} ${complementTitle}` : card.title; // Busca o item em cartItems com base no título
+    const cartItem = cartItems.find((item) => item.title === cardTitle); // Retorna a quantidade se o item existir, senão retorna 0
+    return cartItem ? cartItem.amount : 0;
   };
 
   const fetchAddress = async (inputCep: string) => {
@@ -2769,7 +2808,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
     setOrderMessage(`#00${nextOrder}`);
     setWhatsappMessage(encodeURIComponent(message));
-    setCartItems({});
+    setCartItems([]);
     setPaymentMethod('');
     setTroco('');
     setObservation('');
@@ -2784,31 +2823,22 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsFinalizeOrder(false);
   };
 
-  const cartTotal = Object.entries(cartItems).reduce(
-    (total, [title, quantity]) => {
-      const card = items?.find((card) => card.title === title);
-      if (card && quantity > 0) {
-        total += card.price * quantity;
-      }
-      return total;
-    },
-    0
-  );
+  const cartTotal = cartItems.reduce((total, item) => total + item.amount * item.price, 0);
 
   const totalSumDelivery = (deliveryPrice ?? 0) + cartTotal;
 
   const trocoMessage = Math.abs(totalSumDelivery - parseFloat(troco));
 
-  const totalItems = Object.values(cartItems).reduce(
-    (total, quantity) => total + quantity,
-    0
-  );
+  const totalItems = cartItems.reduce((total, item) => total + item.amount, 0);
 
   const handleRemoveAllItems = (title: string) => {
-    setCartItems((prevCartItems) => ({
-      ...prevCartItems,
-      [title]: 0,
-    }));
+    const existingItem = cartItems.find((item) => item.title === title);
+    if (existingItem) {
+      const updatedItems = cartItems.map((item) =>
+        item.title === title ? { ...item, amount: 0 } : item
+      );
+      setCartItems(updatedItems);
+    }
   };
   
   useEffect(() => { // Função para atualizar os resultados com base na consulta de pesquisa

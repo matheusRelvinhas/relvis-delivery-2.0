@@ -42,17 +42,15 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
         }}
       >
         <ul>
-          {Object.entries(cartItems).map(([title, quantity]) => {
-            const card = items?.find((card) => card.title === title);
-            const totalPrice = card ? card.price * quantity : 0;
-            if (quantity > 0) {
+          {cartItems.map((item) => {
+            if (item.amount > 0) {
               return (
-                <li key={title} className="cart-summary">
+                <li key={item.title} className="cart-summary">
                   <div className="cart-summary-items-span">
                     <span>
-                      {quantity}x {title}
+                      {item.amount}x {item.title}
                     </span>
-                    <span>R$ {totalPrice.toFixed(2)}</span>
+                    <span>R$ {(item.amount * item.price).toFixed(2)}</span>
                   </div>
                   <button
                     style={{
@@ -60,7 +58,7 @@ const CartSummaryItems: React.FC<CartSummaryItemsProps> = ({}) => {
                       color: dataCss.buttonColor,
                     }}
                     className="button-delete-item"
-                    onClick={() => handleRemoveAllItems(title)}
+                    onClick={() => handleRemoveAllItems(item.title)}
                   >
                     <span>x</span>
                   </button>

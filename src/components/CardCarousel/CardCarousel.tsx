@@ -52,7 +52,8 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
           valueTitleComplements: valueTitle,
         };
         return updatedStates;
-      } else { // Item não existe, adicione-o
+      } else {
+        // Item não existe, adicione-o
         return [
           ...prevStates,
           {
@@ -185,18 +186,32 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                           </div>
                         </div>
                         {card.activeComplements ? (
-                          <form className="item-controls" onSubmit={() => handleAddItem(card, complementItem?.valueTitleComplements, complementItem?.valuePriceComplements)}>
+                          <form
+                            className="item-controls"
+                            onSubmit={() =>
+                              handleAddItem(
+                                card,
+                                complementItem?.valueTitleComplements
+                                  ? complementItem?.valueTitleComplements
+                                  : '',
+                                complementItem?.valuePriceComplements
+                                  ? complementItem?.valuePriceComplements
+                                  : 0
+                              )
+                            }
+                          >
                             <select
                               required
                               onChange={(e) => {
                                 const optionValue = e.target.value;
                                 if (optionValue) {
-                                  const { price, title } = JSON.parse(optionValue);
+                                  const { price, title } =
+                                    JSON.parse(optionValue);
                                   updateItemState(card.id, price, title);
                                 }
                               }}
                             >
-                              <option value=''>
+                              <option value="">
                                 {card.complements.complement}
                               </option>
                               {card.complements.complements.map((option) => (
@@ -213,7 +228,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                               normalBackgroundColor={dataCss.colorPrimary}
                               hoverBackgroundColor={dataCss.activeButtonColor}
                               className="card-carousel-remove-button"
-                              type='submit'
+                              type="submit"
                             >
                               Adcionar
                             </StyledButton>
@@ -225,24 +240,59 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                               normalBackgroundColor={dataCss.colorPrimary}
                               hoverBackgroundColor={dataCss.activeButtonColor}
                               className="card-carousel-remove-button"
-                              onClick={() => handleRemoveItem(card)}
-                              type='button'
+                              onClick={() =>
+                                handleRemoveItem(
+                                  card,
+                                  complementItem?.valueTitleComplements
+                                    ? complementItem?.valueTitleComplements
+                                    : ''
+                                )
+                              }
+                              type="button"
                             >
                               -
                             </StyledButton>
                             <input
                               type="number"
                               min={0}
-                              value={getItemQuantity(card)}
-                              onChange={(e) => handleQuantityChange(card, e)}
+                              value={getItemQuantity(
+                                card,
+                                complementItem?.valueTitleComplements
+                                  ? complementItem?.valueTitleComplements
+                                  : ''
+                              )}
+                              onChange={(e) => {
+                                const newAmount =
+                                  parseInt(e.target.value, 10) || 0;
+                                handleQuantityChange(
+                                  card,
+                                  complementItem?.valueTitleComplements
+                                    ? complementItem?.valueTitleComplements
+                                    : '',
+                                  complementItem?.valuePriceComplements
+                                    ? complementItem?.valuePriceComplements
+                                    : 0,
+                                    newAmount
+                                );
+                              }}
                             />
                             <StyledButton
                               style={{ color: dataCss.buttonColor }}
                               normalBackgroundColor={dataCss.colorPrimary}
                               hoverBackgroundColor={dataCss.activeButtonColor}
-                              onClick={() => handleAddItem(card)}
-                              className="card-carousel-add-button"
-                              type='button'
+                              className="card-carousel-remove-button"
+                              onClick={() =>
+                                handleAddItem(
+                                  card,
+                                  complementItem?.valueTitleComplements
+                                    ? complementItem?.valueTitleComplements
+                                    : '',
+                                  complementItem?.valuePriceComplements
+                                    ? complementItem?.valuePriceComplements
+                                    : 0
+                                )
+                              }
+                              type="button"
                             >
                               +
                             </StyledButton>
