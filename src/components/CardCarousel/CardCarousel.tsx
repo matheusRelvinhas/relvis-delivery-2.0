@@ -22,6 +22,49 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
 
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
+  const [itemSelectedComplement, setItemSelectedComplement] = useState<
+    {
+      id: string;
+      valuePriceComplements: number;
+      valueTitleComplements: string;
+    }[]
+  >([]);
+
+  const getItemStateById = (itemId: string) => {
+    return itemSelectedComplement?.find((state: any) => state.id === itemId);
+  };
+
+  const updateItemState = (
+    itemId: string,
+    valuePrice: number,
+    valueTitle: string
+  ) => {
+    setItemSelectedComplement((prevStates) => {
+      const existingItemIndex = prevStates.findIndex(
+        (state) => state.id === itemId
+      );
+      if (existingItemIndex !== -1) {
+        // Item já existe, atualize-o
+        const updatedStates = [...prevStates];
+        updatedStates[existingItemIndex] = {
+          ...updatedStates[existingItemIndex],
+          valuePriceComplements: valuePrice,
+          valueTitleComplements: valueTitle,
+        };
+        return updatedStates;
+      } else { // Item não existe, adicione-o
+        return [
+          ...prevStates,
+          {
+            id: itemId,
+            valuePriceComplements: valuePrice,
+            valueTitleComplements: valueTitle,
+          },
+        ];
+      }
+    });
+  };
+
   const scrollLeft = () => {
     if (carouselRef.current) {
       carouselRef.current.scrollLeft -= 300;
@@ -76,6 +119,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
           </StyledButton>
           <div className="card-list" ref={carouselRef}>
             {searchResults?.map((card) => {
+              const complementItem = getItemStateById(card.id);
               if (card.active && card.category === category.category) {
                 if (
                   (card.activeSunday && currentDay == 'Sunday') ||
@@ -130,16 +174,38 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                               }}
                               className="price"
                             >
-                              R$ {card.price.toFixed(2)}
+                              R${' '}
+                              {(
+                                card.price +
+                                (complementItem?.valuePriceComplements
+                                  ? complementItem?.valuePriceComplements
+                                  : 0)
+                              ).toFixed(2)}
                             </p>
                           </div>
                         </div>
                         {card.activeComplements ? (
-                          <div className="item-controls">
-                            {card.complements.complement}
-                            <select>
-                              {card.complements.complements.map((option) =>(
-                                <option key={`${card.complements.id}${option.order}`}>{option.title} - R$ {option.price.toFixed(2)}</option>
+                          <form className="item-controls" onSubmit={() => handleAddItem(card, complementItem?.valueTitleComplements, complementItem?.valuePriceComplements)}>
+                            <select
+                              required
+                              onChange={(e) => {
+                                const optionValue = e.target.value;
+                                if (optionValue) {
+                                  const { price, title } = JSON.parse(optionValue);
+                                  updateItemState(card.id, price, title);
+                                }
+                              }}
+                            >
+                              <option value=''>
+                                {card.complements.complement}
+                              </option>
+                              {card.complements.complements.map((option) => (
+                                <option
+                                  key={`${card.complements.id}${option.order}`}
+                                  value={JSON.stringify(option)}
+                                >
+                                  {option.title} - R$ {option.price.toFixed(2)}
+                                </option>
                               ))}
                             </select>
                             <StyledButton
@@ -147,11 +213,11 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                               normalBackgroundColor={dataCss.colorPrimary}
                               hoverBackgroundColor={dataCss.activeButtonColor}
                               className="card-carousel-remove-button"
-                              onClick={() => handleAddItem(card)}
+                              type='submit'
                             >
                               Adcionar
                             </StyledButton>
-                          </div>
+                          </form>
                         ) : (
                           <div className="item-controls">
                             <StyledButton
@@ -160,6 +226,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                               hoverBackgroundColor={dataCss.activeButtonColor}
                               className="card-carousel-remove-button"
                               onClick={() => handleRemoveItem(card)}
+                              type='button'
                             >
                               -
                             </StyledButton>
@@ -175,6 +242,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                               hoverBackgroundColor={dataCss.activeButtonColor}
                               onClick={() => handleAddItem(card)}
                               className="card-carousel-add-button"
+                              type='button'
                             >
                               +
                             </StyledButton>

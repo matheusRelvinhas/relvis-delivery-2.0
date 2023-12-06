@@ -1267,6 +1267,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   ) => {
     setIsLoading(true);
     try {
+      const collectionItemRef = firestore.collection('items');
       const complementRef = firestore
         .collection('complements')
         .doc(complementsId);
@@ -1292,6 +1293,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         };
         const updatedComplements = [...currentComplements, newItem];
         await complementRef.update({ complements: updatedComplements });
+        const itemQuerySnapshot = await collectionItemRef
+          .where('complements.id', '==', complementsId)
+          .get();
+        const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
+          await collectionItemRef.doc(docItem.id).update({
+            'complements.complements': updatedComplements,
+          });
+        });
+        await Promise.all(updatePromises);
         setComplementTitle('');
         setComplementPrice('');
       }
@@ -1334,11 +1344,11 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       });
       setIsContentComplementsOpen(false);
       const itemQuerySnapshot = await collectionItemRef
-      .where('complements', '==', lastComplements)
+      .where('complements.complement', '==', lastComplements)
       .get();
     const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
       await collectionItemRef.doc(docItem.id).update({
-        complements: complement,
+        'complements.complement': complement,
       });
     });
     await Promise.all(updatePromises);
@@ -1364,6 +1374,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     try {
       const collectionRef = firestore.collection('complements');
+      const collectionItemRef = firestore.collection('items');
       const complementsDocRef = collectionRef.doc(complementsId);
       const complementsDoc = await complementsDocRef.get();
       if (complementsDoc.exists) {
@@ -1382,11 +1393,20 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
             setErrorMessage('');
           }, 3000);
         } else {
-          const batch = firestore.batch(); // Trocar ordens dos itens
+          const batch = firestore.batch();
           tempComplement.title = complementsTitle
           tempComplement.price = parseFloat(complementsPrice),
           batch.update(complementsDocRef, { complements: complementsArray });
           await batch.commit();
+          const itemQuerySnapshot = await collectionItemRef
+            .where('complements.id', '==', complementsId)
+            .get();
+          const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
+            await collectionItemRef.doc(docItem.id).update({
+              'complements.complements': complementsArray,
+            });
+          });
+          await Promise.all(updatePromises);
           setComplementTitle('');
           setComplementPrice('');
         }
@@ -1419,13 +1439,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const currentOrder = doc.data().order;
         await docRef.update({ order: currentOrder - 1 });
       });
+      let complementObject = {complement: '', complements: [{price:0, title:'', order: 0}], order: 0, id: ''};
       const itemQuerySnapshot = await collectionItemRef
-        .where('complements', '==', complement)
+        .where('complements.id', '==', complementsId)
         .get();
       const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
         await collectionItemRef.doc(docItem.id).update({
           activeComplements: false,
-          complements: '',
+          complements: complementObject,
         });
       });
       await Promise.all(updatePromises);
@@ -1449,6 +1470,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     try {
       const collectionRef = firestore.collection('complements');
+      const collectionItemRef = firestore.collection('items');
       const complementsDocRef = collectionRef.doc(itemComplementsId); // Obter o documento do Firestore
       const complementsDoc = await complementsDocRef.get();
       if (complementsDoc.exists) {
@@ -1464,6 +1486,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           }
         }); // Atualizar o documento no Firestore com os complementos atualizados
         await complementsDocRef.update({ complements: updatedComplements });
+        const itemQuerySnapshot = await collectionItemRef
+            .where('complements.id', '==', itemComplementsId)
+            .get();
+        const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
+          await collectionItemRef.doc(docItem.id).update({
+            'complements.complements': updatedComplements,
+          });
+        });
+        await Promise.all(updatePromises);
       } else {
         console.error('Erro ao excluir item do complemento');
         setErrorMessage('Erro ao excluir item do complemento');
@@ -1869,8 +1900,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       .where('order', '==', order + 1)
       .limit(1)
       .get();
-    if (!nextItemSnapshot.empty) {
-      // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
+    if (!nextItemSnapshot.empty) { // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
       const nextItemId = nextItemSnapshot.docs[0].id;
       const nextItemRef = firestore.collection('items').doc(nextItemId); // Atualize a ordem da categoria selecionada
       batch.update(itemRef, { order: order + 1 }); // Atualize a ordem da categoria seguinte
@@ -1893,8 +1923,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       complement: complementClient,
       district: districtClient,
     };
-    try {
-      // Verifica se já existe um item com o mesmo celular
+    try { // Verifica se já existe um item com o mesmo celular
       const querySnapshot = await collectionRef
         .where('cellphone', '==', cellphoneClient)
         .get();
