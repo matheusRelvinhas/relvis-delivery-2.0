@@ -100,11 +100,6 @@ const LoginItens: React.FC = () => {
                 </div>
                 <div className="login-items-toggle">
                   <div className="login-items-toggle-hours">
-                    {item.activeTime && (
-                      <span className="login-items-toggle-hours-span">
-                        {item.startTime} até {item.endTime}
-                      </span>
-                    )}
                     <div className="login-items-toggle-button">
                       <span>{item.active ? 'Ligado' : 'Desligado'}</span>
                       <button
@@ -122,6 +117,11 @@ const LoginItens: React.FC = () => {
                       </button>
                     </div>
                   </div>
+                  {item.activeTime && (
+                      <span className="login-items-toggle-hours-span">
+                        {item.startTime} até {item.endTime}
+                      </span>
+                    )}
                   {item.activeComplements && (
                     <span>Compl.: {item.complements.complement}</span>
                   )}

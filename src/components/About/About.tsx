@@ -83,7 +83,7 @@ const About: React.FC = () => {
           <span>Fixo: 31 2515-1005</span>
           <span>E-mail: matheusrelvinhas@gmail.com</span>
           <figure>
-            <a href="https://api.whatsapp.com/send?phone=+5531971451910&text=Oi, tudo bem?">
+            <a href={`https://api.whatsapp.com/send?phone=+55${dataCss.cellPhone}&text=Oi, tudo bem?`}>
               <picture>
                 <source src={dataCss.iconAbout.whats} type="image/png" />
                 <img

@@ -788,6 +788,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
 }) => {
   const dataCss = {
     profileName: 'Relvis Delivery',
+    cellPhone: '31971451910',
     logoImage: ['./img/logo.png', './img/logo.webp'],
     cartImage: './img/cart.png',
     backImage: '/img/back.png',
@@ -2601,6 +2602,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsTilted(false);
     setIsFinalizeOrder(false);
   };
+
   const handleCartClick = () => {
     setIsTilted(!isTilted);
     setIsOpen(false);
@@ -2738,8 +2740,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       // Filtra as categorias que têm a promoção ativa
       (category) => category.deliveryPromotion
     ); // Verifica se algum item no carrinho faz parte da promoção por categoria
-    const isPromotionActive = cartItems.some((cartItem) => {
-      // Encontra o item correspondente em "items"
+    const isPromotionActive = cartItems.some((cartItem) => { // Encontra o item correspondente em "items"
       const item = items?.find((i) => cartItem.title.includes(i.title)); // Verifica se o item tem uma categoria em promoção
       if (
         item &&
@@ -2896,7 +2897,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   };
 
   const sendOrder = () => {
-    const whatsappLink = `https://api.whatsapp.com/send?phone=+5531971451910&text=${whatsappMessage}`;
+    const whatsappLink = `https://api.whatsapp.com/send?phone=+55${dataCss.cellPhone}&text=${whatsappMessage}`;
     window.open(whatsappLink, '_blank');
     setIsFinalizeOrder(false);
   };

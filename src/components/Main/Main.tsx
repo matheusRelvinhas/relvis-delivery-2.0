@@ -252,7 +252,7 @@ export default function Main() {
               <span>OU</span>
               <div>
                 <span>Envie uma </span>
-                <a href="https://api.whatsapp.com/send?phone=+5531971451910&text=Oi, teria disponíbilidade de entrega?">
+                <a href={`https://api.whatsapp.com/send?phone=+55${dataCss.cellPhone}&text=Oi, teria disponíbilidade de entrega?`}>
                   <StyledButton
                     normalColor={dataCss.summaryFont}
                     normalBackgroundColor={dataCss.colorPrimary}
