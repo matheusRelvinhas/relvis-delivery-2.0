@@ -223,6 +223,30 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                                 </option>
                               ))}
                             </select>
+                            <input
+                              type="number"
+                              min={0}
+                              value={getItemQuantity(
+                                card,
+                                complementItem?.valueTitleComplements
+                                  ? complementItem?.valueTitleComplements
+                                  : ''
+                              )}
+                              onChange={(e) => {
+                                const newAmount =
+                                  parseInt(e.target.value, 10) || 0;
+                                handleQuantityChange(
+                                  card,
+                                  complementItem?.valueTitleComplements
+                                    ? complementItem?.valueTitleComplements
+                                    : '',
+                                  complementItem?.valuePriceComplements
+                                    ? complementItem?.valuePriceComplements
+                                    : 0,
+                                    newAmount
+                                );
+                              }}
+                            />
                             <StyledButton
                               style={{ color: dataCss.buttonColor }}
                               normalBackgroundColor={dataCss.colorPrimary}
@@ -230,7 +254,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                               className="card-carousel-remove-button"
                               type="submit"
                             >
-                              Adcionar
+                              +
                             </StyledButton>
                           </form>
                         ) : (

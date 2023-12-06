@@ -258,8 +258,12 @@ interface ContextProps {
   imageFile: any;
   setImageFile: React.Dispatch<React.SetStateAction<File | null>>;
   addItem: (event: React.FormEvent) => Promise<void>;
-  handleAddItem: (card: Card, complementTitle:string, complementPrice:number) => void;
-  handleRemoveItem: (card: Card, complementTitle:string) => void;
+  handleAddItem: (
+    card: Card,
+    complementTitle: string,
+    complementPrice: number
+  ) => void;
+  handleRemoveItem: (card: Card, complementTitle: string) => void;
   handleMoveItemUp: (itemId: string, order: number) => void;
   handleMoveItemDown: (itemId: string, order: number) => void;
   toggleActiveItem: (itemId: string, itemActive: boolean) => void;
@@ -267,9 +271,9 @@ interface ContextProps {
     card: Card,
     complementTitle: string,
     complementPrice: number,
-    newAmount: number,
+    newAmount: number
   ) => void;
-  getItemQuantity: (card: Card, complementTitle:string) => number;
+  getItemQuantity: (card: Card, complementTitle: string) => number;
   cartTotal: number;
   totalItems: number; // Adicione essa linha à interface
   handleRemoveAllItems: (title: string) => void;
@@ -438,7 +442,12 @@ interface ContextProps {
   setLastComplements: React.Dispatch<React.SetStateAction<string>>;
   addComplements: (complement: string) => void;
   handleEditComplements: (complementsId: string, complement: string) => void;
-  handleEditComplementsItem: (complementsId: string, itemOrder: number, complementsTitle: string, complementsPrice: string) => void;
+  handleEditComplementsItem: (
+    complementsId: string,
+    itemOrder: number,
+    complementsTitle: string,
+    complementsPrice: string
+  ) => void;
   addComplementItem: (
     complementsId: string,
     complementsTitle: string,
@@ -450,7 +459,7 @@ interface ContextProps {
     order: number;
     complements: complementsItem[];
   }[];
-  handleDeleteComplements: (complementsId: string, complement:string) => void;
+  handleDeleteComplements: (complementsId: string, complement: string) => void;
   handleDeleteItemComplements: (
     itemComplementsId: string,
     itemComplementsOrder: number
@@ -551,7 +560,11 @@ const GlobalContext = createContext<ContextProps>({
   imageFile: null,
   setImageFile: () => {},
   addItem: async (event: React.FormEvent) => {},
-  handleAddItem: (card: Card, complementTitle: string, complementPrice:number) => {},
+  handleAddItem: (
+    card: Card,
+    complementTitle: string,
+    complementPrice: number
+  ) => {},
   handleMoveItemUp: () => {},
   handleMoveItemDown: () => {},
   handleRemoveItem: (card: Card, complementTitle: string) => {},
@@ -559,9 +572,9 @@ const GlobalContext = createContext<ContextProps>({
     card: Card,
     complementTitle: string,
     complementPrice: number,
-    newAmount: number,
+    newAmount: number
   ) => {},
-  getItemQuantity: (card: Card, complementTitle:string) => 0,
+  getItemQuantity: (card: Card, complementTitle: string) => 0,
   cartTotal: 0,
   totalItems: 0, // Adicione essa linha à interface
   handleRemoveAllItems: () => {},
@@ -912,7 +925,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [foundMessage, setFoundMessage] = useState(false);
   const [complements, setComplements] = useState('');
   const [isEditComplements, setIsEditComplements] = useState(false);
-  const [isAddEditComplementsItem, setIsAddEditComplementsItem] = useState(false);
+  const [isAddEditComplementsItem, setIsAddEditComplementsItem] =
+    useState(false);
   const [isEditComplementsItem, setIsEditComplementsItem] = useState(false);
   const [isContentComplementsOpen, setIsContentComplementsOpen] =
     useState(false);
@@ -929,7 +943,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   >([]);
   const [complementTitle, setComplementTitle] = useState('');
   const [complementPrice, setComplementPrice] = useState('');
-  const [toggleActiveComplementItem, setToggleActiveComplementItem] = useState(false);
+  const [toggleActiveComplementItem, setToggleActiveComplementItem] =
+    useState(false);
   const [selectedComplement, setSelectedComplement] = useState('');
   const [toggleActiveTimeItem, setToggleActiveTimeItem] = useState(false);
   const [startTimeItem, setStartTimeItem] = useState<string>('');
@@ -938,10 +953,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
   const [toggleActiveSundayItem, setToggleActiveSundayItem] = useState(false); //domingo
   const [toggleActiveMondayItem, setToggleActiveMondayItem] = useState(false); //segunda
   const [toggleActiveTuesdayItem, setToggleActiveTuesdayItem] = useState(false); //terça
-  const [toggleActiveWednesdayItem, setToggleActiveWednesdayItem] = useState(false); //quarta
-  const [toggleActiveThursdayItem, setToggleActiveThursdayItem] = useState(false); //quinta
+  const [toggleActiveWednesdayItem, setToggleActiveWednesdayItem] =
+    useState(false); //quarta
+  const [toggleActiveThursdayItem, setToggleActiveThursdayItem] =
+    useState(false); //quinta
   const [toggleActiveFridayItem, setToggleActiveFridayItem] = useState(false); //sexta
-  const [toggleActiveSaturdayItem, setToggleActiveSaturdayItem] = useState(false); //sábado
+  const [toggleActiveSaturdayItem, setToggleActiveSaturdayItem] =
+    useState(false); //sábado
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -967,7 +985,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     try {
       await auth.signOut();
-      console.log('Logout successful');
       setIsLogin(false);
     } catch (error) {
       console.error('Logout error:', error);
@@ -1093,7 +1110,6 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setIsEditCategory(false);
       setLastCategory('');
       setCategory('');
-      console.log('Categoria editada com sucesso e itens atualizados!');
     } catch (error) {
       console.error('Erro ao editar categoria: ', error);
       setErrorMessage('Erro ao editar categoria');
@@ -1159,7 +1175,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const querySnapshot = await collectionRef
         .where('order', '>', orderToDelete)
         .get(); // Consulte todas as categorias com ordens maiores que a excluída
-      querySnapshot.forEach(async (doc) => {  // Atualize as ordens das categorias encontradas
+      querySnapshot.forEach(async (doc) => {
+        // Atualize as ordens das categorias encontradas
         const docRef = collectionRef.doc(doc.id);
         const currentOrder = doc.data().order;
         await docRef.update({ order: currentOrder - 1 });
@@ -1216,7 +1233,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       .where('order', '==', order + 1)
       .limit(1)
       .get();
-    if (!nextCategorySnapshot.empty) { // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
+    if (!nextCategorySnapshot.empty) {
+      // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
       const nextCategoryId = nextCategorySnapshot.docs[0].id;
       const nextCategoryRef = firestore
         .collection('categories')
@@ -1236,7 +1254,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const existingComplements = await collectionRef
           .where('complement', '==', complement)
           .get();
-        if (existingComplements.size === 0) { // Se não existir, continua com o processo de adição
+        if (existingComplements.size === 0) {
+          // Se não existir, continua com o processo de adição
           const querySnapshot = await collectionRef.get();
           const totalComplements = querySnapshot.size;
           const order = totalComplements + 1;
@@ -1247,7 +1266,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           });
           setComplements('');
           setIsContentComplementsOpen(false);
-        } else { // Se já existir, exibe uma mensagem de erro
+        } else {
+          // Se já existir, exibe uma mensagem de erro
           setErrorMessage('Complemento já cadastrado');
           setAlertLogin(true);
           setIsLoading(false);
@@ -1286,7 +1306,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const isTitleAlreadyExists = currentComplements.some(
         (complementItem: any) => complementItem.title === complementsTitle
       );
-      if (isTitleAlreadyExists) { // Exibe uma mensagem de erro se o título já existir
+      if (isTitleAlreadyExists) {
+        // Exibe uma mensagem de erro se o título já existir
         setErrorMessage('Item já cadastrado');
         setAlertLogin(true);
         setIsLoading(false);
@@ -1294,7 +1315,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           setAlertLogin(false);
           setErrorMessage('');
         }, 3000);
-      } else { // Se não existir, continua com o processo de adição
+      } else {
+        // Se não existir, continua com o processo de adição
         const order = currentComplements.length + 1;
         const newItem = {
           title: complementsTitle,
@@ -1306,7 +1328,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const itemQuerySnapshot = await collectionItemRef
           .where('complements.id', '==', complementsId)
           .get();
-        const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
+        const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => {
+          // Use Promise.all para esperar por todas as atualizações dos itens
           await collectionItemRef.doc(docItem.id).update({
             'complements.complements': updatedComplements,
           });
@@ -1354,14 +1377,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       });
       setIsContentComplementsOpen(false);
       const itemQuerySnapshot = await collectionItemRef
-      .where('complements.complement', '==', lastComplements)
-      .get();
-    const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
-      await collectionItemRef.doc(docItem.id).update({
-        'complements.complement': complement,
+        .where('complements.complement', '==', lastComplements)
+        .get();
+      const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => {
+        // Use Promise.all para esperar por todas as atualizações dos itens
+        await collectionItemRef.doc(docItem.id).update({
+          'complements.complement': complement,
+        });
       });
-    });
-    await Promise.all(updatePromises);
+      await Promise.all(updatePromises);
     } catch (error) {
       console.error('Erro ao editar complemento: ', error);
       setErrorMessage('Erro ao editar complemento');
@@ -1374,12 +1398,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsEditComplements(false);
     setIsLoading(false);
   };
-  
+
   const handleEditComplementsItem = async (
     complementsId: string,
     itemOrder: number,
     complementsTitle: string,
-    complementsPrice:string,
+    complementsPrice: string
   ) => {
     setIsLoading(true);
     try {
@@ -1404,14 +1428,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
           }, 3000);
         } else {
           const batch = firestore.batch();
-          tempComplement.title = complementsTitle
-          tempComplement.price = parseFloat(complementsPrice),
-          batch.update(complementsDocRef, { complements: complementsArray });
+          tempComplement.title = complementsTitle;
+          (tempComplement.price = parseFloat(complementsPrice)),
+            batch.update(complementsDocRef, { complements: complementsArray });
           await batch.commit();
           const itemQuerySnapshot = await collectionItemRef
             .where('complements.id', '==', complementsId)
             .get();
-          const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
+          const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => {
+            // Use Promise.all para esperar por todas as atualizações dos itens
             await collectionItemRef.doc(docItem.id).update({
               'complements.complements': complementsArray,
             });
@@ -1433,7 +1458,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(false);
   };
 
-  const handleDeleteComplements = async (complementsId: string, complement:string) => {
+  const handleDeleteComplements = async (
+    complementsId: string,
+    complement: string
+  ) => {
     setIsLoading(true);
     try {
       const collectionRef = firestore.collection('complements');
@@ -1449,11 +1477,17 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         const currentOrder = doc.data().order;
         await docRef.update({ order: currentOrder - 1 });
       });
-      let complementObject = {complement: '', complements: [{price:0, title:'', order: 0}], order: 0, id: ''};
+      let complementObject = {
+        complement: '',
+        complements: [{ price: 0, title: '', order: 0 }],
+        order: 0,
+        id: '',
+      };
       const itemQuerySnapshot = await collectionItemRef
         .where('complements.id', '==', complementsId)
         .get();
-      const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
+      const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => {
+        // Use Promise.all para esperar por todas as atualizações dos itens
         await collectionItemRef.doc(docItem.id).update({
           activeComplements: false,
           complements: complementObject,
@@ -1497,9 +1531,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         }); // Atualizar o documento no Firestore com os complementos atualizados
         await complementsDocRef.update({ complements: updatedComplements });
         const itemQuerySnapshot = await collectionItemRef
-            .where('complements.id', '==', itemComplementsId)
-            .get();
-        const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => { // Use Promise.all para esperar por todas as atualizações dos itens
+          .where('complements.id', '==', itemComplementsId)
+          .get();
+        const updatePromises = itemQuerySnapshot.docs.map(async (docItem) => {
+          // Use Promise.all para esperar por todas as atualizações dos itens
           await collectionItemRef.doc(docItem.id).update({
             'complements.complements': updatedComplements,
           });
@@ -1655,18 +1690,23 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     const order = totalItems + 1; // Determine a ordem para o novo item
     let activeComplement = false;
     if (selectedComplement == '') {
-      activeComplement = false
+      activeComplement = false;
     } else {
-      activeComplement = true
+      activeComplement = true;
     }
-    let selectComplementObject = {complement: '', complements: [{price:0, title:'', order: 0}], order: 0, id: ''};
-    if(selectedComplement !== '') {
+    let selectComplementObject = {
+      complement: '',
+      complements: [{ price: 0, title: '', order: 0 }],
+      order: 0,
+      id: '',
+    };
+    if (selectedComplement !== '') {
       complementsList.map((complement) => {
         if (complement.complement == selectedComplement) {
-          selectComplementObject = complement
+          selectComplementObject = complement;
         }
-      })
-    };
+      });
+    }
     const data: ItemData = {
       title,
       description,
@@ -1688,7 +1728,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       activeFriday: toggleActiveFridayItem,
       activeSaturday: toggleActiveSaturdayItem,
     };
-    try { // Verifica se já existe um item com o mesmo título
+    try {
+      // Verifica se já existe um item com o mesmo título
       const querySnapshot = await collectionRef
         .where('title', '==', title)
         .get();
@@ -1718,7 +1759,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setImageFile(null);
       setSelectedCategory('');
       setToggleActiveComplementItem(false);
-      setSelectedComplement('')
+      setSelectedComplement('');
       setToggleActiveTimeItem(false);
       setStartTimeItem('');
       setEndTimeItem('');
@@ -1745,7 +1786,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsLoading(true);
     const collectionRef = firestore.collection('items');
     const itemRef = collectionRef.doc(itemId);
-    try { // Verifica se já existe um item com o mesmo título
+    try {
+      // Verifica se já existe um item com o mesmo título
       const existingItem = await collectionRef
         .where('title', '==', title)
         .get();
@@ -1761,18 +1803,23 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       }
       let activeComplement = false;
       if (selectedComplement == '') {
-        activeComplement = false
+        activeComplement = false;
       } else {
-        activeComplement = true
+        activeComplement = true;
       }
-      let selectComplementObject = {complement: '', complements: [{price:0, title:'', order: 0}], order: 0, id: ''};
-      if(selectedComplement !== '') {
+      let selectComplementObject = {
+        complement: '',
+        complements: [{ price: 0, title: '', order: 0 }],
+        order: 0,
+        id: '',
+      };
+      if (selectedComplement !== '') {
         complementsList.map((complement) => {
           if (complement.complement == selectedComplement) {
-            selectComplementObject = complement
+            selectComplementObject = complement;
           }
-        })
-      };
+        });
+      }
       const updatedItemData = {
         title: title,
         description: description,
@@ -1792,7 +1839,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         activeFriday: toggleActiveFridayItem,
         activeSaturday: toggleActiveSaturdayItem,
       };
-      if (imageFile) { // Faz upload da nova imagem para o Firebase Storage
+      if (imageFile) {
+        // Faz upload da nova imagem para o Firebase Storage
         const storageRef = storage.ref();
         const imageRef = storageRef.child(itemId);
         await imageRef.put(imageFile);
@@ -1910,7 +1958,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       .where('order', '==', order + 1)
       .limit(1)
       .get();
-    if (!nextItemSnapshot.empty) { // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
+    if (!nextItemSnapshot.empty) {
+      // Encontrou uma categoria com a ordem seguinte, portanto, pode atualizar a ordem
       const nextItemId = nextItemSnapshot.docs[0].id;
       const nextItemRef = firestore.collection('items').doc(nextItemId); // Atualize a ordem da categoria selecionada
       batch.update(itemRef, { order: order + 1 }); // Atualize a ordem da categoria seguinte
@@ -1933,7 +1982,8 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       complement: complementClient,
       district: districtClient,
     };
-    try { // Verifica se já existe um item com o mesmo celular
+    try {
+      // Verifica se já existe um item com o mesmo celular
       const querySnapshot = await collectionRef
         .where('cellphone', '==', cellphoneClient)
         .get();
@@ -2459,12 +2509,14 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }
   }, [startDate, endDate, purchaseRequests]);
 
-  useEffect(() => { // Função para atualizar os resultados com base na consulta de pesquisa
+  useEffect(() => {
+    // Função para atualizar os resultados com base na consulta de pesquisa
     const updateResults = () => {
       if (searchQueryLogin === '') {
         setSearchResultsLogin(items); // Se a consulta de pesquisa estiver vazia, exiba todos os itens
       } else {
-        const filteredItems = items?.filter((item) => { // Caso contrário, filtre os itens com base na consulta
+        const filteredItems = items?.filter((item) => {
+          // Caso contrário, filtre os itens com base na consulta
           return (
             item.title.toLowerCase().includes(searchQueryLogin.toLowerCase()) ||
             item.description
@@ -2556,52 +2608,71 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsFinalizeOrder(false);
   };
 
-  const handleAddItem = (card: Card, complementTitle: string, complementPrice: number) => {
+  const handleAddItem = (
+    card: Card,
+    complementTitle: string,
+    complementPrice: number
+  ) => {
     event?.preventDefault();
     const newItem = {
-      title: (complementTitle != '' ? `${card.title} ${complementTitle}` : `${card.title}`),
+      title:
+        complementTitle != ''
+          ? `${card.title} ${complementTitle}`
+          : `${card.title}`,
       price: card.price + complementPrice,
       amount: 1,
-    };  // Verifica se o item já existe no carrinho
+    }; // Verifica se o item já existe no carrinho
     const existingItem = cartItems.find((item) => item.title === newItem.title);
-    if (existingItem) { // Se o item existir, atualiza o amount
+    if (existingItem) {
+      // Se o item existir, atualiza o amount
       const updatedItems = cartItems.map((item) =>
-        item.title === newItem.title ? { ...item, amount: item.amount + 1 } : item
+        item.title === newItem.title
+          ? { ...item, amount: item.amount + 1 }
+          : item
       );
       setCartItems(updatedItems); // Se o item não existir, adiciona-o ao carrinho
-    } else { 
+    } else {
       setCartItems((prevCartItems) => [...prevCartItems, newItem]);
     }
-    console.log(cartItems);
   };
 
   const handleRemoveItem = (card: Card, complementTitle: string) => {
     event?.preventDefault();
-    const cardTitle = (complementTitle != '' ? `${card.title} ${complementTitle}` : `${card.title}`);
-    const existingItem = cartItems.find((item) => item.title === cardTitle && item.amount > 0);
+    const cardTitle =
+      complementTitle != ''
+        ? `${card.title} ${complementTitle}`
+        : `${card.title}`;
+    const existingItem = cartItems.find(
+      (item) => item.title === cardTitle && item.amount > 0
+    );
     if (existingItem) {
       const updatedItems = cartItems.map((item) =>
-        item.title === cardTitle ? { ...item, amount: Math.max(0, item.amount - 1) } : item
-      ); 
+        item.title === cardTitle
+          ? { ...item, amount: Math.max(0, item.amount - 1) }
+          : item
+      );
       setCartItems(updatedItems);
     }
-    console.log(cartItems);
   };
 
   const handleQuantityChange = (
     card: Card,
     complementTitle: string,
     complementPrice: number,
-    newAmount: number,
+    newAmount: number
   ) => {
-    const cardTitle = complementTitle ? `${card.title} ${complementTitle}` : card.title; // Verifica se o item já existe no carrinho
+    const cardTitle = complementTitle
+      ? `${card.title} ${complementTitle}`
+      : card.title; // Verifica se o item já existe no carrinho
     const existingItem = cartItems.find((item) => item.title === cardTitle);
-    if (existingItem) { // Se o item existir, atualiza a quantidade para o novo valor
+    if (existingItem) {
+      // Se o item existir, atualiza a quantidade para o novo valor
       const updatedItems = cartItems.map((item) =>
         item.title === cardTitle ? { ...item, amount: newAmount } : item
       );
       setCartItems(updatedItems);
-    } else { // Se o item não existir, adiciona-o ao carrinho com a quantidade digitada
+    } else {
+      // Se o item não existir, adiciona-o ao carrinho com a quantidade digitada
       const newItem = {
         title: cardTitle,
         price: card.price + complementPrice,
@@ -2609,11 +2680,12 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       };
       setCartItems((prevCartItems) => [...prevCartItems, newItem]);
     }
-    console.log(cartItems);
   };
 
   const getItemQuantity = (card: Card, complementTitle: string) => {
-    const cardTitle = complementTitle ? `${card.title} ${complementTitle}` : card.title; // Busca o item em cartItems com base no título
+    const cardTitle = complementTitle
+      ? `${card.title} ${complementTitle}`
+      : card.title; // Busca o item em cartItems com base no título
     const cartItem = cartItems.find((item) => item.title === cardTitle); // Retorna a quantidade se o item existir, senão retorna 0
     return cartItem ? cartItem.amount : 0;
   };
@@ -2663,16 +2735,22 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     const formattedText = formattedLines.join('\n-------\n');
     setMessageItens(formattedText);
     const categoriesInPromotion = categories.filter(
+      // Filtra as categorias que têm a promoção ativa
       (category) => category.deliveryPromotion
-    );
-    for (const itemName in cartItems) {
-      const item = items?.find((i) => i.title === itemName);
+    ); // Verifica se algum item no carrinho faz parte da promoção por categoria
+    const isPromotionActive = cartItems.some((cartItem) => {
+      // Encontra o item correspondente em "items"
+      const item = items?.find((i) => cartItem.title.includes(i.title)); // Verifica se o item tem uma categoria em promoção
       if (
         item &&
         categoriesInPromotion.some((cat) => cat.category === item.category)
       ) {
-        setActivePromotionCategory(true);
+        return true;
       }
+      return false;
+    });
+    if (isPromotionActive) {
+      setActivePromotionCategory(true);
     }
   };
 
@@ -2823,7 +2901,10 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     setIsFinalizeOrder(false);
   };
 
-  const cartTotal = cartItems.reduce((total, item) => total + item.amount * item.price, 0);
+  const cartTotal = cartItems.reduce(
+    (total, item) => total + item.amount * item.price,
+    0
+  );
 
   const totalSumDelivery = (deliveryPrice ?? 0) + cartTotal;
 
@@ -2840,13 +2921,15 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setCartItems(updatedItems);
     }
   };
-  
-  useEffect(() => { // Função para atualizar os resultados com base na consulta de pesquisa
+
+  useEffect(() => {
+    // Função para atualizar os resultados com base na consulta de pesquisa
     const updateResults = () => {
       if (searchQuery === '') {
         setSearchResults(items); // Se a consulta de pesquisa estiver vazia, exiba todos os itens
       } else {
-        const filteredItems = items?.filter((item) => { // Caso contrário, filtre os itens com base na consulta
+        const filteredItems = items?.filter((item) => {
+          // Caso contrário, filtre os itens com base na consulta
           return (
             item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.description
@@ -2860,6 +2943,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
     }; // Chame a função de atualização dos resultados sempre que a consulta de pesquisa ou os itens mudarem
     updateResults();
   }, [searchQuery, items, setSearchResults]);
+  
+  useEffect(() => { // Filtra os itens com amount diferente de 0
+    const updatedCartItems = cartItems.filter((item) => item.amount !== 0); // Verifica se há mudanças antes de atualizar o estado
+    if (JSON.stringify(cartItems) !== JSON.stringify(updatedCartItems)) { // Atualiza o estado do carrinho removendo os itens com amount igual a 0
+      setCartItems(updatedCartItems);
+    }
+  }, [cartItems]); // Executa sempre que cartItems for atualizado
 
   useEffect(() => {
     const lastDeliveryArea = deliveryArea[deliveryArea.length - 1];
@@ -3193,13 +3283,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
         handleEditComplementsItem,
         toggleActiveComplementItem,
         setToggleActiveComplementItem,
-        selectedComplement, 
+        selectedComplement,
         setSelectedComplement,
         toggleActiveTimeItem,
         setToggleActiveTimeItem,
-        startTimeItem, 
+        startTimeItem,
         setStartTimeItem,
-        endTimeItem, 
+        endTimeItem,
         setEndTimeItem,
         toggleActiveDaysItem,
         setToggleActiveDaysItem,
