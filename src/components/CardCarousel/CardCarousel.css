@@ -41,77 +41,6 @@
   -ms-overflow-style: none;
 }
 
-.card {
-  display: flex;
-  flex-direction: column;
-  border: none;
-  margin: 10px;
-  box-shadow: 0 0 8px 0 #555; /* Adiciona sombra nas quatro bordas */
-  transition: transform 0.2s ease-in-out;
-  border-radius: 16px;
-}
-
-.card:hover {
-  transform: scale(1.05); /* Efeito de zoom no hover */
-}
-
-.card-div {
-  display: flex;
-  width: 240px;
-  height: 132px;
-  border-radius: 5px;
-}
-
-.card-img {
-  width: 115px;
-  border-radius: 10px;
-  border-top-right-radius: 0;
-  border-bottom-left-radius: 0;
-  border: 3px solid;
-}
-
-.card-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  width: 100%;
-  padding: 0 4px 0 4px;
-  overflow: hidden; /* Limita a altura e oculta o conteúdo que transborda */
-}
-
-.description {
-  font-size: x-small;
-  white-space: pre-line; /* Mantém quebras de linha no texto */
-  overflow: hidden; /* Oculta qualquer texto que ultrapasse o contêiner */
-  text-overflow: ellipsis; /* Mostra "..." quando o texto for cortado */
-  display: -webkit-box;
-  -webkit-line-clamp: 4; /* Define o número de linhas que você deseja mostrar */
-  -webkit-box-orient: vertical;
-}
-
-.card-img figure img {
-  width: 115px;
-  height: 125.25px;
-  border-radius: 8px;
-}
-
-.card-info h3 {
-  font-size: medium;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-  border-bottom: 3px solid;
-}
-
-.price {
-  font-weight: bold;
-  margin-bottom: 2px;
-  border-bottom: 3px solid;
-  align-items: center;
-  text-align: center;
-}
-
 .scroll-button {
   position: absolute;
   top: 50%;
@@ -132,17 +61,94 @@
   right: 10px;
 }
 
+.card {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  margin: 10px;
+  box-shadow: 0 0 8px 0 #555; /* Adiciona sombra nas quatro bordas */
+  transition: transform 0.1s ease-in-out;
+  border-radius: 10px;
+  border-bottom-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+
+.card:hover {
+  transform: scale(1.01); /* Efeito de zoom no hover */
+}
+
+.card-div {
+  display: flex;
+  width: 240px;
+  height: 121px;
+  border-radius: 10px;
+  border-bottom-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+
+.card-img {
+  display: flex;
+  width: 115px;
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border: 3px solid;
+  border-bottom: 4px solid;
+}
+
+.card-img figure img {
+  width: 115px;
+  height: 115px; 
+  border-radius: 7.5px;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  padding: 0 4px;
+  overflow: hidden; /* Limita a altura e oculta o conteúdo que transborda */
+}
+
+.card-title {
+  font-size: medium;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  border-bottom: 3px solid;
+}
+
+.description {
+  font-size: x-small;
+  white-space: pre-line; /* Mantém quebras de linha no texto */
+  overflow: hidden; /* Oculta qualquer texto que ultrapasse o contêiner */
+  text-overflow: ellipsis; /* Mostra "..." quando o texto for cortado */
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Define o número de linhas que você deseja mostrar */
+  -webkit-box-orient: vertical;
+}
+
+.price {
+  font-weight: bold;
+  border-bottom: 3px solid;
+  align-items: center;
+  text-align: center;
+}
+
 .item-controls {
   display: flex;
   align-items: center;
+  width: 240px;
 }
-
 
 .card-carousel-remove-button {
   font-size: x-large;
   padding: 6px;
   width: 100%;
-  border: none;
   border-radius: 8px;
   border-bottom-left-radius: 0;
   border: 2px solid;
@@ -154,7 +160,6 @@
   font-size: x-large;
   padding: 6px;
   width: 100%;
-  border: none;
   border-radius: 8px;
   border-bottom-right-radius: 0;
   border: 2px solid;
@@ -167,7 +172,31 @@
   padding: 5px;
   width: 40px;
   text-align: center;
-  
+  border-radius: 5px;
+  margin: 0 5px;
+}
+
+.form-item-controls{
+  display: flex;
+  flex-direction: row;
+  width: 240px;
+}
+
+.select-card-carousel {
+  width: 120px;
+  padding: 6px;
+  border-radius: 8px;
+  border-bottom-left-radius: 0;
+  border: 2px solid;
+  transition: background-color 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.form-item-controls input[type="number"] {
+  font-size: x-large;
+  padding: 5px;
+  width: 40px;
+  text-align: center;
   border-radius: 5px;
   margin: 0 5px;
 }

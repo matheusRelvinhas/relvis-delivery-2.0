@@ -149,7 +149,10 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                         >
                           <div
                             className="card-img"
-                            style={{ borderColor: dataCss.colorPrimary }}
+                            style={{
+                              borderColor: dataCss.colorPrimary,
+                              background: dataCss.colorPrimary,
+                            }}
                           >
                             <figure>
                               <picture>
@@ -159,16 +162,19 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                             </figure>
                           </div>
                           <div className="card-info">
-                            <h3 style={{ borderColor: dataCss.colorPrimary }}>
+                            <span
+                              className="card-title"
+                              style={{ borderColor: dataCss.colorPrimary }}
+                            >
                               {card.title}
-                            </h3>
-                            <p
+                            </span>
+                            <span
                               style={{ color: dataCss.fontColor }}
                               className="description"
                             >
                               {card.description}
-                            </p>
-                            <p
+                            </span>
+                            <span
                               style={{
                                 color: dataCss.fontColor,
                                 borderColor: dataCss.colorPrimary,
@@ -182,12 +188,12 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                                   ? complementItem?.valuePriceComplements
                                   : 0)
                               ).toFixed(2)}
-                            </p>
+                            </span>
                           </div>
                         </div>
                         {card.activeComplements ? (
                           <form
-                            className="item-controls"
+                            className="form-item-controls"
                             onSubmit={() =>
                               handleAddItem(
                                 card,
@@ -201,6 +207,11 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                             }
                           >
                             <select
+                              style={{
+                                backgroundColor: dataCss.colorPrimary,
+                                color: dataCss.summaryFont,
+                              }}
+                              className="select-card-carousel"
                               required
                               onChange={(e) => {
                                 const optionValue = e.target.value;
@@ -243,7 +254,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                                   complementItem?.valuePriceComplements
                                     ? complementItem?.valuePriceComplements
                                     : 0,
-                                    newAmount
+                                  newAmount
                                 );
                               }}
                             />
@@ -251,7 +262,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                               style={{ color: dataCss.buttonColor }}
                               normalBackgroundColor={dataCss.colorPrimary}
                               hoverBackgroundColor={dataCss.activeButtonColor}
-                              className="card-carousel-remove-button"
+                              className="card-carousel-add-button"
                               type="submit"
                             >
                               +
@@ -296,7 +307,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                                   complementItem?.valuePriceComplements
                                     ? complementItem?.valuePriceComplements
                                     : 0,
-                                    newAmount
+                                  newAmount
                                 );
                               }}
                             />
@@ -304,7 +315,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ category }) => {
                               style={{ color: dataCss.buttonColor }}
                               normalBackgroundColor={dataCss.colorPrimary}
                               hoverBackgroundColor={dataCss.activeButtonColor}
-                              className="card-carousel-remove-button"
+                              className="card-carousel-add-button"
                               onClick={() =>
                                 handleAddItem(
                                   card,
