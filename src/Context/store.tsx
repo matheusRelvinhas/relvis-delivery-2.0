@@ -1083,7 +1083,7 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       const collectionRef = firestore.collection('categories');
       const collectionItemRef = firestore.collection('items');
       const existingCategoryQuery = await collectionRef
-        .where('category', '==', lastCategory)
+        .where('category', '==', category)
         .get(); // Verifique se a nova categoria já existe (independentemente de ser maiúscula ou minúscula)
       if (existingCategoryQuery.size > 0) {
         setErrorMessage('Categoria já cadastrada');
@@ -2478,6 +2478,13 @@ export const GlobalContextProvider: React.FC<GlobalContextProviderProps> = ({
       setEndDate('');
     } else if (selectedOption === 'Todos') {
       setFilteredPurchaseRequests(purchaseRequests);
+      setStartDate('');
+      setEndDate('');
+    } else if (selectedOption === 'Novo') {
+      const newPurchaseRequests = purchaseRequests?.filter(
+        (purchaseRequest) => purchaseRequest.status === 'new'
+      );
+      setFilteredPurchaseRequests(newPurchaseRequests);
       setStartDate('');
       setEndDate('');
     } else if (selectedOption === 'Período') {

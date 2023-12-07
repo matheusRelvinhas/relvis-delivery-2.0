@@ -199,6 +199,7 @@ const LoginPurchaseRequest: React.FC = () => {
             onChange={(e) => setSelectedOption(e.target.value)}
           >
             <option value="Hoje">Hoje</option>
+            <option value="Novo">Novo</option>
             <option value="Período">Período</option>
             <option value="Todos">Todos</option>
           </select>
